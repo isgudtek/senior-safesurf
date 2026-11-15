@@ -230,13 +230,27 @@ and deletes, so a log entry can't be edited later.
 
 Requirements: Node 20+, desktop Chrome 138+.
 
+### Try it from GitHub (about 2 minutes)
+
 ```bash
+git clone https://github.com/isgudtek/senior-safesurf.git
+cd senior-safesurf
 npm install
 npm run build        # bundles the Firebase SDK into lib/ (extension) and web-dist/ (cloud bridge)
-npm test             # unit tests (keywords, routing, policy, verdict parsing)
 ```
 
-Load it: `chrome://extensions` → Developer mode → **Load unpacked** → this folder.
+1. Open `chrome://extensions` and turn on **Developer mode** (top right).
+2. Click **Load unpacked** and choose the `senior-safesurf` folder.
+3. The welcome tab opens. On the last slide, allow cloud checks and press **Start protecting**. If this computer
+   can run Gemini Nano, the download starts there.
+4. Open **Settings › Instructions › AI Protection › Try it**, or visit a page and use the popup's **Is this page
+   safe?**
+
+No keys or tokens are needed: on-device checks run in Chrome, and cloud checks go through the hosted bridge.
+If another copy of Senior SafeSurf is loaded unpacked, remove it first. Both use the same extension ID, so
+Chrome only keeps one.
+
+Optional: `npm test` runs the unit tests (keywords, routing, policy, verdict parsing).
 
 ### App Check and the cloud bridge
 
