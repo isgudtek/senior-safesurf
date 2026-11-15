@@ -1,5 +1,32 @@
 # Senior SafeSurf
 
+## Inspiration
+
+Older adults are one of the fastest-growing groups online, and the group that loses the most when something
+goes wrong.
+
+- **A growing audience.** By 2030, one in six people in the world will be 60 or older
+  ([WHO](https://www.who.int/news-room/fact-sheets/detail/ageing-and-health)). Most of them now browse,
+  shop, bank and talk to family online, often on their own.
+- **An internet that targets them.** In 2025 the FBI's Internet Crime Complaint Center received about
+  201,000 complaints from people over 60. Their reported losses were about **$7.7 billion**, 37% more than
+  in 2024 and over a third of all reported losses
+  ([FBI](https://fbi.gov/news/press-releases/cryptocurrency-and-ai-scams-bilk-americans-of-billions),
+  [IC3 2025 figures](https://elaca.org/2025-ic3-report-snapshot/)). The average loss per older victim was
+  about 1.9 times the overall average. Fake tech support, fake bank alerts and "you've won" prizes are the
+  usual way in.
+- **Tools that don't fit them.** Parental-control and security tools are built for children or IT
+  departments. They're full of settings, and word lists both block too much and miss what matters. Our own
+  v1.3 blocked any page containing "history", because it contains "tor". It also missed scams, which rarely
+  use a word on a list.
+
+We built Senior SafeSurf for that gap: big buttons, a calm interface, and protection that understands what a
+page is actually doing, without sending a parent's browsing to a server. Hybrid AI makes that possible.
+Gemini Nano runs on the computer, so judging every page stays private, offline and free. Gemini in the cloud
+helps only when the computer can't, and only if the user agreed.
+
+## What it is
+
 A free Chrome extension that keeps older adults safe online. It blocks sites and keywords, warns about scams,
 and adds a large-button speed dial and a reading-assist toolbar. Version 2 adds a **hybrid AI check built on
 Firebase AI Logic**: Gemini Nano runs on the computer first, and Gemini in the cloud is used only when the
