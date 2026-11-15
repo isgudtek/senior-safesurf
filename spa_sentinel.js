@@ -4,14 +4,19 @@
     // The hard reload will then be caught by the main background blocker.
 
     const result = await chrome.storage.local.get(['blacklist', 'masterEnabled']);
-    if (result.masterEnabled === false) return;
+    let masterOn = result.masterEnabled !== false;
+    let blacklist = result.blacklist || [];
 
-    const blacklist = result.blacklist || [];
-    if (blacklist.length === 0) return;
+    // Keep rules current: v1.3 read them once and missed edits made while the tab was open.
+    chrome.storage.onChanged.addListener((changes) => {
+        if (changes.blacklist) blacklist = changes.blacklist.newValue || [];
+        if (changes.masterEnabled) masterOn = changes.masterEnabled.newValue !== false;
+    });
 
     let lastUrl = location.href;
 
     function checkSurgicalMatch() {
+        if (!masterOn || blacklist.length === 0) return;
         const currentUrl = location.href;
         if (currentUrl === lastUrl) return;
 

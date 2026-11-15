@@ -400,8 +400,8 @@
                     at tiny links. Just click and go.</p>
                 <div class="feature-item"
                     style="width: 100%; background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.2);">
-                    <p style="color: #fff; font-size: 13px;"><strong>Free:</strong> 3 bookmarks. <strong>PRO:</strong>
-                        Unlimited bookmarks to build your personal portal.</p>
+                    <p style="color: #fff; font-size: 13px;">Add as many favorites as you like. Every feature is
+                        free.</p>
                 </div>
             </div>
 
@@ -454,47 +454,36 @@
                 </div>
             </div>
 
-            <!-- Slide 5: Choose Your Path -->
+            <!-- Slide 5: AI protection setup -->
             <div class="slide" id="slide-5">
-                <h1>Ready to Browse Safely?</h1>
-                <p class="subtitle" style="margin-bottom: 20px;">Pick the tier that suits you. Both are 100% private—we
-                    never see your data.</p>
+                <h1>Smart Protection</h1>
+                <p class="subtitle" style="margin-bottom: 16px;">A small AI reads the page around a blocked word and
+                    warns about scams that no word list catches. It runs on this computer first, so your browsing stays
+                    private. Everything is free.</p>
 
-                <table class="compact-table">
-                    <thead>
-                        <tr>
-                            <th>Feature</th>
-                            <th>Free</th>
-                            <th>PRO</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Speed Dial Slots</td>
-                            <td>3</td>
-                            <td>Unlimited</td>
-                        </tr>
-                        <tr>
-                            <td>Blocking Rules</td>
-                            <td>3</td>
-                            <td>Unlimited</td>
-                        </tr>
-                        <tr>
-                            <td>Anti-Scam Presets</td>
-                            <td>Limited</td>
-                            <td>1000+ Keywords</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <div class="cta-grid">
-                    <button class="btn-nav" id="freeBtn" style="justify-content: center; width: 100%;">Start
-                        Free</button>
-                    <button class="btn-nav pro" id="proBtn" style="justify-content: center; width: 100%;">Unlock
-                        PRO</button>
+                <div class="feature-item" style="width: 100%; text-align: left; margin-bottom: 12px;">
+                    <h3 id="wNanoTitle" style="margin-bottom: 4px;">Checking this computer…</h3>
+                    <p id="wNanoDesc" style="font-size: 13px; color: var(--text-muted);"></p>
+                    <div id="wNanoProgress" style="display: none; height: 8px; background: rgba(255,255,255,.1); border-radius: 8px; overflow: hidden; margin-top: 10px;">
+                        <div id="wNanoBar" style="height: 100%; width: 0; background: var(--primary); transition: width .3s;"></div>
+                    </div>
                 </div>
-                <p style="font-size: 11px; color: var(--text-muted); margin-top: 18px;">PRO starts at $2.99/month.
-                    Cancel anytime.</p>
+
+                <label class="feature-item" style="width: 100%; text-align: left; display: flex; gap: 12px; align-items: flex-start; cursor: pointer;">
+                    <input type="checkbox" id="wConsent" style="width: 22px; height: 22px; margin-top: 2px; flex-shrink: 0;">
+                    <span style="font-size: 13px; color: #fff;"><strong>Allow cloud checks when needed.</strong>
+                        If the on-device AI is missing or unsure, a small snapshot (site name, title, headings and a
+                        short excerpt, never passwords or form contents) is checked by Gemini through Firebase. You can
+                        change this anytime in AI Protection.</span>
+                </label>
+
+                <div class="cta-grid" style="grid-template-columns: 1fr;">
+                    <button class="btn-nav primary" id="startBtn" style="justify-content: center; width: 100%;">Start
+                        protecting</button>
+                    <button class="btn-nav" id="settingsBtn" style="justify-content: center; width: 100%; display: none;">Open
+                        settings</button>
+                </div>
+                <p id="wStartMsg" style="font-size: 12px; color: var(--text-muted); margin-top: 14px;"></p>
             </div>
         </div>
 

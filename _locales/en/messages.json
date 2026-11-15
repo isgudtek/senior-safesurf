@@ -4,7 +4,7 @@
         "description": "The name of the extension."
     },
     "extDesc": {
-        "message": "A simplified, secure browser experience tailored for seniors. Features speed dial, blockers, and reminders.",
+        "message": "Free browser safety for older adults: site and keyword blocking, scam warnings and a hybrid on-device/cloud AI check.",
         "description": "The description of the extension."
     },
     "view_dial": {
@@ -54,14 +54,6 @@
     "unlock_btn": {
         "message": "Unlock",
         "description": "Unlock button text"
-    },
-    "limit_reached": {
-        "message": "Limit Reached!",
-        "description": "Limit warning title"
-    },
-    "upgrade_pro_hint": {
-        "message": "Upgrade to PRO for unlimited blocks",
-        "description": "PRO upgrade hint"
     },
     "add_current_page": {
         "message": "Block current page/domain",
@@ -118,10 +110,6 @@
     "nav_appearance": {
         "message": "Appearance",
         "description": "Sidebar appearance"
-    },
-    "nav_license": {
-        "message": "License",
-        "description": "Sidebar license"
     },
     "nav_support": {
         "message": "Support & Feedback",
@@ -212,7 +200,7 @@
         "description": "Safety presets title"
     },
     "safety_presets_desc": {
-        "message": "Instantly protect against common scams and fraudulent keywords. Note: Free users are limited to the first 3 safety terms.",
+        "message": "Instantly protect against common scams and fraudulent keywords.",
         "description": "Safety presets description"
     },
     "btn_safety_en": {
@@ -230,14 +218,6 @@
     "stop_words_desc": {
         "message": "Pages containing these words will be surgically blocked.",
         "description": "Stop words description"
-    },
-    "btn_load_pro_shield": {
-        "message": "Load Pro-Shield Presets",
-        "description": "Load pro presets btn"
-    },
-    "pro_shield_hint": {
-        "message": "Load 100+ surgical keywords to instantly harden the shield.",
-        "description": "Pro shield hint"
     },
     "stop_word_placeholder": {
         "message": "Enter word to block",
@@ -258,46 +238,6 @@
     "settings_title": {
         "message": "Extension Settings",
         "description": "Settings section title"
-    },
-    "license_status_title": {
-        "message": "License Status",
-        "description": "License status title"
-    },
-    "license_status_desc_free": {
-        "message": "Currently limited to 3 blocking rules. Upgrade to unlock the full surgical power.",
-        "description": "License free description"
-    },
-    "license_key_placeholder": {
-        "message": "Enter License Key",
-        "description": "License input placeholder"
-    },
-    "btn_activate_pro": {
-        "message": "Activate PRO",
-        "description": "Activate btn"
-    },
-    "get_pro_link": {
-        "message": "Don't have a key? Get PRO access starting at $2.99",
-        "description": "Checkout link text"
-    },
-    "select_plan_title": {
-        "message": "🔓 Select Your Plan",
-        "description": "Plan selection title"
-    },
-    "plan_monthly": {
-        "message": "Monthly",
-        "description": "Monthly plan"
-    },
-    "plan_yearly": {
-        "message": "Yearly",
-        "description": "Yearly plan"
-    },
-    "best_value_badge": {
-        "message": "BEST VALUE",
-        "description": "Best value badge"
-    },
-    "btn_select_plan": {
-        "message": "Select",
-        "description": "Select plan button"
     },
     "security_settings_title": {
         "message": "Security Settings",
@@ -391,33 +331,13 @@
         "message": "Next",
         "description": "Next button"
     },
-    "table_max_targets": {
-        "message": "Maximum Targets",
-        "description": "Table row"
-    },
-    "table_unlimited": {
-        "message": "Unlimited",
-        "description": "Table value"
-    },
-    "table_parental_presets": {
-        "message": "Parental Presets",
-        "description": "Table row"
-    },
     "table_10_langs": {
         "message": "10 Languages",
         "description": "Table value"
     },
-    "table_rule_sync": {
-        "message": "Rule Sync",
-        "description": "Table row"
-    },
     "table_included": {
         "message": "Included",
         "description": "Table value"
-    },
-    "table_future_updates": {
-        "message": "Future Updates",
-        "description": "Table row"
     },
     "advanced_config_title": {
         "message": "Advanced Configuration",
@@ -483,32 +403,6 @@
         "message": "Send Message",
         "description": "Submit support button"
     },
-    "alert_enter_license": {
-        "message": "Please enter a license key.",
-        "description": "Alert"
-    },
-    "alert_pro_active": {
-        "message": "Success! Your Pro license is now active.",
-        "description": "Alert"
-    },
-    "alert_license_verified": {
-        "message": "Success! License verified.\nExpires: $EXPIRY$",
-        "description": "Alert",
-        "placeholders": {
-            "expiry": {
-                "content": "$1"
-            }
-        }
-    },
-    "alert_license_error": {
-        "message": "License Error: $MSG$",
-        "description": "Alert",
-        "placeholders": {
-            "msg": {
-                "content": "$1"
-            }
-        }
-    },
     "alert_connection_error": {
         "message": "Connection error: $MSG$\nMake sure you are connected to the internet.",
         "description": "Alert",
@@ -520,10 +414,6 @@
     },
     "alert_already_in_list": {
         "message": "Already in the list.",
-        "description": "Alert"
-    },
-    "alert_limit_reached": {
-        "message": "Limit reached! Upgrade to PRO to add more.",
         "description": "Alert"
     },
     "confirm_remove_password": {
@@ -546,15 +436,6 @@
         "message": "Password saved successfully!",
         "description": "Alert"
     },
-    "alert_import_limit": {
-        "message": "Notice: As a FREE user, only the first 3 items will be imported. Upgrade to PRO to import all $TOTAL$ items.",
-        "description": "Alert",
-        "placeholders": {
-            "total": {
-                "content": "$1"
-            }
-        }
-    },
     "alert_import_success": {
         "message": "Import successful!",
         "description": "Alert"
@@ -569,14 +450,6 @@
     },
     "alert_wrong_password": {
         "message": "Incorrect password.",
-        "description": "Alert"
-    },
-    "alert_pro_random_bg": {
-        "message": "PRO Feature: Random category backgrounds are only available for PRO members.",
-        "description": "Alert"
-    },
-    "alert_pro_select_bg": {
-        "message": "PRO Feature: You can only select the 1st image per category as a FREE user. Upgrade to PRO to unlock hundreds of high-quality backgrounds!",
         "description": "Alert"
     },
     "confirm_add_safety": {
@@ -610,10 +483,6 @@
             }
         }
     },
-    "alert_safety_limit": {
-        "message": "Free Version: Only the first 3 safety terms could be added. Upgrade to PRO to add them all!",
-        "description": "Alert"
-    },
     "alert_pack_loaded": {
         "message": "$PACK$ pack loaded successfully!",
         "description": "Alert",
@@ -622,14 +491,6 @@
                 "content": "$1"
             }
         }
-    },
-    "alert_stopword_limit": {
-        "message": "Limit reached! Upgrade to PRO to add more keywords.",
-        "description": "Alert"
-    },
-    "alert_pro_shield_required": {
-        "message": "Pro-Shield Presets require a PRO license. Upgrade to unlock 1000+ keywords!",
-        "description": "Alert"
     },
     "alert_presets_loaded": {
         "message": "Successfully loaded $COUNT$ surgical presets for $LANG$.",
@@ -651,15 +512,6 @@
         "message": "Clear all stop words? This will weaken the shield.",
         "description": "Confirm"
     },
-    "alert_license_expired": {
-        "message": "Your Pro license has expired or is invalid.\nReason: $REASON$\n\nPlease check your subscription.",
-        "description": "Alert",
-        "placeholders": {
-            "reason": {
-                "content": "$1"
-            }
-        }
-    },
     "btn_sending": {
         "message": "Sending surgically...",
         "description": "Button state"
@@ -672,21 +524,9 @@
         "message": "Are you sure? This will add these high-trust sites to your Speed Dial grid.",
         "description": "Confirm"
     },
-    "alert_bookmark_limit": {
-        "message": "Limit reached! Upgrade to PRO to add more than 3 bookmarks.",
-        "description": "Alert"
-    },
     "no_dial_sites": {
         "message": "No speed dial sites yet.",
         "description": "Empty state"
-    },
-    "btn_verifying": {
-        "message": "Verifying...",
-        "description": "Button state"
-    },
-    "btn_check_status": {
-        "message": "Check Status",
-        "description": "Button state"
     },
     "manage_blocks_label": {
         "message": "Manage blocks",
@@ -742,11 +582,11 @@
         "description": "Timer state"
     },
     "nav_settings_license": {
-        "message": "Settings/License",
+        "message": "Settings",
         "description": "Sidebar label"
     },
     "settings_license_title": {
-        "message": "Extension Settings & License",
+        "message": "Extension Settings",
         "description": "Section title"
     },
     "language_title": {
@@ -764,5 +604,209 @@
     "alert_language_saved": {
         "message": "Language updated. Please reload for full effect.",
         "description": "Alert"
+    },
+    "nav_settings": {
+        "message": "Settings",
+        "description": "nav settings"
+    },
+    "nav_ai": {
+        "message": "AI Protection",
+        "description": "nav ai"
+    },
+    "nav_family": {
+        "message": "Family",
+        "description": "nav family"
+    },
+    "btn_load_presets": {
+        "message": "Load Presets",
+        "description": "btn load presets"
+    },
+    "presets_hint": {
+        "message": "Load 100+ keywords to instantly harden the shield.",
+        "description": "presets hint"
+    },
+    "support_mail_opened": {
+        "message": "Your mail app opened with the message. Press Send there.",
+        "description": "support mail opened"
+    },
+    "ai_title": {
+        "message": "AI Protection",
+        "description": "ai title"
+    },
+    "ai_intro": {
+        "message": "Keywords alone can't tell a museum page about guns from a gun shop. The AI reads the page around a blocked word, and spots scams that no word list catches. It runs on this computer first.",
+        "description": "ai intro"
+    },
+    "ai_mode_title": {
+        "message": "Where the AI runs",
+        "description": "ai mode title"
+    },
+    "ai_mode_off": {
+        "message": "Off (keywords only)",
+        "description": "ai mode off"
+    },
+    "ai_mode_local": {
+        "message": "🔒 On this computer only",
+        "description": "ai mode local"
+    },
+    "ai_mode_hybrid": {
+        "message": "🔒 + ☁️ Hybrid",
+        "description": "ai mode hybrid"
+    },
+    "ai_mode_cloud": {
+        "message": "☁️ Cloud only",
+        "description": "ai mode cloud"
+    },
+    "ai_device_title": {
+        "message": "On-device AI (Gemini Nano)",
+        "description": "ai device title"
+    },
+    "ai_download_btn": {
+        "message": "Download on-device AI",
+        "description": "ai download btn"
+    },
+    "ai_cloud_title": {
+        "message": "Cloud check (Gemini via Firebase)",
+        "description": "ai cloud title"
+    },
+    "ai_consent_name": {
+        "message": "Allow cloud checks",
+        "description": "ai consent name"
+    },
+    "ai_consent_desc": {
+        "message": "Only a small snapshot is sent: the site name, page title, headings and about 600 characters around the match. Never passwords, form contents or the full address. Used when the on-device AI is missing or unsure.",
+        "description": "ai consent desc"
+    },
+    "ai_tuning_title": {
+        "message": "Fine-tuning",
+        "description": "ai tuning title"
+    },
+    "ai_sensitivity_name": {
+        "message": "Sensitivity",
+        "description": "ai sensitivity name"
+    },
+    "ai_sensitivity_desc": {
+        "message": "Strict keeps more keyword blocks and warns sooner. Relaxed lets the AI clear more harmless mentions.",
+        "description": "ai sensitivity desc"
+    },
+    "ai_scope_name": {
+        "message": "Scam check on login and payment pages",
+        "description": "ai scope name"
+    },
+    "ai_scope_desc": {
+        "message": "Also checks pages that ask for a password or card number, even without a blocked word, and warns about likely scams.",
+        "description": "ai scope desc"
+    },
+    "ai_rc_name": {
+        "message": "Use Firebase Remote Config",
+        "description": "ai rc name"
+    },
+    "ai_rc_desc": {
+        "message": "Optional. Lets the maintainers tune the cloud model, the escalation threshold and the prompt, or switch the cloud off, without a store update.",
+        "description": "ai rc desc"
+    },
+    "ai_try_title": {
+        "message": "Try it",
+        "description": "ai try title"
+    },
+    "ai_try_desc": {
+        "message": "Paste some page text to see what the AI decides and where it ran.",
+        "description": "ai try desc"
+    },
+    "ai_try_btn": {
+        "message": "Check text",
+        "description": "ai try btn"
+    },
+    "family_title": {
+        "message": "Family",
+        "description": "family title"
+    },
+    "family_intro": {
+        "message": "See what Senior SafeSurf stopped this week and get a plain-language summary. Optionally share it with a family member through a Firebase account.",
+        "description": "family intro"
+    },
+    "family_log_title": {
+        "message": "This week",
+        "description": "family log title"
+    },
+    "family_summary_btn": {
+        "message": "Write summary",
+        "description": "family summary btn"
+    },
+    "family_clear_btn": {
+        "message": "Clear log",
+        "description": "family clear btn"
+    },
+    "family_sync_title": {
+        "message": "Share with family (optional)",
+        "description": "family sync title"
+    },
+    "family_sync_desc": {
+        "message": "Create one family account. Sign in with it on this computer and on the family member's Chrome (with Senior SafeSurf installed). Only the time, site name, type and engine of each block or warning are shared. Never page text.",
+        "description": "family sync desc"
+    },
+    "family_signin_btn": {
+        "message": "Sign in",
+        "description": "family signin btn"
+    },
+    "family_create_btn": {
+        "message": "Create account",
+        "description": "family create btn"
+    },
+    "family_sync_name": {
+        "message": "Share blocks and warnings",
+        "description": "family sync name"
+    },
+    "family_signout_btn": {
+        "message": "Sign out",
+        "description": "family signout btn"
+    },
+    "ai_check_btn": {
+        "message": "🛡 Is this page safe?",
+        "description": "ai check btn"
+    },
+    "ai_label": {
+        "message": "AI",
+        "description": "ai label"
+    },
+    "ai_checking": {
+        "message": "Checking…",
+        "description": "ai checking"
+    },
+    "verdict_allow": {
+        "message": "✅ This page looks safe",
+        "description": "verdict allow"
+    },
+    "verdict_warn": {
+        "message": "⚠️ Be careful on this page",
+        "description": "verdict warn"
+    },
+    "verdict_block": {
+        "message": "⛔ This page is not safe",
+        "description": "verdict block"
+    },
+    "verdict_unknown": {
+        "message": "ℹ️ Could not check this page",
+        "description": "verdict unknown"
+    },
+    "engine_device": {
+        "message": "Checked on this computer (Gemini Nano). Nothing was sent online.",
+        "description": "engine device"
+    },
+    "engine_cloud": {
+        "message": "Checked in the cloud (Gemini via Firebase).",
+        "description": "engine cloud"
+    },
+    "engine_keywords": {
+        "message": "Checked with your keyword list.",
+        "description": "engine keywords"
+    },
+    "engine_escalated": {
+        "message": "(double-checked in the cloud)",
+        "description": "engine escalated"
+    },
+    "ai_restricted": {
+        "message": "Chrome does not allow checking this kind of page.",
+        "description": "ai restricted"
     }
 }

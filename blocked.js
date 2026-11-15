@@ -35,29 +35,56 @@ if (isTimerBlock) {
 } else if (isContentBlock) {
     const msg = document.querySelector('.message');
     if (msg) {
-        msg.innerHTML = `This page was blocked by Senior SafeSurf because it contains protected content. Take a deep breath.`;
+        msg.textContent = 'This page was blocked by Senior SafeSurf because it contains protected content. Take a deep breath.';
     }
     const h1 = document.querySelector('h1');
     if (h1) h1.textContent = "Protected Content.";
+    showBlockReason();
+}
 
-    // Debug: show keyword in footer
-    const debugEl = document.getElementById('debugKeyword');
-    if (debugEl && word) {
-        debugEl.textContent = `[${word}]`;
+// Explain the block: the AI's reason (stored by the service worker under ?vid=) or the matched word.
+async function showBlockReason() {
+    const CATEGORY = {
+        adult: 'adult content', gambling: 'gambling', violence: 'graphic violence', drugs: 'illegal drugs',
+        weapons: 'weapons', hate: 'hate or extremism', scam: 'a likely scam', phishing: 'a likely phishing page',
+        malware: 'possible malware', keyword: 'a blocked word', other: 'unsafe content'
+    };
+    const ENGINE = {
+        'on-device': 'Checked on this computer (Gemini Nano). Nothing was sent online.',
+        cloud: 'Checked in the cloud (Gemini via Firebase).',
+        keywords: 'Checked with your keyword list.'
+    };
+    let verdict = null;
+    const vid = urlParams.get('vid');
+    if (vid) {
+        try { verdict = await chrome.runtime.sendMessage({ command: 'getVerdict', vid }); } catch { verdict = null; }
     }
+    if (!verdict) {
+        verdict = {
+            engine: 'keywords',
+            category: 'keyword',
+            reason: word ? `The page contains the blocked word "${word}".` : 'The page matched your block list.'
+        };
+    }
+    const box = document.getElementById('aiReason');
+    const text = document.getElementById('aiReasonText');
+    const engine = document.getElementById('aiEngine');
+    if (!box || !text || !engine) return;
+    const type = CATEGORY[verdict.category] ? `Blocked: ${CATEGORY[verdict.category]}. ` : '';
+    text.textContent = type + (verdict.reason || ''); // textContent only: model output is never HTML
+    engine.textContent = ENGINE[verdict.engine] || '';
+    box.classList.remove('hidden');
 }
 
 // Load custom background & attribution
-chrome.storage.local.get(['customBackground', 'bgAuthorName', 'bgAuthorUrl', 'isPro'], async (result) => {
+chrome.storage.local.get(['customBackground', 'bgAuthorName', 'bgAuthorUrl'], async (result) => {
     const bgContainer = document.getElementById('bgContainer');
     const authorAttribution = document.getElementById('authorAttribution');
     const authorLink = document.getElementById('authorLink');
-    const isProUser = result.isPro === true;
 
     if (!bgContainer) return;
 
-    // Use 'toys' background for parental blocks
-    // For others: if FREE, use fixed fallback. If PRO, use their choice (or random:abstract fallback).
+    // Use 'toys' background for parental blocks, otherwise the user's choice (or random:abstract).
     const fixedFallback = 'https://images.pexels.com/photos/310452/pexels-photo-310452.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2';
 
     let bgUrl = result.customBackground || 'random:abstract';
@@ -65,17 +92,10 @@ chrome.storage.local.get(['customBackground', 'bgAuthorName', 'bgAuthorUrl', 'is
         bgUrl = 'random:toys';
     }
 
-    // Force fixed fallback for FREE users if they have random selected or no selection
-    if (!isProUser) {
-        if (!result.customBackground || bgUrl.startsWith('random:')) {
-            bgUrl = fixedFallback;
-        }
-    }
-
     let authorName = result.bgAuthorName;
     let authorUrl = result.bgAuthorUrl;
 
-    // Handle Random Category (PRO Only)
+    // Handle Random Category
     if (bgUrl.startsWith('random:')) {
         const category = bgUrl.split(':')[1];
         const PEXELS_API_KEY = 'IQkbu7hsbNHooEjFvGwQUm0Gqmdcf2Pz30HPsTD2vu5AcwJEkIoOgS6J';
@@ -110,15 +130,13 @@ chrome.storage.local.get(['customBackground', 'bgAuthorName', 'bgAuthorUrl', 'is
 
 const continueAnyway = async function () {
     const result = await chrome.storage.local.get(['password']);
-    const masterPassword = result.password;
-
-    if (!masterPassword) {
+    if (!result.password) {
         alert('Internal error: No master password set.');
         return;
     }
 
     const pass = prompt('Deep Focus Override: Enter Master Password');
-    if (pass === masterPassword) {
+    if (pass !== null && await SafeSurfSecurity.check(pass)) {
         chrome.runtime.sendMessage({
             command: "startBypass",
             url: blockedUrl

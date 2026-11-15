@@ -513,11 +513,12 @@
                 <span class="slider"></span>
             </label>
         </div>
+        <div class="nav-item" data-section="ai"><span data-i18n="nav_ai">AI Protection</span></div>
+        <div class="nav-item" data-section="family"><span data-i18n="nav_family">Family</span></div>
         <div class="nav-item" data-section="appearance"><span data-i18n="nav_appearance">Appearance</span></div>
         <div class="nav-item" data-section="security"><span data-i18n="nav_security">Security & Password</span></div>
         <div class="nav-item" data-section="support"><span data-i18n="nav_support">Support & Feedback</span></div>
-        <div class="nav-item" data-section="general"><span data-i18n="nav_settings_license">Settings/License</span>
-        </div>
+        <div class="nav-item" data-section="general"><span data-i18n="nav_settings">Settings</span></div>
     </div>
     <div class="main">
         <div id="section-instructions" class="content-section">
@@ -767,7 +768,6 @@
                         <p data-i18n="safety_presets_desc"
                             style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">
                             Instantly protect against common scams and fraudulent keywords.
-                            <strong>Note:</strong> Free users are limited to the first 3 safety terms.
                         </p>
                         <div style="display: flex; gap: 12px; flex-wrap: wrap;">
                             <button class="btn-primary safety-btn" data-pack="en" data-i18n="btn_safety_en"
@@ -808,11 +808,11 @@
                                         <option value="zh">🇨🇳 中文</option>
                                         <option value="ar">🇸🇦 العربية</option>
                                     </select>
-                                    <button class="btn-primary" id="loadPresetsBtn" data-i18n="btn_load_pro_shield"
+                                    <button class="btn-primary" id="loadPresetsBtn" data-i18n="btn_load_presets"
                                         style="padding: 8px 16px; font-size: 13px; background: transparent; border: 1px solid var(--primary); color: var(--primary);">Load
-                                        Pro-Shield Presets</button>
+                                        Presets</button>
                                 </div>
-                                <p data-i18n="pro_shield_hint"
+                                <p data-i18n="presets_hint"
                                     style="font-size: 11px; color: var(--text-muted); margin-top: 8px;">Load
                                     100+
                                     surgical
@@ -846,7 +846,7 @@
 
         <!-- Settings Section -->
         <div id="section-general" class="content-section hidden">
-            <h1 data-i18n="settings_license_title">Extension Settings & License</h1>
+            <h1 data-i18n="settings_title">Extension Settings</h1>
             <div class="card">
                 <h2 data-i18n="language_title">Display Language</h2>
                 <div class="options-item">
@@ -863,111 +863,161 @@
                     </select>
                 </div>
             </div>
+            
+        </div>
+
+        <!-- AI Protection Section -->
+        <div id="section-ai" class="content-section hidden">
+            <h1 data-i18n="ai_title">AI Protection</h1>
+            <p style="color: var(--text-muted); margin-top: -24px; margin-bottom: 32px; font-size: 15px;" data-i18n="ai_intro">
+                Keywords alone can't tell a museum page about guns from a gun shop. The AI reads the page around a
+                blocked word, and spots scams that no word list catches. It runs on this computer first.
+            </p>
+
             <div class="card">
-                <h2><span data-i18n="license_status_title">License Status</span> <span id="tierBadge"
-                        class="status-badge free">FREE</span></h2>
-                <p data-i18n="license_status_desc_free" style="color: #94a3b8;">Currently limited to 3
-                    blocking rules. Upgrade to unlock the full surgical power.</p>
-                <div id="licenseDetails"
-                    style="font-size: 13px; color: #94a3b8; margin-top: -8px; margin-bottom: 16px;"></div>
-
-                <div id="licenseSection">
-                    <div class="input-group">
-                        <input type="text" id="licenseInput" placeholder="Enter License Key"
-                            data-i18n="license_key_placeholder">
-                        <button class="btn-pro" id="activateBtn" data-i18n="btn_activate_pro">Activate
-                            PRO</button>
-                    </div>
-                    <a href="https://gudtek.lol/chrome/checkout.php?plan=monthly" target="_blank"
-                        data-i18n="get_pro_link" class="btn-buy">Don't
-                        have a key? Get
-                        PRO access starting at $2.99</a>
+                <h2 data-i18n="ai_mode_title">Where the AI runs</h2>
+                <div class="category-group" id="aiModeGroup">
+                    <button class="category-btn" data-mode="off" data-i18n="ai_mode_off">Off (keywords only)</button>
+                    <button class="category-btn" data-mode="local" data-i18n="ai_mode_local">🔒 On this computer only</button>
+                    <button class="category-btn" data-mode="hybrid" data-i18n="ai_mode_hybrid">🔒 + ☁️ Hybrid</button>
+                    <button class="category-btn" data-mode="cloud" data-i18n="ai_mode_cloud">☁️ Cloud only</button>
                 </div>
+                <p id="aiModeHelp" style="color: var(--text-muted); font-size: 13px; margin: 0;"></p>
+            </div>
 
-                <div id="freeComparisonTable"
-                    style="margin-top: 24px; background: rgba(16, 185, 129, 0.05); padding: 20px; border-radius: 12px; border: 1px solid rgba(16, 185, 129, 0.15);">
-                    <h4 data-i18n="select_plan_title" style="font-size: 14px; color: #10b981; margin-bottom: 20px;">
-                        🔓 Select Your Plan
-                    </h4>
-
-                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
-                        <!-- Monthly -->
-                        <div
-                            style="background: var(--bg); padding: 16px; border-radius: 12px; border: 1px solid var(--border); text-align: center;">
-                            <div data-i18n="plan_monthly"
-                                style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px;">
-                                Monthly</div>
-                            <div style="font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 12px;">
-                                $2.99
-                            </div>
-                            <a href="https://gudtek.lol/chrome/checkout.php?plan=monthly" target="_blank"
-                                data-i18n="btn_select_plan"
-                                style="display: block; padding: 8px; background: #334155; color: #fff; text-decoration: none; border-radius: 8px; font-size: 12px; font-weight: 700;">Select</a>
-                        </div>
-
-                        <!-- Yearly -->
-                        <div
-                            style="background: rgba(245, 158, 11, 0.05); padding: 16px; border-radius: 12px; border: 1px solid var(--pro); text-align: center; position: relative;">
-                            <div data-i18n="best_value_badge"
-                                style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: var(--pro); color: #000; font-size: 9px; font-weight: 800; padding: 2px 8px; border-radius: 4px;">
-                                BEST VALUE</div>
-                            <div data-i18n="plan_yearly"
-                                style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px;">
-                                Yearly</div>
-                            <div style="font-size: 20px; font-weight: 800; color: #f59e0b; margin-bottom: 12px;">
-                                $29.99
-                            </div>
-                            <a href="https://gudtek.lol/chrome/checkout.php?plan=yearly" target="_blank"
-                                data-i18n="btn_select_plan"
-                                style="display: block; padding: 8px; background: var(--pro); color: #000; text-decoration: none; border-radius: 8px; font-size: 12px; font-weight: 700;">Select</a>
-                        </div>
-
-                        <!-- Lifetime -->
-                        <div
-                            style="background: var(--bg); padding: 16px; border-radius: 12px; border: 1px solid var(--border); text-align: center;">
-                            <div
-                                style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px;">
-                                Lifetime</div>
-                            <div style="font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 12px;">
-                                $49.99
-                            </div>
-                            <a href="https://gudtek.lol/chrome/checkout.php?plan=lifetime" target="_blank"
-                                style="display: block; padding: 8px; background: #334155; color: #fff; text-decoration: none; border-radius: 8px; font-size: 12px; font-weight: 700;">Select</a>
-                        </div>
+            <div class="card">
+                <h2 data-i18n="ai_device_title">On-device AI (Gemini Nano)</h2>
+                <div class="options-item">
+                    <div class="info">
+                        <span class="name" id="nanoStatusName">Checking…</span>
+                        <span class="description" id="nanoStatusDesc"></span>
                     </div>
-
-                    <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.05);">
-                        <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
-                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-                                <td data-i18n="table_max_targets" style="padding: 8px 0; color: var(--text-muted);">
-                                    Maximum Targets</td>
-                                <td style="padding: 8px 0; text-align: right; color: #10b981; font-weight: 700;">
-                                    Unlimited</td>
-                            </tr>
-                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-                                <td data-i18n="table_parental_presets"
-                                    style="padding: 8px 0; color: var(--text-muted);">Parental Presets</td>
-                                <td style="padding: 8px 0; text-align: right; color: #10b981; font-weight: 700;">
-                                    10
-                                    Languages</td>
-                            </tr>
-                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-                                <td data-i18n="table_rule_sync" style="padding: 8px 0; color: var(--text-muted);">
-                                    Rule Sync</td>
-                                <td style="padding: 8px 0; text-align: right; color: #10b981; font-weight: 700;">
-                                    Included</td>
-                            </tr>
-                            <tr>
-                                <td data-i18n="table_future_updates" style="padding: 8px 0; color: var(--text-muted);">
-                                    Future Updates</td>
-                                <td style="padding: 8px 0; text-align: right; color: #10b981; font-weight: 700;">
-                                    Included</td>
-                            </tr>
-                        </table>
-                    </div>
+                    <button class="btn-primary hidden" id="nanoDownloadBtn" data-i18n="ai_download_btn">Download on-device AI</button>
+                </div>
+                <div id="nanoProgress" class="hidden" style="height: 8px; background: var(--border); border-radius: 8px; overflow: hidden;">
+                    <div id="nanoProgressBar" style="height: 100%; width: 0; background: var(--primary); transition: width .3s;"></div>
                 </div>
             </div>
 
+            <div class="card">
+                <h2 data-i18n="ai_cloud_title">Cloud check (Gemini via Firebase)</h2>
+                <div class="options-item">
+                    <div class="info">
+                        <span class="name" data-i18n="ai_consent_name">Allow cloud checks</span>
+                        <span class="description" data-i18n="ai_consent_desc">Only a small snapshot is sent: the site
+                            name, page title, headings and about 600 characters around the match. Never passwords,
+                            form contents or the full address. Used when the on-device AI is missing or unsure.</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="aiConsentToggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <p id="cloudStatus" style="color: var(--text-muted); font-size: 13px; margin: 0;"></p>
+            </div>
+
+            <div class="card">
+                <h2 data-i18n="ai_tuning_title">Fine-tuning</h2>
+                <div class="options-item">
+                    <div class="info">
+                        <span class="name" data-i18n="ai_sensitivity_name">Sensitivity</span>
+                        <span class="description" data-i18n="ai_sensitivity_desc">Strict keeps more keyword blocks and
+                            warns sooner. Relaxed lets the AI clear more harmless mentions.</span>
+                    </div>
+                    <select id="aiSensitivity" style="background: var(--bg); color: var(--text-main); border: 1px solid var(--border); padding: 8px 12px; border-radius: 8px;">
+                        <option value="low">Relaxed</option>
+                        <option value="normal">Balanced</option>
+                        <option value="strict">Strict</option>
+                    </select>
+                </div>
+                <div class="options-item">
+                    <div class="info">
+                        <span class="name" data-i18n="ai_scope_name">Scam check on login and payment pages</span>
+                        <span class="description" data-i18n="ai_scope_desc">Also checks pages that ask for a password
+                            or card number, even without a blocked word, and warns about likely scams.</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="aiScopeToggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="options-item">
+                    <div class="info">
+                        <span class="name" data-i18n="ai_rc_name">Use Firebase Remote Config</span>
+                        <span class="description" data-i18n="ai_rc_desc">Optional. Lets the maintainers tune the cloud
+                            model, the escalation threshold and the prompt, or switch the cloud off, without a store
+                            update.</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="aiRemoteConfigToggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <p id="rcStatus" style="color: var(--text-muted); font-size: 13px; margin: 0;"></p>
+            </div>
+
+            <div class="card">
+                <h2 data-i18n="ai_try_title">Try it</h2>
+                <p style="color: #94a3b8; font-size: 13px; margin-bottom: 15px;" data-i18n="ai_try_desc">Paste some
+                    page text to see what the AI decides and where it ran.</p>
+                <textarea id="aiTestInput" style="width: 100%; height: 90px; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 12px; color: var(--text-main); font-family: inherit; resize: vertical;">URGENT: Your computer is infected! Call Microsoft Support now at 1-800-555-0199 and pay the $299 fee with Google Play gift cards to unlock it.</textarea>
+                <button class="btn-primary" id="aiTestBtn" style="margin-top: 12px;" data-i18n="ai_try_btn">Check text</button>
+                <div id="aiTestResult" class="hidden" style="margin-top: 16px; padding: 16px; border-radius: 12px; border: 1px solid var(--border); font-size: 14px;"></div>
+            </div>
+        </div>
+
+        <!-- Family Section -->
+        <div id="section-family" class="content-section hidden">
+            <h1 data-i18n="family_title">Family</h1>
+            <p style="color: var(--text-muted); margin-top: -24px; margin-bottom: 32px; font-size: 15px;" data-i18n="family_intro">
+                See what Senior SafeSurf stopped this week and get a plain-language summary. Optionally share it with
+                a family member through a Firebase account.
+            </p>
+
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <h2 style="margin: 0;" data-i18n="family_log_title">This week</h2>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn-primary" id="summaryBtn" data-i18n="family_summary_btn">Write summary</button>
+                        <button class="btn-action btn-delete" id="clearLogBtn" data-i18n="family_clear_btn">Clear log</button>
+                    </div>
+                </div>
+                <div id="summaryBox" class="hidden" style="background: rgba(16,185,129,.08); border: 1px solid rgba(16,185,129,.25); padding: 16px; border-radius: 12px; margin-bottom: 16px; font-size: 15px; line-height: 1.6;"></div>
+                <div id="logSourceNote" style="color: var(--text-muted); font-size: 12px; margin-bottom: 8px;"></div>
+                <div id="eventList" class="options-list"></div>
+            </div>
+
+            <div class="card">
+                <h2 data-i18n="family_sync_title">Share with family (optional)</h2>
+                <p style="color: #94a3b8; font-size: 13px; margin-bottom: 15px;" data-i18n="family_sync_desc">Create one
+                    family account. Sign in with it on this computer and on the family member's Chrome (with Senior
+                    SafeSurf installed). Only the time, site name, type and engine of each block or warning are
+                    shared. Never page text.</p>
+                <div id="familySignedOut">
+                    <div class="input-group" style="flex-direction: column; gap: 10px; max-width: 360px;">
+                        <input type="email" id="familyEmail" placeholder="Family email" autocomplete="username">
+                        <input type="password" id="familyPassword" placeholder="Password (6+ characters)" autocomplete="current-password">
+                        <div style="display: flex; gap: 8px;">
+                            <button class="btn-primary" id="familySignInBtn" style="flex: 1;" data-i18n="family_signin_btn">Sign in</button>
+                            <button class="btn-action btn-edit" id="familyCreateBtn" style="flex: 1;" data-i18n="family_create_btn">Create account</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="familySignedIn" class="hidden">
+                    <div class="options-item">
+                        <div class="info">
+                            <span class="name" data-i18n="family_sync_name">Share blocks and warnings</span>
+                            <span class="description" id="familyWho"></span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="familySyncToggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <button class="btn-action btn-delete" id="familySignOutBtn" data-i18n="family_signout_btn">Sign out</button>
+                </div>
+                <div id="familyMsg" style="color: var(--text-muted); font-size: 13px; margin-top: 12px;"></div>
+            </div>
         </div>
 
         <!-- Security Section -->
@@ -1047,7 +1097,10 @@
         </div>
     </div>
     <script src="js/i18n.js"></script>
+    <script src="js/security.js"></script>
     <script src="options.js"></script>
+    <script src="ai_options.js"></script>
+    <script type="module" src="lib/family.js"></script>
 </body>
 
 </html>

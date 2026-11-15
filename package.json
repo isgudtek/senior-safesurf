@@ -1,0 +1,21 @@
+{
+  "name": "senior-safesurf",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Free Chrome extension that keeps older adults safe online, with hybrid on-device/cloud AI via Firebase AI Logic.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "watch": "node build.mjs --watch",
+    "test": "vitest --run",
+    "deploy:firebase": "firebase deploy --only firestore:rules,remoteconfig --project hackathon-e2f2b"
+  },
+  "dependencies": {
+    "firebase": "13.3.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "vitest": "^5.1.0"
+  }
+}

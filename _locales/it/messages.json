@@ -4,7 +4,7 @@
         "description": "The name of the extension."
     },
     "extDesc": {
-        "message": "Un'esperienza di navigazione semplificata e sicura su misura per gli anziani. Include selezione rapida, blocchi e promemoria.",
+        "message": "Sicurezza gratuita per gli anziani: blocco di siti e parole, avvisi antitruffa e controllo IA ibrido sul dispositivo/cloud.",
         "description": "The description of the extension."
     },
     "view_dial": {
@@ -54,14 +54,6 @@
     "unlock_btn": {
         "message": "Sblocca",
         "description": "Unlock button text"
-    },
-    "limit_reached": {
-        "message": "Limite Raggiunto!",
-        "description": "Limit warning title"
-    },
-    "upgrade_pro_hint": {
-        "message": "Passa a PRO per blocchi illimitati",
-        "description": "PRO upgrade hint"
     },
     "add_current_page": {
         "message": "Blocca pagina/dominio corrente",
@@ -118,10 +110,6 @@
     "nav_appearance": {
         "message": "Aspetto",
         "description": "Sidebar appearance"
-    },
-    "nav_license": {
-        "message": "Licenza",
-        "description": "Sidebar license"
     },
     "nav_support": {
         "message": "Supporto & Feedback",
@@ -212,7 +200,7 @@
         "description": "Safety presets title"
     },
     "safety_presets_desc": {
-        "message": "Proteggiti istantaneamente da truffe comuni e parole fraudolente. Nota: Gli utenti gratuiti sono limitati ai primi 3 termini.",
+        "message": "Proteggi subito da truffe comuni e parole chiave fraudolente.",
         "description": "Safety presets description"
     },
     "btn_safety_en": {
@@ -222,14 +210,6 @@
     "btn_safety_it": {
         "message": "Italiano (Anti-Frode)",
         "description": "Italian safety btn"
-    },
-    "btn_load_pro_shield": {
-        "message": "Carica Preset Pro-Shield",
-        "description": "Load pro presets btn"
-    },
-    "pro_shield_hint": {
-        "message": "Carica più di 100 parole chiave chirurgiche per rafforzare istantaneamente lo scudo.",
-        "description": "Pro shield hint"
     },
     "stop_word_placeholder": {
         "message": "Inserisci parola da bloccare",
@@ -248,48 +228,8 @@
         "description": "Clear all btn"
     },
     "settings_title": {
-        "message": "Impostazioni Estensione",
+        "message": "Impostazioni dell'estensione",
         "description": "Settings section title"
-    },
-    "license_status_title": {
-        "message": "Stato Licenza",
-        "description": "License status title"
-    },
-    "license_status_desc_free": {
-        "message": "Attualmente limitato a 3 regole di blocco. Passa a PRO per sbloccare la piena potenza.",
-        "description": "License free description"
-    },
-    "license_key_placeholder": {
-        "message": "Inserisci Chiave Licenza",
-        "description": "License input placeholder"
-    },
-    "btn_activate_pro": {
-        "message": "Attiva PRO",
-        "description": "Activate btn"
-    },
-    "get_pro_link": {
-        "message": "Non hai una chiave? Ottieni PRO a partire da $2.99",
-        "description": "Checkout link text"
-    },
-    "select_plan_title": {
-        "message": "🔓 Seleziona il tuo Piano",
-        "description": "Plan selection title"
-    },
-    "plan_monthly": {
-        "message": "Mensile",
-        "description": "Monthly plan"
-    },
-    "plan_yearly": {
-        "message": "Annuale",
-        "description": "Yearly plan"
-    },
-    "best_value_badge": {
-        "message": "MIGLIOR OFFERTA",
-        "description": "Best value badge"
-    },
-    "btn_select_plan": {
-        "message": "Seleziona",
-        "description": "Select plan button"
     },
     "security_settings_title": {
         "message": "Impostazioni Sicurezza",
@@ -383,33 +323,13 @@
         "message": "Successivo",
         "description": "Next button"
     },
-    "table_max_targets": {
-        "message": "Target Massimi",
-        "description": "Table row"
-    },
-    "table_unlimited": {
-        "message": "Illimitati",
-        "description": "Table value"
-    },
-    "table_parental_presets": {
-        "message": "Preset Parentali",
-        "description": "Table row"
-    },
     "table_10_langs": {
         "message": "10 Lingue",
         "description": "Table value"
     },
-    "table_rule_sync": {
-        "message": "Sincronizzazione Regole",
-        "description": "Table row"
-    },
     "table_included": {
         "message": "Inclusa",
         "description": "Table value"
-    },
-    "table_future_updates": {
-        "message": "Aggiornamenti Futuri",
-        "description": "Table row"
     },
     "advanced_config_title": {
         "message": "Configurazione Avanzata",
@@ -475,32 +395,6 @@
         "message": "Invia Messaggio",
         "description": "Submit support button"
     },
-    "alert_enter_license": {
-        "message": "Inserisci una chiave di licenza.",
-        "description": "Alert"
-    },
-    "alert_pro_active": {
-        "message": "Successo! La tua licenza Pro è ora attiva.",
-        "description": "Alert"
-    },
-    "alert_license_verified": {
-        "message": "Successo! Licenza verificata.\nScadenza: $EXPIRY$",
-        "description": "Alert",
-        "placeholders": {
-            "expiry": {
-                "content": "$1"
-            }
-        }
-    },
-    "alert_license_error": {
-        "message": "Errore Licenza: $MSG$",
-        "description": "Alert",
-        "placeholders": {
-            "msg": {
-                "content": "$1"
-            }
-        }
-    },
     "alert_connection_error": {
         "message": "Errore di connessione: $MSG$\nAssicurati di essere connesso a internet.",
         "description": "Alert",
@@ -512,10 +406,6 @@
     },
     "alert_already_in_list": {
         "message": "Già in elenco.",
-        "description": "Alert"
-    },
-    "alert_limit_reached": {
-        "message": "Limite raggiunto! Passa a PRO per aggiungere altro.",
         "description": "Alert"
     },
     "confirm_remove_password": {
@@ -538,15 +428,6 @@
         "message": "Password salvata con successo!",
         "description": "Alert"
     },
-    "alert_import_limit": {
-        "message": "Avviso: Come utente FREE, solo i primi 3 elementi verranno importati. Passa a PRO per importare tutti i $TOTAL$ elementi.",
-        "description": "Alert",
-        "placeholders": {
-            "total": {
-                "content": "$1"
-            }
-        }
-    },
     "alert_import_success": {
         "message": "Importazione riuscita!",
         "description": "Alert"
@@ -561,14 +442,6 @@
     },
     "alert_wrong_password": {
         "message": "Password errata.",
-        "description": "Alert"
-    },
-    "alert_pro_random_bg": {
-        "message": "Funzione PRO: Gli sfondi casuali per categoria sono disponibili solo per i membri PRO.",
-        "description": "Alert"
-    },
-    "alert_pro_select_bg": {
-        "message": "Funzione PRO: Puoi selezionare solo la prima immagine per categoria come utente FREE. Passa a PRO per sbloccare centinaia di sfondi di alta qualità!",
         "description": "Alert"
     },
     "confirm_add_safety": {
@@ -602,10 +475,6 @@
             }
         }
     },
-    "alert_safety_limit": {
-        "message": "Versione Gratuita: Solo i primi 3 termini di sicurezza sono stati aggiunti. Passa a PRO per aggiungerli tutti!",
-        "description": "Alert"
-    },
     "alert_pack_loaded": {
         "message": "Pacchetto $PACK$ caricato con successo!",
         "description": "Alert",
@@ -614,14 +483,6 @@
                 "content": "$1"
             }
         }
-    },
-    "alert_stopword_limit": {
-        "message": "Limite raggiunto! Passa a PRO per aggiungere altre parole chiave.",
-        "description": "Alert"
-    },
-    "alert_pro_shield_required": {
-        "message": "I preset Pro-Shield richiedono una licenza PRO. Passa a PRO per sbloccare più di 1000 parole chiave!",
-        "description": "Alert"
     },
     "alert_presets_loaded": {
         "message": "Caricati con successo $COUNT$ preset chirurgici per $LANG$.",
@@ -643,15 +504,6 @@
         "message": "Cancellare tutte le parole bloccate? Questo indebolirà lo scudo.",
         "description": "Confirm"
     },
-    "alert_license_expired": {
-        "message": "La tua licenza Pro è scaduta o non è valida.\nMotivo: $REASON$\n\nControlla il tuo abbonamento.",
-        "description": "Alert",
-        "placeholders": {
-            "reason": {
-                "content": "$1"
-            }
-        }
-    },
     "btn_sending": {
         "message": "Invio in corso...",
         "description": "Button state"
@@ -664,21 +516,9 @@
         "message": "Sei sicuro? Questo aggiungerà questi siti affidabili alla tua selezione rapida.",
         "description": "Confirm"
     },
-    "alert_bookmark_limit": {
-        "message": "Limite raggiunto! Passa a PRO per aggiungere più di 3 segnalibri.",
-        "description": "Alert"
-    },
     "no_dial_sites": {
         "message": "Ancora nessun sito nella selezione rapida.",
         "description": "Empty state"
-    },
-    "btn_verifying": {
-        "message": "Verifica in corso...",
-        "description": "Button state"
-    },
-    "btn_check_status": {
-        "message": "Verifica Stato",
-        "description": "Button state"
     },
     "manage_blocks_label": {
         "message": "Gestisci blocchi",
@@ -734,11 +574,11 @@
         "description": "Timer state"
     },
     "nav_settings_license": {
-        "message": "Impostazioni/Licenza",
+        "message": "Impostazioni",
         "description": "Sidebar label"
     },
     "settings_license_title": {
-        "message": "Impostazioni Estensione e Licenza",
+        "message": "Impostazioni dell'estensione",
         "description": "Section title"
     },
     "language_title": {
@@ -756,5 +596,209 @@
     "alert_language_saved": {
         "message": "Lingua aggiornata. Ricarica per l'effetto completo.",
         "description": "Alert"
+    },
+    "nav_settings": {
+        "message": "Impostazioni",
+        "description": "nav settings"
+    },
+    "nav_ai": {
+        "message": "Protezione IA",
+        "description": "nav ai"
+    },
+    "nav_family": {
+        "message": "Famiglia",
+        "description": "nav family"
+    },
+    "btn_load_presets": {
+        "message": "Carica preset",
+        "description": "btn load presets"
+    },
+    "presets_hint": {
+        "message": "Carica oltre 100 parole chiave per rafforzare subito lo scudo.",
+        "description": "presets hint"
+    },
+    "support_mail_opened": {
+        "message": "Si è aperta la tua app di posta con il messaggio. Premi Invia lì.",
+        "description": "support mail opened"
+    },
+    "ai_title": {
+        "message": "Protezione IA",
+        "description": "ai title"
+    },
+    "ai_intro": {
+        "message": "Le parole chiave da sole non distinguono una pagina di museo sulle armi da un'armeria. L'IA legge la pagina intorno alla parola bloccata e riconosce truffe che nessun elenco di parole trova. Funziona prima su questo computer.",
+        "description": "ai intro"
+    },
+    "ai_mode_title": {
+        "message": "Dove funziona l'IA",
+        "description": "ai mode title"
+    },
+    "ai_mode_off": {
+        "message": "Spenta (solo parole chiave)",
+        "description": "ai mode off"
+    },
+    "ai_mode_local": {
+        "message": "🔒 Solo su questo computer",
+        "description": "ai mode local"
+    },
+    "ai_mode_hybrid": {
+        "message": "🔒 + ☁️ Ibrida",
+        "description": "ai mode hybrid"
+    },
+    "ai_mode_cloud": {
+        "message": "☁️ Solo cloud",
+        "description": "ai mode cloud"
+    },
+    "ai_device_title": {
+        "message": "IA sul dispositivo (Gemini Nano)",
+        "description": "ai device title"
+    },
+    "ai_download_btn": {
+        "message": "Scarica l'IA sul dispositivo",
+        "description": "ai download btn"
+    },
+    "ai_cloud_title": {
+        "message": "Controllo nel cloud (Gemini tramite Firebase)",
+        "description": "ai cloud title"
+    },
+    "ai_consent_name": {
+        "message": "Consenti i controlli nel cloud",
+        "description": "ai consent name"
+    },
+    "ai_consent_desc": {
+        "message": "Viene inviato solo un piccolo estratto: nome del sito, titolo, intestazioni e circa 600 caratteri intorno alla parola. Mai password, contenuti dei moduli o l'indirizzo completo. Usato quando l'IA sul dispositivo manca o non è sicura.",
+        "description": "ai consent desc"
+    },
+    "ai_tuning_title": {
+        "message": "Regolazioni",
+        "description": "ai tuning title"
+    },
+    "ai_sensitivity_name": {
+        "message": "Sensibilità",
+        "description": "ai sensitivity name"
+    },
+    "ai_sensitivity_desc": {
+        "message": "Rigida mantiene più blocchi e avvisa prima. Rilassata lascia che l'IA sblocchi più menzioni innocue.",
+        "description": "ai sensitivity desc"
+    },
+    "ai_scope_name": {
+        "message": "Controllo antitruffa su pagine di accesso e pagamento",
+        "description": "ai scope name"
+    },
+    "ai_scope_desc": {
+        "message": "Controlla anche le pagine che chiedono password o numero di carta, anche senza parole bloccate, e avvisa delle probabili truffe.",
+        "description": "ai scope desc"
+    },
+    "ai_rc_name": {
+        "message": "Usa Firebase Remote Config",
+        "description": "ai rc name"
+    },
+    "ai_rc_desc": {
+        "message": "Facoltativo. Permette ai manutentori di regolare il modello cloud, la soglia di escalation e il prompt, o spegnere il cloud, senza aggiornare l'estensione.",
+        "description": "ai rc desc"
+    },
+    "ai_try_title": {
+        "message": "Provalo",
+        "description": "ai try title"
+    },
+    "ai_try_desc": {
+        "message": "Incolla del testo di una pagina per vedere cosa decide l'IA e dove ha funzionato.",
+        "description": "ai try desc"
+    },
+    "ai_try_btn": {
+        "message": "Controlla il testo",
+        "description": "ai try btn"
+    },
+    "family_title": {
+        "message": "Famiglia",
+        "description": "family title"
+    },
+    "family_intro": {
+        "message": "Vedi cosa ha fermato Senior SafeSurf questa settimana e ottieni un riepilogo semplice. Puoi condividerlo con un familiare tramite un account Firebase.",
+        "description": "family intro"
+    },
+    "family_log_title": {
+        "message": "Questa settimana",
+        "description": "family log title"
+    },
+    "family_summary_btn": {
+        "message": "Scrivi riepilogo",
+        "description": "family summary btn"
+    },
+    "family_clear_btn": {
+        "message": "Svuota registro",
+        "description": "family clear btn"
+    },
+    "family_sync_title": {
+        "message": "Condividi con la famiglia (facoltativo)",
+        "description": "family sync title"
+    },
+    "family_sync_desc": {
+        "message": "Crea un account di famiglia. Accedi con esso su questo computer e sul Chrome del familiare (con Senior SafeSurf installato). Si condividono solo ora, nome del sito, tipo e motore di ogni blocco o avviso. Mai il testo delle pagine.",
+        "description": "family sync desc"
+    },
+    "family_signin_btn": {
+        "message": "Accedi",
+        "description": "family signin btn"
+    },
+    "family_create_btn": {
+        "message": "Crea account",
+        "description": "family create btn"
+    },
+    "family_sync_name": {
+        "message": "Condividi blocchi e avvisi",
+        "description": "family sync name"
+    },
+    "family_signout_btn": {
+        "message": "Esci",
+        "description": "family signout btn"
+    },
+    "ai_check_btn": {
+        "message": "🛡 Questa pagina è sicura?",
+        "description": "ai check btn"
+    },
+    "ai_label": {
+        "message": "IA",
+        "description": "ai label"
+    },
+    "ai_checking": {
+        "message": "Controllo in corso…",
+        "description": "ai checking"
+    },
+    "verdict_allow": {
+        "message": "✅ Questa pagina sembra sicura",
+        "description": "verdict allow"
+    },
+    "verdict_warn": {
+        "message": "⚠️ Attenzione a questa pagina",
+        "description": "verdict warn"
+    },
+    "verdict_block": {
+        "message": "⛔ Questa pagina non è sicura",
+        "description": "verdict block"
+    },
+    "verdict_unknown": {
+        "message": "ℹ️ Impossibile controllare questa pagina",
+        "description": "verdict unknown"
+    },
+    "engine_device": {
+        "message": "Controllato su questo computer (Gemini Nano). Nulla è stato inviato online.",
+        "description": "engine device"
+    },
+    "engine_cloud": {
+        "message": "Controllato nel cloud (Gemini tramite Firebase).",
+        "description": "engine cloud"
+    },
+    "engine_keywords": {
+        "message": "Controllato con il tuo elenco di parole.",
+        "description": "engine keywords"
+    },
+    "engine_escalated": {
+        "message": "(ricontrollato nel cloud)",
+        "description": "engine escalated"
+    },
+    "ai_restricted": {
+        "message": "Chrome non permette di controllare questo tipo di pagina.",
+        "description": "ai restricted"
     }
 }

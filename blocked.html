@@ -298,6 +298,13 @@
             z-index: -1;
         }
 
+        .ai-reason {
+            margin: 0 auto 24px; max-width: 520px; padding: 16px 20px; border-radius: 16px;
+            background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.15);
+            font-size: 18px; line-height: 1.5; color: #f8fafc; backdrop-filter: blur(8px);
+        }
+        .ai-engine { margin-top: 8px; font-size: 13px; color: rgba(248, 250, 252, 0.7); }
+
         .particle {
             position: absolute;
             background: #fff;
@@ -340,6 +347,11 @@
         <h1>Stay the course.</h1>
         <p class="message">This path is currently protected to safeguard your focus. Take a deep breath.</p>
 
+        <div id="aiReason" class="ai-reason hidden">
+            <div id="aiReasonText"></div>
+            <div id="aiEngine" class="ai-engine"></div>
+        </div>
+
         <div class="domain-box">
             <span class="domain-label">Protected</span>
             <span class="domain-name" id="blockedDomain">...</span>
@@ -355,14 +367,13 @@
         <div class="brand"
             style="font-family: 'Outfit', sans-serif; text-transform: none; font-weight: 400; font-size: 16px;">
             SafeNet<span> Senior</span>
-            <span id="debugKeyword"
-                style="font-size: 10px; color: rgba(255,255,255,0.3); margin-left: 12px; font-weight: 400;"></span>
         </div>
         <div id="authorAttribution" class="attribution hidden">
             Captured by <a id="authorLink" href="#" target="_blank">Author</a> on Pexels
         </div>
     </div>
 
+    <script src="js/security.js"></script>
     <script src="blocked.js"></script>
 </body>
 

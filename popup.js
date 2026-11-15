@@ -17,14 +17,12 @@ const unlockBtn = document.getElementById('unlockBtn');
 
 let blacklist = [];
 let isUnlocked = false;
-let isPro = false;
 let pendingDomain = null;
 
 // Load initial state on popup open
 document.addEventListener('DOMContentLoaded', async () => {
-    const result = await chrome.storage.local.get(['password', 'blacklist', 'isPro', 'lastView', 'showSeniorOverlay', 'themeMode']);
+    const result = await chrome.storage.local.get(['password', 'blacklist', 'lastView', 'showSeniorOverlay', 'themeMode']);
     blacklist = result.blacklist || [];
-    isPro = result.isPro || false;
 
     // Apply theme
     applyTheme(result.themeMode || 'dark');
@@ -56,10 +54,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     chrome.storage.onChanged.addListener((changes) => {
         if (changes.blacklist) {
             blacklist = changes.blacklist.newValue || [];
-            updateSassUI();
-        }
-        if (changes.isPro) {
-            isPro = changes.isPro.newValue || false;
             updateSassUI();
         }
     });
@@ -117,54 +111,9 @@ async function captureCurrentTab() {
     addDomain(); // This will trigger the "Confirm?" state
 }
 
-async function updateSassUI() {
-    const tierBadge = document.getElementById('tierBadge');
-    const upgradeSection = document.getElementById('upgradeSection');
-
-    // Elements for view-specific counts
+function updateSassUI() {
+    // Everything is free: no tiers, no limits. Just show how many rules are active.
     const blockCountEl = document.getElementById('blockCount');
-    const blockLimitEl = document.getElementById('blockLimit');
-    const dialCountEl = document.getElementById('dialCount');
-    const dialLimitEl = document.getElementById('dialLimit');
-    const dialStatusEl = document.getElementById('dialStatus');
-
-    // Get current state
-    const res = await chrome.storage.local.get(['speedDialer', 'isPro']);
-    const dialer = Array.isArray(res.speedDialer) ? res.speedDialer : [];
-    const filledSlots = dialer.filter(item => item && item.url).length;
-
-    if (isPro) {
-        tierBadge.textContent = 'PRO';
-        tierBadge.className = 'tier-badge pro';
-
-        if (blockLimitEl) blockLimitEl.textContent = '∞';
-        if (upgradeSection) upgradeSection.classList.add('hidden');
-
-        // Hide bookmark status for PRO
-        if (dialStatusEl) dialStatusEl.style.display = 'none';
-    } else {
-        tierBadge.textContent = 'FREE';
-        tierBadge.className = 'tier-badge free';
-
-        if (blockLimitEl) blockLimitEl.textContent = '3';
-
-        if (blacklist.length >= 3) {
-            if (upgradeSection) upgradeSection.classList.remove('hidden');
-        } else {
-            if (upgradeSection) upgradeSection.classList.add('hidden');
-        }
-
-        // Show bookmark status for FREE
-        if (dialStatusEl) {
-            dialStatusEl.style.display = 'block';
-            const remainingEl = document.getElementById('bookmarksRemaining');
-            if (remainingEl) {
-                const remaining = 3 - filledSlots;
-                remainingEl.textContent = remaining > 0 ? remaining : 0;
-            }
-        }
-    }
-
     if (blockCountEl) blockCountEl.textContent = blacklist.length;
 }
 
@@ -180,7 +129,7 @@ const handleSavePassword = async () => {
         return;
     }
 
-    await chrome.storage.local.set({ password: pass });
+    await chrome.storage.local.set({ password: await SafeSurfSecurity.toStored(pass) });
     isUnlocked = true;
     showView('app');
     domainInput.focus(); // Focus main input after setup
@@ -194,9 +143,8 @@ confirmPasswordInput.addEventListener('keypress', (e) => { if (e.key === 'Enter'
 // Unlock Logic
 const handleUnlock = async () => {
     const inputPass = unlockPasswordInput.value.trim();
-    const result = await chrome.storage.local.get(['password']);
 
-    if (inputPass === result.password) {
+    if (await SafeSurfSecurity.check(inputPass)) {
         isUnlocked = true;
         showView('app');
         captureCurrentTab(); // Capture tab after manual unlock
@@ -259,12 +207,6 @@ domainInput.addEventListener('input', () => {
 
 async function addDomain() {
     if (!isUnlocked) return;
-
-    if (!isPro && blacklist.length >= 3) {
-        showStatus(i18nCustom.t("alert_limit_reached"), 'warning');
-        updateSassUI();
-        return;
-    }
 
     const domain = domainInput.value.trim().toLowerCase();
 
@@ -340,7 +282,6 @@ const openOptions = (section = 'general') => {
 };
 
 document.getElementById('settingsBtn').addEventListener('click', () => openOptions('domains'));
-document.getElementById('openOptions').addEventListener('click', () => openOptions('general'));
 
 function showStatus(message, type = 'success') {
     // UI status element removed as per user request. 
@@ -349,7 +290,7 @@ function showStatus(message, type = 'success') {
 }
 
 async function loadSpeedDialer() {
-    const res = await chrome.storage.local.get(['speedDialer', 'dialerEnabled', 'isPro']);
+    const res = await chrome.storage.local.get(['speedDialer', 'dialerEnabled']);
     const container = document.getElementById('speedDialerContainer');
     const section = container?.closest('.speed-dialer');
     if (!container) return;
@@ -361,7 +302,6 @@ async function loadSpeedDialer() {
         if (section) section.style.display = 'block';
     }
 
-    const isProUser = res.isPro || false;
     let dialer = res.speedDialer || [];
 
     // Ensure dialer is an array
@@ -370,14 +310,13 @@ async function loadSpeedDialer() {
     container.innerHTML = '';
 
     // Always show at least 9 slots for layout consistency
-    let slotCount = isProUser ? Math.max(9, dialer.length + 1) : 9;
+    let slotCount = Math.max(9, dialer.length + 1);
 
     for (let i = 0; i < slotCount; i++) {
         const item = dialer[i];
         const btn = document.createElement('button');
 
-        // Determine if slot is locked for free users (indices 3-8)
-        const isLockedForFree = !isProUser && i >= 3;
+        const isLockedForFree = false; // all slots are free
 
         btn.style.cssText = `
             background: ${isLockedForFree ? 'rgba(15, 23, 42, 0.4)' : 'rgba(30, 41, 59, 0.5)'};
@@ -416,13 +355,6 @@ async function loadSpeedDialer() {
             }
             btn.onclick = () => {
                 chrome.tabs.create({ url: item.url });
-            };
-        } else if (isLockedForFree) {
-            // Locked Slot for Free Users
-            btn.innerHTML = `<span style="font-size: 18px; color: var(--pro);">PRO</span>`;
-            btn.onclick = () => {
-                showStatus("Upgrade to PRO for more slots", "warning");
-                openOptions('general');
             };
         } else {
             // Available Empty Slot

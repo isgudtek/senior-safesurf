@@ -278,6 +278,19 @@
             border-color: rgba(255, 255, 255, 0.2);
         }
 
+        .ai-check { margin: 0 0 14px; display: flex; flex-direction: column; gap: 8px; }
+        .ai-check-btn { width: 100%; padding: 14px; font-size: 17px; font-weight: 800; border-radius: 14px; border: 0; cursor: pointer;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #fff; }
+        .ai-check-btn:disabled { opacity: .7; cursor: progress; }
+        .ai-check-result { padding: 14px; border-radius: 14px; font-size: 15px; line-height: 1.45; border: 1px solid var(--border); background: var(--bg-accent); color: var(--text-main); }
+        .ai-check-result.allow { border-color: #10b981; }
+        .ai-check-result.warn { border-color: #f59e0b; background: rgba(245, 158, 11, .12); }
+        .ai-check-result.block { border-color: #ef4444; background: rgba(239, 68, 68, .12); }
+        .ai-check-result .verdict { font-size: 18px; font-weight: 800; margin-bottom: 4px; }
+        .ai-check-result .engine { font-size: 12px; color: var(--text-muted); margin-top: 6px; }
+        .ai-mode-row { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--text-muted); }
+        .ai-mode-row select { background: var(--bg-accent); color: var(--text-main); border: 1px solid var(--border); border-radius: 8px; padding: 4px 8px; font-size: 12px; }
+
         .tier-badge {
             font-size: 11px;
             font-weight: 700;
@@ -629,7 +642,7 @@
         </svg>
     </div>
 
-    <div class="version-tag">Senior SafeSurf Pro v1.3</div>
+    <div class="version-tag">Senior SafeSurf v2.0</div>
     <div class="header">
         <div style="display: flex; justify-content: center; align-items: center; gap: 8px;">
             <h1 data-i18n="extName">
@@ -640,7 +653,6 @@
                 </svg>
                 Senior SafeSurf
             </h1>
-            <span id="tierBadge" class="tier-badge free">FREE</span>
         </div>
     </div>
 
@@ -680,25 +692,31 @@
             </div>
         </nav>
 
+        <!-- AI: "Is this page safe?" (always visible) -->
+        <div class="ai-check">
+            <button id="aiCheckBtn" class="ai-check-btn" data-i18n="ai_check_btn">🛡 Is this page safe?</button>
+            <div id="aiCheckResult" class="ai-check-result hidden" aria-live="polite"></div>
+            <div class="ai-mode-row">
+                <span data-i18n="ai_label">AI</span>
+                <select id="aiModeSelect" aria-label="AI mode">
+                    <option value="off">Off</option>
+                    <option value="local">🔒 Local</option>
+                    <option value="hybrid">🔒+☁️ Hybrid</option>
+                    <option value="cloud">☁️ Cloud</option>
+                </select>
+            </div>
+        </div>
+
         <!-- Section 1: Speed Dial -->
         <div id="view-dial" class="view-section active">
             <div id="speedDialerContainer" class="dialer-grid">
                 <!-- Buttons injected by JS -->
             </div>
-            <p id="dialStatus" class="view-status"
-                style="margin-top: 12px; text-align: center; font-size: 11px; color: var(--text-muted); padding-bottom: 8px;">
-                bookmarks left <span id="bookmarksRemaining">3</span>/3
-            </p>
         </div>
 
         <!-- Section 2: Blocker -->
         <div id="view-block" class="view-section">
-            <p id="blockStatus" class="view-status">Manage blocks <span id="blockCount" class="count">0</span> / <span
-                    id="blockLimit">3</span></p>
-            <div id="upgradeSection" class="upgrade-section hidden">
-                <p><strong data-i18n="limit_reached">Limit Reached!</strong></p>
-                <span id="openOptions" data-i18n="upgrade_pro_hint">Upgrade to PRO for unlimited blocks</span>
-            </div>
+            <p id="blockStatus" class="view-status">Active blocks: <span id="blockCount" class="count">0</span></p>
 
             <label id="blockLabel"
                 style="font-size: 14px; font-weight: 600; color: var(--text-main); margin-bottom: 8px; display: block;"
@@ -728,7 +746,9 @@
     </div>
 
     <script src="js/i18n.js"></script>
+    <script src="js/security.js"></script>
     <script src="popup.js"></script>
+    <script src="popup_ai.js"></script>
 </body>
 
 </html>

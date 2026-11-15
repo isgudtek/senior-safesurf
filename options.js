@@ -1,11 +1,9 @@
-let isPro = false;
 let blacklist = [];
 let stopWords = [];
 let hasPassword = false;
 let isUnlockedInSession = false;
 const PEXELS_API_KEY = 'IQkbu7hsbNHooEjFvGwQUm0Gqmdcf2Pz30HPsTD2vu5AcwJEkIoOgS6J';
-const LICENSE_API_URL = 'https://gudtek.lol/chrome/api.php';
-const SUPPORT_API_URL = 'https://gudtek.lol/chrome/support.php';
+const SUPPORT_EMAIL = 'tazzcderq@gmail.com';
 let selectedBgUrl = '';
 let currentCategory = 'abstract';
 let currentPage = 1;
@@ -13,21 +11,14 @@ let currentMasterState = true;
 
 document.addEventListener('DOMContentLoaded', async () => {
     const result = await chrome.storage.local.get([
-        'isPro', 'blacklist', 'password', 'customBackground',
+        'blacklist', 'password', 'customBackground',
         'enableBypass', 'enableContentFilter', 'stopWords', 'masterEnabled',
         'dialerEnabled', 'blockingEnabled', 'parentalEnabled', 'showSeniorOverlay'
     ]);
-    isPro = result.isPro || false;
     blacklist = result.blacklist || [];
     stopWords = result.stopWords || [];
     hasPassword = !!result.password;
     selectedBgUrl = result.customBackground || '';
-
-    // Safety reset for FREE users who might have smuggled a 'random' setting
-    if (!isPro && selectedBgUrl.startsWith('random:')) {
-        selectedBgUrl = '';
-        await chrome.storage.local.set({ customBackground: '' });
-    }
 
     const bypassToggle = document.getElementById('bypassToggle');
     if (bypassToggle) {
@@ -36,8 +27,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             await chrome.storage.local.set({ enableBypass: bypassToggle.checked });
         });
     }
-
-    updateUI(isPro);
 
     currentMasterState = result.masterEnabled !== false;
 
@@ -106,9 +95,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // Auto-ping removed as per user request. Validation is now manual only.
-    // if (isPro) { validateLicense(); }
-
     renderOptionsList();
     setupNavigation();
     setupSecurityUI();
@@ -147,72 +133,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         domainInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter' && addRuleBtn) addRuleBtn.click();
         });
-    }
-
-    // License Activation
-    const activateBtn = document.getElementById('activateBtn');
-    if (activateBtn) activateBtn.addEventListener('click', async () => {
-        const input = document.getElementById('licenseInput');
-        if (!input) return;
-
-        let key = input.value.trim();
-
-        // Manual Validation Trigger
-        // If the user already has a key and just clicks Activate (e.g. to re-verify), use the stored key if input is empty
-        if (!key && isPro) {
-            const stored = await chrome.storage.local.get(['licenseKey']);
-            if (stored.licenseKey) key = stored.licenseKey;
-        }
-
-        if (!key) {
-            alert(i18nCustom.t("alert_enter_license"));
-            return;
-        }
-
-        if (key === 'PRO-2026') {
-            await chrome.storage.local.set({
-                isPro: true,
-                licenseKey: key,
-                lastLicenseCheck: Date.now()
-            });
-            isPro = true;
-            updateUI(true);
-            alert(i18nCustom.t("alert_pro_active"));
-        } else {
-            // Try validating against API for real keys
-            activateBtn.textContent = i18nCustom.t("btn_verifying");
-            activateBtn.disabled = true;
-
-            try {
-                // Force validate (bypass cache)
-                const response = await fetch(`${LICENSE_API_URL}?action=validate&key=${key}`);
-                const data = await response.json();
-
-                if (data.success && data.valid) {
-                    await chrome.storage.local.set({
-                        isPro: true,
-                        licenseKey: key,
-                        lastLicenseCheck: Date.now()
-                    });
-                    isPro = true;
-                    updateUI(true);
-                    alert(i18nCustom.t("alert_license_verified", [data.expires_at || 'Never']));
-                } else {
-                    alert(i18nCustom.t("alert_license_error", [data.message || 'Invalid key']));
-                }
-            } catch (e) {
-                console.error("[License] Verification Error:", e);
-                alert(i18nCustom.t("alert_connection_error", [e.message]));
-            } finally {
-                activateBtn.textContent = isPro ? i18nCustom.t("btn_check_status") : i18nCustom.t("btn_activate_pro");
-                activateBtn.disabled = false;
-            }
-        }
-    });
-
-    // Update button text if already pro
-    if (isPro) {
-        if (activateBtn) activateBtn.textContent = i18nCustom.t("btn_check_status");
     }
 
     // Password Update/Set
@@ -259,7 +179,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const newLang = langSelect.value;
             await chrome.storage.local.set({ appLanguage: newLang });
             // Load the new language messages
-            if (window.i18nCustom) {
+            if (typeof i18nCustom !== 'undefined') {
                 await i18nCustom.load(newLang);
             }
             // Apply translations immediately
@@ -308,50 +228,6 @@ function setupNavigation() {
     const initialTab = hash || savedTab || 'instructions';
     switchTab(initialTab);
 
-}
-
-function updateUI(isPro) {
-    const tierBadge = document.getElementById('tierBadge');
-    const licenseSection = document.getElementById('licenseSection');
-    const freeComparisonTable = document.getElementById('freeComparisonTable');
-
-    if (tierBadge) {
-        tierBadge.textContent = isPro ? 'PRO' : 'FREE';
-        tierBadge.className = isPro ? 'status-badge pro' : 'status-badge free';
-    }
-
-    if (isPro) {
-        if (licenseSection) {
-            licenseSection.innerHTML = '<p style="color: #4ade80;">✓ Your license is active. Unlimited blocking enabled.</p>';
-        }
-        if (freeComparisonTable) {
-            freeComparisonTable.style.display = 'none';
-        }
-    } else {
-        if (freeComparisonTable) {
-            freeComparisonTable.style.display = 'block';
-        }
-    }
-    // License Detail Sync
-    const detailsEl = document.getElementById('licenseDetails');
-    if (detailsEl) {
-        if (isPro) {
-            chrome.storage.local.get(['licenseKey', 'lastLicenseCheck'], async (data) => {
-                try {
-                    const response = await fetch(`${LICENSE_API_URL}?action=validate&key=${data.licenseKey}`);
-                    const result = await response.json();
-                    if (result.success && result.valid) {
-                        const expiryStr = result.expires_at ? new Date(result.expires_at).toLocaleDateString() : 'Never';
-                        detailsEl.innerHTML = `<strong>Plan</strong>: PRO <span style="margin-left: 10px;"><strong>Expires</strong>: ${expiryStr}</span>`;
-                    }
-                } catch (e) {
-                    detailsEl.textContent = "Syncing license details...";
-                }
-            });
-        } else {
-            detailsEl.textContent = "";
-        }
-    }
 }
 
 // Rule Description Generator
@@ -439,11 +315,6 @@ async function handleAddDomain() {
         alert(i18nCustom.t("alert_already_in_list"));
         return;
     }
-    if (!isPro && blacklist.length >= 3) {
-        alert(i18nCustom.t("alert_limit_reached"));
-        return;
-    }
-
     blacklist.push(domain);
     await chrome.storage.local.set({ blacklist });
     chrome.runtime.sendMessage({ command: "updateRules" });
@@ -535,12 +406,9 @@ async function handleUpdatePassword() {
         return;
     }
 
-    if (hasPassword) {
-        const result = await chrome.storage.local.get(['password']);
-        if (currentPass !== result.password) {
-            alert(i18nCustom.t("alert_curr_pass_wrong"));
-            return;
-        }
+    if (hasPassword && !(await SafeSurfSecurity.check(currentPass))) {
+        alert(i18nCustom.t("alert_curr_pass_wrong"));
+        return;
     }
 
     if (newPass === '') {
@@ -550,7 +418,7 @@ async function handleUpdatePassword() {
         hasPassword = false;
         alert(i18nCustom.t("alert_pass_removed"));
     } else {
-        await chrome.storage.local.set({ password: newPass });
+        await chrome.storage.local.set({ password: await SafeSurfSecurity.toStored(newPass) });
         hasPassword = true;
         alert(i18nCustom.t("alert_pass_saved"));
     }
@@ -595,23 +463,8 @@ function handleImport(e) {
                 throw new Error("Invalid format");
             }
 
-            let newBlacklist = data.blacklist;
-
-            // Enforce limit for Free users
-            if (!isPro && newBlacklist.length > 3) {
-                alert(i18nCustom.t("alert_import_limit", [newBlacklist.length.toString()]));
-                newBlacklist = newBlacklist.slice(0, 3);
-            }
-
-            // Deduplicate with existing items
-            const combined = [...new Set([...blacklist, ...newBlacklist])];
-
-            // Re-apply limit if the combined result exceeds it (for free users)
-            if (!isPro && combined.length > 3) {
-                blacklist = combined.slice(0, 3);
-            } else {
-                blacklist = combined;
-            }
+            const newBlacklist = data.blacklist.filter((x) => typeof x === 'string' && x.trim());
+            blacklist = [...new Set([...blacklist, ...newBlacklist])];
 
             await chrome.storage.local.set({ blacklist });
             chrome.runtime.sendMessage({ command: "updateRules" });
@@ -633,10 +486,6 @@ chrome.storage.onChanged.addListener((changes) => {
         blacklist = changes.blacklist.newValue || [];
         renderOptionsList();
     }
-    if (changes.isPro) {
-        isPro = changes.isPro.newValue || false;
-        updateUI(isPro);
-    }
     if (changes.password) {
         hasPassword = !!changes.password.newValue; // Handle undefined, null, or empty string
         setupSecurityUI();
@@ -645,9 +494,8 @@ chrome.storage.onChanged.addListener((changes) => {
 
 async function checkSecurity() {
     if (!hasPassword || isUnlockedInSession) return true;
-    const result = await chrome.storage.local.get(['password']);
     const pass = prompt(i18nCustom.t("prompt_enter_password"));
-    if (pass === result.password) {
+    if (pass !== null && await SafeSurfSecurity.check(pass)) {
         isUnlockedInSession = true;
         return true;
     }
@@ -779,47 +627,27 @@ async function fetchBackgrounds(query, page = 1) {
             </div>
         `;
 
-        if (!isPro) {
-            randomItem.style.opacity = '0.5';
-            randomItem.innerHTML = `
-                <div style="position: absolute; top: 5px; right: 5px; z-index: 10;">🔒</div>
-                ${randomHtml}
-            `;
-            randomItem.addEventListener('click', () => {
-                alert(i18nCustom.t("alert_pro_random_bg"));
-            });
-        } else {
-            randomItem.innerHTML = randomHtml;
-            randomItem.addEventListener('click', async () => {
-                document.querySelectorAll('.bg-item').forEach(i => i.classList.remove('selected'));
-                randomItem.classList.add('selected');
-                selectedBgUrl = `random:${query}`;
-                await chrome.storage.local.set({ customBackground: selectedBgUrl });
-            });
-        }
+        randomItem.innerHTML = randomHtml;
+        randomItem.addEventListener('click', async () => {
+            document.querySelectorAll('.bg-item').forEach(i => i.classList.remove('selected'));
+            randomItem.classList.add('selected');
+            selectedBgUrl = `random:${query}`;
+            await chrome.storage.local.set({ customBackground: selectedBgUrl });
+        });
         grid.appendChild(randomItem);
 
         if (data.photos && data.photos.length > 0) {
             data.photos.forEach((photo, index) => {
                 const item = document.createElement('div');
-                const isFirstImage = index === 0 && page === 1;
-                const isLocked = !isPro && !isFirstImage;
-
-                // For free users with no saved bg viewing abstract page 1, show first image as selected
-                const isDefaultSelected = !isPro && !selectedBgUrl && query === 'abstract' && isFirstImage;
                 const isExplicitlySelected = selectedBgUrl === photo.src.large2x;
 
-                item.className = 'bg-item' + ((isDefaultSelected || isExplicitlySelected) ? ' selected' : '');
-                item.innerHTML = `
-                    ${isLocked ? '<div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 5; font-size: 20px;">🔒</div>' : ''}
-                    <img src="${photo.src.medium}" alt="${photo.alt}" style="${isLocked ? 'filter: blur(2px) grayscale(0.5);' : ''}">
-                `;
+                item.className = 'bg-item' + (isExplicitlySelected ? ' selected' : '');
+                const img = document.createElement('img');
+                img.src = photo.src.medium;
+                img.alt = photo.alt || '';
+                item.appendChild(img);
 
                 item.addEventListener('click', async () => {
-                    if (isLocked) {
-                        alert(i18nCustom.t("alert_pro_select_bg"));
-                        return;
-                    }
                     document.querySelectorAll('.bg-item').forEach(i => i.classList.remove('selected'));
                     item.classList.add('selected');
                     selectedBgUrl = photo.src.large2x;
@@ -877,21 +705,8 @@ async function loadSafetyPack(lang) {
     const words = SENIOR_SAFETY_KEYWORDS[lang];
     if (!words) return;
 
-    // Enforce limit logic (3 for free, unlimited for pro)
-    const limit = isPro ? words.length : 3;
-    const wordsToAdd = words.slice(0, limit);
-
-    // Merge and deduplicate
-    const combined = [...new Set([...stopWords, ...wordsToAdd])];
-
-    // Final safety check for free users in case the merge exceeded it
-    if (!isPro && combined.length > 3) {
-        stopWords = combined.slice(0, 3);
-        alert(i18nCustom.t("alert_safety_limit"));
-    } else {
-        stopWords = combined;
-        alert(i18nCustom.t("alert_pack_loaded", [(lang === 'en' ? 'English' : 'Italian')]));
-    }
+    stopWords = [...new Set([...stopWords, ...words])];
+    alert(i18nCustom.t("alert_pack_loaded", [(lang === 'en' ? 'English' : 'Italian')]));
 
     await chrome.storage.local.set({ stopWords });
     renderStopWords();
@@ -917,12 +732,6 @@ function setupParentalUI() {
         addBtn.addEventListener('click', async () => {
             if (!(await checkSecurity())) return;
 
-            // Free user limit check
-            if (!isPro && stopWords.length >= 3) {
-                alert(i18nCustom.t("alert_stopword_limit"));
-                return;
-            }
-
             const word = input.value.trim().toLowerCase();
             if (word && !stopWords.includes(word)) {
                 stopWords.push(word);
@@ -939,10 +748,6 @@ function setupParentalUI() {
     if (loadPresetsBtn && presetLangSelect) {
         console.log("[Parental] Attaching Load Presets listener");
         loadPresetsBtn.addEventListener('click', async () => {
-            if (!isPro) {
-                alert(i18nCustom.t("alert_pro_shield_required"));
-                return;
-            }
             if (!(await checkSecurity())) return;
             const lang = presetLangSelect.value;
             console.log(`[Parental] Loading presets for: ${lang}`);
@@ -955,7 +760,6 @@ function setupParentalUI() {
 
             let addedCount = 0;
             presets.forEach(word => {
-                if (word === 'tor') return; // Skip "tor" - causes over-blocking
                 if (!stopWords.includes(word)) {
                     stopWords.push(word);
                     addedCount++;
@@ -1010,44 +814,6 @@ function renderStopWords() {
     });
 }
 
-// License Validation Logic
-async function validateLicense() {
-    const { licenseKey, lastLicenseCheck } = await chrome.storage.local.get(['licenseKey', 'lastLicenseCheck']);
-
-    // 1. Check Cache (24h)
-    const now = Date.now();
-    const oneDay = 24 * 60 * 60 * 1000;
-
-    if (lastLicenseCheck && (now - lastLicenseCheck < oneDay)) {
-        console.log("[License] Using cached validation.");
-        return;
-    }
-
-    if (!licenseKey) {
-        return;
-    }
-
-    console.log("[License] Validating with server...");
-    try {
-        const response = await fetch(`${LICENSE_API_URL}?action=validate&key=${licenseKey}`);
-        const data = await response.json();
-
-        if (data.success && data.valid) {
-            await chrome.storage.local.set({ lastLicenseCheck: now });
-            console.log("[License] Verified active.");
-        } else {
-            console.warn("[License] Validation failed:", data.message);
-            await chrome.storage.local.set({ isPro: false });
-            isPro = false;
-            updateUI(false);
-            alert(i18nCustom.t("alert_license_expired", [data.message || 'Unknown']));
-        }
-
-    } catch (e) {
-        console.error("[License] Network error checking license:", e);
-    }
-}
-
 function setupSupportUI() {
     const form = document.getElementById('supportForm');
     const feedback = document.getElementById('supportFeedback');
@@ -1064,42 +830,15 @@ function setupSupportUI() {
 
         if (!message) return;
 
-        // Visual feedback
-        submitBtn.disabled = true;
-        submitBtn.textContent = i18nCustom.t("btn_sending");
-        feedback.classList.add('hidden');
-
-        try {
-            const response = await fetch(SUPPORT_API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ type, email, message })
-            });
-
-            const data = await response.json();
-
-            feedback.classList.remove('hidden');
-            if (data.success) {
-                feedback.style.background = 'rgba(74, 222, 128, 0.1)';
-                feedback.style.color = '#4ade80';
-                feedback.style.border = '1px solid rgba(74, 222, 128, 0.2)';
-                feedback.textContent = data.message;
-                form.reset();
-            } else {
-                feedback.style.background = 'rgba(239, 68, 68, 0.1)';
-                feedback.style.color = '#f87171';
-                feedback.style.border = '1px solid rgba(239, 68, 68, 0.2)';
-                feedback.textContent = data.message || 'Error sending message.';
-            }
-        } catch (err) {
-            feedback.classList.remove('hidden');
-            feedback.style.background = 'rgba(239, 68, 68, 0.1)';
-            feedback.style.color = '#f87171';
-            feedback.textContent = i18nCustom.t("error_connection");
-        } finally {
-            submitBtn.disabled = false;
-            submitBtn.textContent = i18nCustom.t("btn_send_message");
-        }
+        // Fully local: open the user's mail app with the message, nothing goes through a server.
+        const subject = `Senior SafeSurf: ${type}`;
+        const body = `${message}\n\nReply to: ${email || 'not provided'}\nVersion: ${chrome.runtime.getManifest().version}`;
+        window.location.href = `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        feedback.classList.remove('hidden');
+        feedback.style.background = 'rgba(74, 222, 128, 0.1)';
+        feedback.style.color = '#4ade80';
+        feedback.style.border = '1px solid rgba(74, 222, 128, 0.2)';
+        feedback.textContent = i18nCustom.t("support_mail_opened");
     });
 }
 
@@ -1132,15 +871,11 @@ async function loadPresetPack(packType) {
     const sites = SENIOR_PRESETS[packType];
     if (!sites) return;
 
-    const res = await chrome.storage.local.get(['speedDialer', 'isPro']);
+    const res = await chrome.storage.local.get(['speedDialer']);
     let dialer = res.speedDialer || [];
     if (!Array.isArray(dialer)) dialer = [];
 
-    // For FREE users, we can only add the first 3 (as per our limit logic)
-    // For PRO, we add all 6 (filling the first 6 slots)
-    const limit = res.isPro ? sites.length : 3;
-
-    for (let i = 0; i < limit; i++) {
+    for (let i = 0; i < sites.length; i++) {
         dialer[i] = sites[i];
     }
 
@@ -1159,19 +894,13 @@ async function setupDialerUI() {
             const url = document.getElementById('dialUrl').value.trim();
             if (!name || !url) return;
 
-            const res = await chrome.storage.local.get(['speedDialer', 'isPro']);
+            const res = await chrome.storage.local.get(['speedDialer']);
             let dialer = res.speedDialer || [];
             if (!Array.isArray(dialer)) dialer = [];
 
             // Simple index find (first empty slot)
             let index = dialer.findIndex(item => item === null || item === undefined);
             if (index === -1) index = dialer.length;
-
-            // Free user limit check (indices 0, 1, 2 only)
-            if (!res.isPro && index >= 3) {
-                alert(i18nCustom.t("alert_bookmark_limit"));
-                return;
-            }
 
             // Clean URL
             const cleanUrl = url.includes('://') ? url : 'https://' + url;

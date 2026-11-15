@@ -1,5 +1,4 @@
-// Constants
-const LICENSE_API_URL = 'https://gudtek.lol/chrome/api.php';
+importScripts('ai_router.js');
 
 // Initialize on install
 chrome.runtime.onInstalled.addListener(async (details) => {
@@ -7,38 +6,32 @@ chrome.runtime.onInstalled.addListener(async (details) => {
     if (!result.blacklist) {
         await chrome.storage.local.set({ blacklist: [] });
     }
+    await applyAiDefaults();
+    await removeLegacyLicenseData();
     await updateBlockingRules();
 
     if (details.reason === 'install') {
         chrome.tabs.create({ url: 'welcome.html' });
     }
-
-    // Schedule license check heartbeat (Daily)
-    await chrome.alarms.create('licenseCheck', {
-        periodInMinutes: 1440 // 24 hours
-    });
-
-    // Run once on install/update
-    performSilentLicenseCheck();
 });
 
 // Update rules on startup
 chrome.runtime.onStartup.addListener(() => {
     updateBlockingRules();
-    performSilentLicenseCheck();
 });
 
-// Alarm Listener
-if (chrome.alarms) {
-    chrome.alarms.onAlarm.addListener((alarm) => {
-        if (alarm.name === 'licenseCheck') {
-            performSilentLicenseCheck();
-        }
-    });
+// v1.3 had a paid tier. Everything is free now, so drop its leftover keys.
+async function removeLegacyLicenseData() {
+    await chrome.storage.local.remove(['isPro', 'licenseKey', 'lastLicenseCheck']);
+    if (chrome.alarms) await chrome.alarms.clear('licenseCheck');
 }
 
 // Listen for messages from popup and blocked page
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.target === 'offscreen') return false; // handled by the AI engine page
+
+    if (handleAiMessage(message, sender, sendResponse)) return true;
+
     if (message.command === "updateRules") {
         updateBlockingRules().then(() => {
             sendResponse({ status: "success" });
@@ -192,7 +185,7 @@ async function updateBlockingRules() {
                     action: {
                         type: "redirect",
                         redirect: {
-                            regexSubstitution: chrome.runtime.getURL('blocked.html') + '?url=\\1'
+                            regexSubstitution: blockedPageUrl + '?url=\\1'
                         }
                     },
                     condition: {
@@ -259,35 +252,3 @@ async function updateBlockingRules() {
     }
 }
 
-async function performSilentLicenseCheck() {
-    const result = await chrome.storage.local.get(['isPro', 'licenseKey', 'blacklist']);
-    if (!result.isPro || !result.licenseKey) return;
-
-    console.log("[SurgicalFocus] performing background license verification...");
-
-    try {
-        const response = await fetch(`${LICENSE_API_URL}?action=validate&key=${result.licenseKey}`);
-        const data = await response.json();
-
-        if (!data.success || !data.valid) {
-            console.log("[SurgicalFocus] License expired or invalid. Downgrading to FREE.");
-
-            let newBlacklist = result.blacklist || [];
-            if (newBlacklist.length > 3) {
-                newBlacklist = newBlacklist.slice(0, 3);
-            }
-
-            await chrome.storage.local.set({
-                isPro: false,
-                licenseKey: '',
-                blacklist: newBlacklist
-            });
-
-            await updateBlockingRules();
-        } else {
-            console.log("[SurgicalFocus] License verified. Expiration:", data.expires_at || 'Never');
-        }
-    } catch (e) {
-        console.error("[SurgicalFocus] Background license check failed (network error):", e);
-    }
-}

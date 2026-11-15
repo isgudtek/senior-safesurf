@@ -1,0 +1,25 @@
+{
+  "conditions": [],
+  "parameters": {
+    "ai_cloud_enabled": {
+      "defaultValue": { "value": "true" },
+      "valueType": "BOOLEAN",
+      "description": "Kill switch: false stops every cloud AI call (on-device AI and keywords keep working)."
+    },
+    "ai_cloud_model": {
+      "defaultValue": { "value": "gemini-3.5-flash-lite" },
+      "valueType": "STRING",
+      "description": "Cloud Gemini model used for fallback and escalation."
+    },
+    "ai_escalate_below": {
+      "defaultValue": { "value": "0.6" },
+      "valueType": "NUMBER",
+      "description": "Hybrid mode: when Gemini Nano's confidence is below this, the snapshot is re-checked in the cloud."
+    },
+    "ai_prompt_extra": {
+      "defaultValue": { "value": "" },
+      "valueType": "STRING",
+      "description": "Extra guidance appended to the classification prompt (for example a new scam pattern)."
+    }
+  }
+}
