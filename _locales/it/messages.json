@@ -192,7 +192,7 @@
         "description": "Scanning feature name"
     },
     "smart_scan_desc": {
-        "message": "Blocca automaticamente le pagine che contengono specifiche 'Parole Bloccate' nel testo.",
+        "message": "Controlla ogni pagina per le tue parole bloccate. Quando ne compare una, l'IA legge il testo intorno prima di bloccare.",
         "description": "Scanning feature description"
     },
     "safety_presets_title": {
@@ -812,5 +812,33 @@
     "ai_block_failed": {
         "message": "Impossibile bloccare questa pagina",
         "description": "ai block failed"
+    },
+    "scan_how_title": {
+        "message": "Come vengono controllate le pagine",
+        "description": "scan how title"
+    },
+    "scan_step1": {
+        "message": "Il testo della pagina viene cercato su questo computer. Solo parole intere, quindi \"tor\" non corrisponde più a \"history\".",
+        "description": "scan step1"
+    },
+    "scan_step2": {
+        "message": "Se la parola viene trovata, la pagina viene coperta e un piccolo estratto (nome del sito, titolo, intestazioni e circa 600 caratteri intorno alla parola) viene controllato dall'IA tramite Firebase AI Logic.",
+        "description": "scan step2"
+    },
+    "scan_step3": {
+        "message": "🔒 Locale: Gemini Nano funziona dentro Chrome su questo computer. Nulla viene inviato online.",
+        "description": "scan step3"
+    },
+    "scan_step4": {
+        "message": "☁️ Cloud: solo se hai consentito i controlli nel cloud, e solo quando l'IA locale manca o non è sicura, l'estratto viene controllato da Gemini tramite Firebase (protetto da App Check). Nulla viene salvato.",
+        "description": "scan step4"
+    },
+    "scan_step5": {
+        "message": "L'IA decide: blocca (pagina bloccata con il motivo), avvisa (banner di avviso) o consenti (menzione innocua, la pagina resta aperta). Se l'IA è spenta, non disponibile o troppo lenta, la pagina viene bloccata dalla parola, come prima.",
+        "description": "scan step5"
+    },
+    "scan_change_link": {
+        "message": "Cambia impostazioni locale/cloud →",
+        "description": "scan change link"
     }
 }

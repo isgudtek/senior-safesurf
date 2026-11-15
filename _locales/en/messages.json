@@ -192,7 +192,7 @@
         "description": "Scanning feature name"
     },
     "smart_scan_desc": {
-        "message": "Automatically block pages that contain specific 'Stop Words' in their text.",
+        "message": "Checks every page for your Stop Words. When one appears, the AI reads the text around it before anything is blocked.",
         "description": "Scanning feature description"
     },
     "safety_presets_title": {
@@ -820,5 +820,33 @@
     "ai_block_failed": {
         "message": "Could not block this page",
         "description": "ai block failed"
+    },
+    "scan_how_title": {
+        "message": "How pages are scanned",
+        "description": "scan how title"
+    },
+    "scan_step1": {
+        "message": "The page text is searched for your Stop Words on this computer. Whole words only, so \"tor\" no longer matches \"history\".",
+        "description": "scan step1"
+    },
+    "scan_step2": {
+        "message": "If a word is found, the page is covered and a small snapshot (site name, title, headings and about 600 characters around the word) is checked by AI through Firebase AI Logic.",
+        "description": "scan step2"
+    },
+    "scan_step3": {
+        "message": "🔒 Local: Gemini Nano runs inside Chrome on this computer. Nothing is sent online.",
+        "description": "scan step3"
+    },
+    "scan_step4": {
+        "message": "☁️ Cloud: only if you allowed cloud checks, and only when the local AI is missing or unsure, the snapshot is checked by Gemini through Firebase (App Check protected). Nothing is stored.",
+        "description": "scan step4"
+    },
+    "scan_step5": {
+        "message": "The AI decides: block (blocked page with the reason), warn (warning banner) or allow (a harmless mention, the page stays open). If the AI is off, unavailable or too slow, the page is blocked by the word, as before.",
+        "description": "scan step5"
+    },
+    "scan_change_link": {
+        "message": "Change local/cloud settings →",
+        "description": "scan change link"
     }
 }

@@ -818,15 +818,29 @@
                 <div class="options-item">
                     <div class="info">
                         <span class="name" data-i18n="smart_scan_name">Smart Page Scanning</span>
-                        <span class="description" data-i18n="smart_scan_desc">Automatically block pages that
-                            contain
-                            specific "Stop Words" in their
-                            text.</span>
+                        <span class="description" data-i18n="smart_scan_desc">Checks every page for your Stop
+                            Words. When one appears, the AI reads the text around it before anything is
+                            blocked.</span>
                     </div>
                     <label class="switch">
                         <input type="checkbox" id="contentFilterToggle">
                         <span class="slider"></span>
                     </label>
+                </div>
+
+                <div id="scanExplainer" style="background: rgba(16, 185, 129, 0.06); border: 1px solid rgba(16, 185, 129, 0.2); padding: 16px 18px; border-radius: 12px; margin-top: 4px; font-size: 13px; line-height: 1.7; color: var(--text-muted);">
+                    <strong style="color: var(--text-main); font-size: 14px;" data-i18n="scan_how_title">How pages are scanned</strong>
+                    <ol style="margin: 8px 0 10px 18px; padding: 0;">
+                        <li data-i18n="scan_step1">The page text is searched for your Stop Words on this computer. Whole words only, so "tor" no longer matches "history".</li>
+                        <li data-i18n="scan_step2">If a word is found, the page is covered and a small snapshot (site name, title, headings and about 600 characters around the word) is checked by AI through Firebase AI Logic.</li>
+                        <li data-i18n="scan_step3">🔒 Local: Gemini Nano runs inside Chrome on this computer. Nothing is sent online.</li>
+                        <li data-i18n="scan_step4">☁️ Cloud: only if you allowed cloud checks, and only when the local AI is missing or unsure, the snapshot is checked by Gemini through Firebase (App Check protected). Nothing is stored.</li>
+                        <li data-i18n="scan_step5">The AI decides: block (blocked page with the reason), warn (warning banner) or allow (a harmless mention, the page stays open). If the AI is off, unavailable or too slow, the page is blocked by the word, as before.</li>
+                    </ol>
+                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; border-top: 1px solid rgba(16, 185, 129, 0.2); padding-top: 10px;">
+                        <span id="scanModeNow" style="color: var(--text-main);"></span>
+                        <a href="#" id="scanModeLink" style="color: var(--primary); font-weight: 700; text-decoration: none;" data-i18n="scan_change_link">Change local/cloud settings →</a>
+                    </div>
                 </div>
 
                 <div id="contentFilterSettings" class="hidden">

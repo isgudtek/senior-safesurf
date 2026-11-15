@@ -33,7 +33,26 @@
         refreshEngineStatus();
     }
 
+    const MODE_NAME = {
+        off: () => t('ai_mode_off', 'Off (keywords only)'),
+        local: () => t('ai_mode_local', '🔒 On this computer only'),
+        hybrid: () => t('ai_mode_hybrid', '🔒 + ☁️ Hybrid'),
+        cloud: () => t('ai_mode_cloud', '☁️ Cloud only')
+    };
+
+    // Parental Controls › "How pages are scanned": show the current local/cloud setting.
+    function renderScanMode() {
+        const el = $('scanModeNow');
+        if (!el) return;
+        const mode = (MODE_NAME[settings.aiMode] || MODE_NAME.hybrid)();
+        const cloud = settings.aiMode === 'off' || settings.aiMode === 'local'
+            ? ''
+            : (settings.aiCloudConsent ? ` · ${t('scan_cloud_on', 'cloud checks allowed')}` : ` · ${t('scan_cloud_off', 'cloud checks not allowed')}`);
+        el.textContent = `${t('scan_mode_now', 'Now')}: ${mode}${cloud}`;
+    }
+
     function renderMode() {
+        renderScanMode();
         document.querySelectorAll('#aiModeGroup .category-btn').forEach((b) =>
             b.classList.toggle('active', b.dataset.mode === settings.aiMode));
         let help = (MODE_HELP[settings.aiMode] || MODE_HELP.hybrid)();
@@ -190,6 +209,13 @@
             refreshEngineStatus();
         });
         $('nanoDownloadBtn').addEventListener('click', downloadNano);
+        if ($('scanModeLink')) {
+            $('scanModeLink').addEventListener('click', (e) => {
+                e.preventDefault();
+                document.querySelector('.nav-item[data-section="instructions"]').click();
+                document.getElementById('ai-protection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        }
         $('aiTestBtn').addEventListener('click', runTest);
         load();
     });
