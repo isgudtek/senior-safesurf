@@ -6,7 +6,6 @@ const SUPPORT_EMAIL = 'tazzcderq@gmail.com';
 let selectedBgUrl = '';
 let currentCategory = 'abstract';
 let currentPage = 1;
-let currentMasterState = true;
 
 document.addEventListener('DOMContentLoaded', async () => {
     const result = await chrome.storage.local.get([
@@ -24,24 +23,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         bypassToggle.checked = result.enableBypass === true; // Default to false
         bypassToggle.addEventListener('change', async () => {
             await chrome.storage.local.set({ enableBypass: bypassToggle.checked });
-        });
-    }
-
-    currentMasterState = result.masterEnabled !== false;
-
-    const masterToggle = document.getElementById('masterToggle');
-    if (masterToggle) {
-        masterToggle.checked = currentMasterState;
-        masterToggle.addEventListener('click', async (e) => {
-            if (!(await checkSecurity())) {
-                e.preventDefault();
-                return;
-            }
-        });
-        masterToggle.addEventListener('change', async () => {
-            currentMasterState = masterToggle.checked;
-            await chrome.storage.local.set({ masterEnabled: currentMasterState });
-            chrome.runtime.sendMessage({ command: "updateRules" });
         });
     }
 

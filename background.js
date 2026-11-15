@@ -23,6 +23,8 @@ chrome.runtime.onStartup.addListener(() => {
 // v1.3 had a paid tier. Everything is free now, so drop its leftover keys.
 async function removeLegacyLicenseData() {
     await chrome.storage.local.remove(['isPro', 'licenseKey', 'lastLicenseCheck']);
+    // The master on/off switch was removed from Settings; make sure nobody is left with protection off and no way back.
+    await chrome.storage.local.remove('masterEnabled');
     if (chrome.alarms) await chrome.alarms.clear('licenseCheck');
 }
 
