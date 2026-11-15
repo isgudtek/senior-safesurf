@@ -165,7 +165,11 @@ function setup() {
         refresh();
     });
 
-    chrome.storage.onChanged.addListener((changes) => { if (changes.blockLog && !auth.currentUser) refresh(); });
+    chrome.storage.onChanged.addListener((changes) => {
+        if (changes.blockLog && !auth.currentUser) refresh();
+        // Keep the toggle in step with storage (e.g. "Create account" turns sharing on after sign-in fires).
+        if (changes.familySyncEnabled) $('familySyncToggle').checked = changes.familySyncEnabled.newValue === true;
+    });
 }
 
 // Module scripts run after the DOM is parsed.

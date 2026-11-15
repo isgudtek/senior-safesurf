@@ -207,9 +207,9 @@ Family**, not to the extension or the computer:
 - Settings, blocked sites and stop words are **not** synced. Use Export/Import to move the blocked-sites list
   between computers.
 
-Status: the code and rules are in this repository. Sharing needs Firestore and Email/Password sign-in enabled
-in the Firebase project (see **Setup › Firebase project**). Until then, **Sign in** shows "Email/password
-sign-in is not enabled for this Firebase project yet", and everything else works.
+Status: live on the `hackathon-e2f2b` project. The Firestore database `(default)` is in `eur3` (Europe), the
+security rules are deployed, and Email/Password sign-in is enabled (`firebase.json › auth`). Tested end to end:
+create an account, block a page, and the event appears in the shared log read back from Firestore.
 
 ## Family sharing (Firestore)
 
@@ -264,10 +264,10 @@ The extension uses the `hackathon-e2f2b` project (`.firebaserc`). To use your ow
 
 For Family sharing:
 
-1. Firebase console › **Firestore Database** › Create database (production mode).
-2. Firebase console › **Authentication** › Get started › enable **Email/Password**.
-3. Put `PEXELS_API_KEY=...` in `.env.local` (gitignored).
-4. `npm run deploy:firebase` deploys `firestore.rules`, the bridge page and Remote Config. The Remote Config
+1. Create the Firestore database: `firebase firestore:databases:create "(default)" --location=eur3`.
+2. Put `PEXELS_API_KEY=...` in `.env.local` (gitignored).
+3. `npm run deploy:firebase` deploys the Email/Password provider (`firebase.json › auth`), `firestore.rules`,
+   the bridge page and Remote Config. The Remote Config
    template in the repo has an empty `pexels_api_key`; `scripts/remote-config.mjs` fills it from `.env.local`
    at deploy time, so the key is never committed.
 

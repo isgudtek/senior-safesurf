@@ -33,5 +33,10 @@
   },
   "remoteconfig": {
     "template": "remoteconfig.generated.json"
+  },
+  "auth": {
+    "providers": {
+      "emailPassword": true
+    }
   }
 }
