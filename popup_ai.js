@@ -37,6 +37,18 @@
         engine.className = 'engine';
         engine.textContent = (ENGINE_LABEL[v.engine] || ENGINE_LABEL.none)() + (v.escalated ? ` ${t('engine_escalated', '(double-checked in the cloud)')}` : '');
         out.append(head, reason, engine);
+        if (v.aiError || v.error) {
+            const details = document.createElement('div');
+            details.className = 'engine';
+            details.textContent = `Details: ${v.aiError || v.error}`;
+            out.appendChild(details);
+        }
+        if (v.deviceError) {
+            const note = document.createElement('div');
+            note.className = 'engine';
+            note.textContent = `On-device check failed, used the cloud instead (${v.deviceError})`;
+            out.appendChild(note);
+        }
         out.classList.remove('hidden');
     }
 

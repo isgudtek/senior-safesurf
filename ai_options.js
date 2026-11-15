@@ -145,7 +145,7 @@
         box.classList.remove('hidden');
         box.textContent = t('ai_checking', 'Checking…');
         try {
-            const v = await chrome.runtime.sendMessage({ command: 'aiTest', text: $('aiTestInput').value });
+            const v = (await chrome.runtime.sendMessage({ command: 'aiTest', text: $('aiTestInput').value })) || { verdict: 'unknown', aiError: 'no answer from the service worker' };
             box.textContent = '';
             const head = document.createElement('div');
             head.style.cssText = 'font-size:18px;font-weight:800;margin-bottom:6px;';
@@ -159,6 +159,9 @@
             if (typeof v.confidence === 'number') bits.push(`${t('label_confidence', 'Confidence')}: ${Math.round(v.confidence * 100)}%`);
             if (v.ms) bits.push(`${v.ms} ms`);
             if (v.escalated) bits.push(t('engine_escalated', '(double-checked in the cloud)'));
+            if (v.deviceError) bits.push(`on-device failed: ${v.deviceError}`);
+            if (v.aiError) bits.push(`details: ${v.aiError}`);
+            if (v.aiStatus) bits.push(`Nano: ${v.aiStatus}`);
             meta.textContent = bits.filter(Boolean).join(' · ');
             box.append(head, reason, meta);
         } catch (e) {

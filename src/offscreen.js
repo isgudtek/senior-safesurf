@@ -2,7 +2,7 @@
 // The service worker (ai_router.js) sends { target: 'offscreen', type, ... } messages here.
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from './firebase.js';
-import { analyze, summarize, status } from './engine.js';
+import { analyze, summarize, status, warmUp } from './engine.js';
 
 async function logEvent(event) {
     await auth.authStateReady();
@@ -24,6 +24,8 @@ async function handle(msg) {
         default: return { error: `unknown type ${msg.type}` };
     }
 }
+
+warmUp(); // load Gemini Nano into memory if it's available
 
 chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
     if (!msg || msg.target !== 'offscreen') return false;

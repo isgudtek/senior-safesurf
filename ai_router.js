@@ -12,7 +12,7 @@ const AI_DEFAULTS = {
 };
 
 const BLOCK_LOG_MAX = 200;
-const ENGINE_TIMEOUT_MS = 25000;
+const ENGINE_TIMEOUT_MS = 50000; // on-device (20s) + cloud fallback (20s) + margin
 
 // Confidence the AI needs before it may lift a keyword block ("this mention is harmless").
 const ALLOW_OVERRIDE = { low: 0.6, normal: 0.75, strict: 0.9 };
@@ -108,7 +108,10 @@ function applyPolicy(trigger, ai, snapshot, settings) {
         // A page with no blocked word is only ever warned about, never hard-blocked.
         return { ...ai, verdict: 'warn' };
     }
-    return usable ? ai : { verdict: 'unknown', engine: 'none', reason: aiUnavailableReason(ai, settings), aiStatus: ai && ai.status };
+    return usable ? ai : {
+        verdict: 'unknown', engine: 'none', reason: aiUnavailableReason(ai, settings),
+        aiStatus: ai && ai.status, aiError: ai && ai.error
+    };
 }
 
 function aiUnavailableReason(ai, settings) {

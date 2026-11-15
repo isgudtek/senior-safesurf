@@ -148,11 +148,33 @@ export function planRoute({ mode, cloudConsent }, nano, rc) {
     return cloudAllowed ? { route: 'cloud' } : { route: 'none', why: nano };
 }
 
-const MODE_FOR_ROUTE = {
-    device: InferenceMode.ONLY_ON_DEVICE,
-    hybrid: InferenceMode.PREFER_ON_DEVICE, // SDK falls back to the cloud if on-device fails
-    cloud: InferenceMode.ONLY_IN_CLOUD
-};
+// Routes use explicit modes: in PREFER_ON_DEVICE the SDK does not fall back to the cloud when an
+// on-device call fails or stalls, so the engine runs Nano first and does the fallback itself.
+// Gemini Nano can be slow on low-memory machines (model load + constrained decoding).
+const DEVICE_TIMEOUT_MS = 20000;
+const CLOUD_TIMEOUT_MS = 20000;
+
+function withTimeout(promise, ms, label) {
+    let timer;
+    return Promise.race([
+        promise,
+        new Promise((_, reject) => { timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms / 1000}s`)), ms); })
+    ]).finally(() => clearTimeout(timer));
+}
+
+const errText = (e) => String((e && e.message) || e).slice(0, 300);
+
+// Keeps Gemini Nano loaded in memory so the first real check isn't paying the model-load cost.
+let warmSession = null;
+export async function warmUp() {
+    if (warmSession || (await nanoState()) !== 'available') return;
+    try { warmSession = await LanguageModel.create(createOptions); } catch (e) { console.warn('[SafeSurf] Nano warm-up failed:', e); }
+}
+
+async function runModel(factory, mode, rc, prompt, timeoutMs, label) {
+    const res = (await withTimeout(factory(mode, rc).generateContent(prompt), timeoutMs, label)).response;
+    return res;
+}
 
 export async function analyze(snapshot, trigger, config) {
     const t0 = performance.now();
@@ -162,23 +184,33 @@ export async function analyze(snapshot, trigger, config) {
     if (plan.route === 'none') return { engine: 'none', status: nano, error: plan.why };
 
     const prompt = buildPrompt(snapshot, trigger, rc.values.ai_prompt_extra);
-    try {
-        const res = (await verdictModel(MODE_FOR_ROUTE[plan.route], rc).generateContent(prompt)).response;
-        let result = { ...parseVerdict(res.text()), engine: engineOf(res) };
+    const cloud = async (extra = {}) => {
+        const res = await runModel(verdictModel, InferenceMode.ONLY_IN_CLOUD, rc, prompt, CLOUD_TIMEOUT_MS, 'Cloud check');
+        return { ...parseVerdict(res.text()), engine: 'cloud', ...extra };
+    };
 
-        // Hybrid escalation: Nano wasn't sure, so ask the bigger cloud model once.
-        if (plan.route === 'hybrid' && result.engine === 'on-device' && result.confidence < rc.values.ai_escalate_below) {
-            try {
-                const cloudRes = (await verdictModel(InferenceMode.ONLY_IN_CLOUD, rc).generateContent(prompt)).response;
-                result = { ...parseVerdict(cloudRes.text()), engine: 'cloud', escalated: true };
-            } catch (e) {
-                result.escalationError = String(e.message || e);
+    let result;
+    if (plan.route === 'cloud') {
+        try { result = await cloud(); } catch (e) { return { engine: 'none', status: nano, error: `cloud: ${errText(e)}` }; }
+    } else {
+        // 'device' or 'hybrid': Gemini Nano first.
+        try {
+            const res = await runModel(verdictModel, InferenceMode.ONLY_ON_DEVICE, rc, prompt, DEVICE_TIMEOUT_MS, 'On-device check');
+            result = { ...parseVerdict(res.text()), engine: engineOf(res) };
+        } catch (e) {
+            const deviceError = errText(e);
+            console.warn('[SafeSurf] on-device check failed:', e);
+            if (plan.route !== 'hybrid') return { engine: 'none', status: nano, error: `on-device: ${deviceError}` };
+            try { result = await cloud({ fallback: true, deviceError }); } catch (e2) {
+                return { engine: 'none', status: nano, error: `on-device: ${deviceError}; cloud: ${errText(e2)}` };
             }
         }
-        return { ...result, status: nano, ms: Math.round(performance.now() - t0) };
-    } catch (e) {
-        return { engine: 'none', status: nano, error: String(e.message || e) };
+        // Hybrid escalation: Nano wasn't sure, so ask the bigger cloud model once.
+        if (plan.route === 'hybrid' && result.engine === 'on-device' && result.confidence < rc.values.ai_escalate_below) {
+            try { result = await cloud({ escalated: true }); } catch (e) { result.escalationError = errText(e); }
+        }
     }
+    return { ...result, status: nano, ms: Math.round(performance.now() - t0) };
 }
 
 export async function summarize(events, config) {
@@ -195,11 +227,20 @@ export async function summarize(events, config) {
         'EVENTS (date verdict category site engine):',
         lines.length ? lines.join('\n') : '(none)'
     ].join('\n');
-    try {
-        const res = (await textModel(MODE_FOR_ROUTE[plan.route], rc).generateContent(prompt)).response;
+    const attempt = async (mode, ms, label) => {
+        const res = await runModel(textModel, mode, rc, prompt, ms, label);
         return { text: res.text().trim(), engine: engineOf(res) };
+    };
+    try {
+        if (plan.route === 'cloud') return await attempt(InferenceMode.ONLY_IN_CLOUD, CLOUD_TIMEOUT_MS * 2, 'Cloud summary');
+        try {
+            return await attempt(InferenceMode.ONLY_ON_DEVICE, DEVICE_TIMEOUT_MS * 2, 'On-device summary');
+        } catch (e) {
+            if (plan.route !== 'hybrid') throw e;
+            return await attempt(InferenceMode.ONLY_IN_CLOUD, CLOUD_TIMEOUT_MS * 2, 'Cloud summary');
+        }
     } catch (e) {
-        return { engine: 'none', status: nano, error: String(e.message || e) };
+        return { engine: 'none', status: nano, error: errText(e) };
     }
 }
 
