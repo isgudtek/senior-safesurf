@@ -162,15 +162,23 @@ const errText = (e) => String((e && e.message) || e).slice(0, 300);
 
 // Keeps Gemini Nano loaded in memory so the first real check isn't paying the model-load cost.
 let warmSession = null;
+let warmAbort = null;
 export async function warmUp() {
     if (warmSession || (await nanoState()) !== 'available') return;
     try {
         warmSession = await LanguageModel.create(createOptions);
         // The first answer is slow (about 13 s on a MacBook, then about 5 s). Pay that once in the
         // background with a tiny check in the same JSON format, not on the first real block.
-        await withTimeout(warmSession.prompt('Reply with a verdict for a safe page about gardening.',
-            { responseConstraint: verdictSchema }), 30000, 'Nano warm-up');
-    } catch (e) { console.warn('[SafeSurf] Nano warm-up failed:', e); }
+        // A real check cancels it (Nano answers one prompt at a time), and so does a 30 s limit.
+        warmAbort = new AbortController();
+        const timer = setTimeout(() => warmAbort && warmAbort.abort(), 30000);
+        await warmSession.prompt('Reply with a verdict for a safe page about gardening.',
+            { responseConstraint: verdictSchema, signal: warmAbort.signal }).finally(() => clearTimeout(timer));
+    } catch (e) {
+        console.info('[SafeSurf] Nano warm-up stopped early (harmless):', errText(e));
+    } finally {
+        warmAbort = null;
+    }
 }
 
 async function runModel(factory, mode, rc, prompt, timeoutMs, label) {
@@ -204,7 +212,8 @@ export async function analyze(snapshot, trigger, config) {
     if (plan.route === 'cloud') {
         try { result = await cloud(); } catch (e) { return { engine: 'none', status: nano, error: `cloud: ${errText(e)}` }; }
     } else {
-        // 'device' or 'hybrid': Gemini Nano first.
+        // 'device' or 'hybrid': Gemini Nano first. A running warm-up would make this check wait.
+        if (warmAbort) warmAbort.abort();
         try {
             const res = await runModel(verdictModel, InferenceMode.ONLY_ON_DEVICE, rc, prompt,
                 plan.route === 'hybrid' ? HYBRID_DEVICE_TIMEOUT_MS : DEVICE_TIMEOUT_MS, 'On-device check');
@@ -240,6 +249,7 @@ export async function summarize(events, config) {
         lines.length ? lines.join('\n') : '(none)'
     ].join('\n');
     const onDevice = async () => {
+        if (warmAbort) warmAbort.abort();
         const res = await runModel(textModel, InferenceMode.ONLY_ON_DEVICE, rc, prompt, DEVICE_TIMEOUT_MS * 2, 'On-device summary');
         return { text: res.text().trim(), engine: engineOf(res) };
     };
