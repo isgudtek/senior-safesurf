@@ -6,3 +6,4 @@ lib/
 web-dist/
 .firebase/
 remoteconfig.generated.json
+dist/
