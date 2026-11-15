@@ -144,8 +144,11 @@ export function planRoute({ mode, cloudConsent }, nano, rc) {
 // Routes use explicit modes: in PREFER_ON_DEVICE the SDK does not fall back to the cloud when an
 // on-device call fails or stalls, so the engine runs Nano first and does the fallback itself.
 // Gemini Nano can be slow on low-memory machines (model load + constrained decoding).
+// Time budget for one check. The block page waits 28 s in total, so in Hybrid Nano gets 10 s and the
+// cloud backup 15 s. In Local mode there is no backup, so Nano may take up to 20 s.
 const DEVICE_TIMEOUT_MS = 20000;
-const CLOUD_TIMEOUT_MS = 20000;
+const HYBRID_DEVICE_TIMEOUT_MS = 10000;
+const CLOUD_TIMEOUT_MS = 15000;
 
 function withTimeout(promise, ms, label) {
     let timer;
@@ -197,7 +200,8 @@ export async function analyze(snapshot, trigger, config) {
     } else {
         // 'device' or 'hybrid': Gemini Nano first.
         try {
-            const res = await runModel(verdictModel, InferenceMode.ONLY_ON_DEVICE, rc, prompt, DEVICE_TIMEOUT_MS, 'On-device check');
+            const res = await runModel(verdictModel, InferenceMode.ONLY_ON_DEVICE, rc, prompt,
+                plan.route === 'hybrid' ? HYBRID_DEVICE_TIMEOUT_MS : DEVICE_TIMEOUT_MS, 'On-device check');
             result = { ...parseVerdict(res.text()), engine: engineOf(res) };
         } catch (e) {
             const deviceError = errText(e);

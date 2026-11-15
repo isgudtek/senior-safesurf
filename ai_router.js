@@ -216,7 +216,7 @@ async function reviewKeywordHit({ pid, snapshot, word, words, review }, tabUrl) 
 async function awaitReview(pid) {
     if (pendingReviews.has(pid)) return pendingReviews.get(pid);
     // The service worker may have restarted, or the block page asked first: poll briefly.
-    for (let i = 0; i < 40; i++) {
+    for (let i = 0; i < 56; i++) {
         const r = await chrome.storage.session.get(`pending_${pid}`);
         if (r[`pending_${pid}`]) return r[`pending_${pid}`];
         if (pendingReviews.has(pid)) return pendingReviews.get(pid);

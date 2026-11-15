@@ -72,7 +72,7 @@ async function showBlockReason() {
     let verdict = null;
     if (pid) {
         engine.textContent = '🛡 Checking with AI…';
-        const timeout = new Promise((r) => setTimeout(() => r(null), 25000));
+        const timeout = new Promise((r) => setTimeout(() => r(null), 28000));
         try {
             verdict = await Promise.race([chrome.runtime.sendMessage({ command: 'awaitVerdict', pid }), timeout]);
         } catch { verdict = null; }
