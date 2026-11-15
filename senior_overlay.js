@@ -70,9 +70,12 @@
         }
     }
 
+    let creating = false; // the toolbar is built in an async callback; don't build it twice
+
     function createOverlay() {
         if (!document.body) return;
-        if (document.getElementById(OVERLAY_ID)) return;
+        if (creating || document.getElementById(OVERLAY_ID)) return;
+        creating = true;
 
         const overlay = document.createElement('div');
         overlay.id = OVERLAY_ID;
@@ -152,6 +155,15 @@
                 return btn;
             }
 
+            // 0. "Is this page safe?" (same AI check as the popup)
+            const safeBtn = createThemedButton('🛡', 'Is this page safe?');
+            safeBtn.setAttribute('aria-label', 'Is this page safe?');
+            safeBtn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+            safeBtn.style.borderColor = 'transparent';
+            safeBtn.style.fontSize = '18px';
+            safeBtn.onmouseout = () => { safeBtn.style.transform = 'translateY(0)'; safeBtn.style.boxShadow = 'none'; };
+            safeBtn.onclick = () => checkThisPage(safeBtn, { isLight, textColor, bgColor, borderColor, mutedColor });
+
             // 1. Zoom Controls
             const zoomOutBtn = createThemedButton('Aa-', 'Decrease Text Size');
             zoomOutBtn.onclick = () => adjustZoom(-0.25);
@@ -207,6 +219,7 @@
                 }
             };
 
+            overlay.appendChild(safeBtn);
             overlay.appendChild(zoomOutBtn);
             overlay.appendChild(zoomInBtn);
             overlay.appendChild(settingsBtn);
@@ -214,6 +227,7 @@
             overlay.appendChild(closeBtn);
 
             document.body.appendChild(overlay);
+            creating = false;
         });
     }
 
@@ -244,6 +258,7 @@
     }
 
     function hideOverlay() {
+        closeCheckCard();
         const el = document.getElementById(OVERLAY_ID);
         if (el) {
             el.style.opacity = '0';
@@ -276,8 +291,92 @@
         if (el) {
             el.style.zoom = (1 / currentZoom);
         }
+        const card = document.getElementById(CHECK_ID);
+        if (card) card.style.zoom = (1 / currentZoom);
 
         showZoomFeedback(`${Math.round(currentZoom * 100)}%`);
+    }
+
+    // ---------- "Is this page safe?" card ----------
+    const CHECK_ID = 'safenet-senior-check';
+    const HEADLINE = {
+        allow: '✅ This page looks safe',
+        warn: '⚠️ Be careful on this page',
+        block: '⛔ This page is not safe',
+        unknown: 'ℹ️ Could not check this page'
+    };
+    const ENGINE = {
+        'on-device': 'Checked on this computer (Gemini Nano). Nothing was sent online.',
+        cloud: 'Checked in the cloud (Gemini via Firebase).',
+        keywords: 'Checked with your keyword list.'
+    };
+    const ACCENT = { allow: '#10b981', warn: '#f59e0b', block: '#ef4444', unknown: '#64748b' };
+
+    function closeCheckCard() {
+        const card = document.getElementById(CHECK_ID);
+        if (card) card.remove();
+    }
+
+    function showCheckCard(theme, content) {
+        closeCheckCard();
+        const card = document.createElement('div');
+        card.id = CHECK_ID;
+        card.setAttribute('role', 'dialog');
+        card.setAttribute('aria-live', 'polite');
+        card.style.cssText = `
+            position: fixed; right: 20px; bottom: 84px; width: 340px; max-width: calc(100vw - 40px);
+            z-index: 2147483647; box-sizing: border-box; padding: 18px 20px 16px; border-radius: 20px;
+            background: ${theme.bgColor}; color: ${theme.textColor};
+            border: 2px solid ${ACCENT[content.verdict] || theme.borderColor};
+            backdrop-filter: blur(12px) saturate(160%); -webkit-backdrop-filter: blur(12px) saturate(160%);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, ${theme.isLight ? '0.18' : '0.5'});
+            font: 16px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; text-align: left;
+            zoom: ${1 / currentZoom};
+        `;
+        const close = document.createElement('button');
+        close.textContent = '×';
+        close.title = 'Close';
+        close.style.cssText = `position: absolute; top: 8px; right: 10px; background: none; border: 0; cursor: pointer;
+            font-size: 22px; line-height: 1; color: ${theme.mutedColor};`;
+        close.onclick = closeCheckCard;
+        const head = document.createElement('div');
+        head.style.cssText = 'font-size: 19px; font-weight: 800; margin: 0 22px 6px 0;';
+        head.textContent = content.title;
+        card.append(close, head);
+        if (content.text) {
+            const body = document.createElement('div');
+            body.textContent = content.text; // AI text is never inserted as HTML
+            card.appendChild(body);
+        }
+        if (content.meta) {
+            const meta = document.createElement('div');
+            meta.style.cssText = `font-size: 12px; margin-top: 8px; color: ${theme.mutedColor};`;
+            meta.textContent = content.meta;
+            card.appendChild(meta);
+        }
+        document.body.appendChild(card);
+    }
+
+    let checking = false;
+    async function checkThisPage(btn, theme) {
+        if (checking) return;
+        checking = true;
+        btn.textContent = '…';
+        btn.disabled = true;
+        showCheckCard(theme, { verdict: 'unknown', title: '🛡 Checking this page…', text: 'This takes a few seconds.' });
+        try {
+            const snapshot = SafeSurfSnapshot.build({ trigger: 'manual' });
+            const v = (await chrome.runtime.sendMessage({ command: 'analyzePage', snapshot, trigger: 'manual' })) || {};
+            const verdict = HEADLINE[v.verdict] ? v.verdict : 'unknown';
+            const meta = [ENGINE[v.engine], v.escalated ? '(double-checked in the cloud)' : ''].filter(Boolean).join(' ');
+            showCheckCard(theme, { verdict, title: HEADLINE[verdict], text: v.reason || '', meta });
+        } catch (e) {
+            showCheckCard(theme, { verdict: 'unknown', title: HEADLINE.unknown, text: 'Reload the page and try again.' });
+        } finally {
+            checking = false;
+            btn.textContent = '🛡';
+            btn.disabled = false;
+        }
     }
 
     function showZoomFeedback(text) {

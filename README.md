@@ -44,6 +44,8 @@ Every feature is free. There is no paid tier, no license server and no backend o
 | **Scam warning.** A fake bank login page with no blocked word still gets a warning. | **Popup.** One click: "Is this page safe?" |
 | ![Settings: AI Protection](docs/screenshots/ai-protection.png) | ![Family log and weekly AI summary](docs/screenshots/family.png) |
 | **AI Protection** (top of Settings › Instructions): mode, on-device status, cloud consent, fine-tuning, Try it. | **Family.** This week's blocks and warnings, with a plain-language AI summary. |
+| ![Senior Assist toolbar: safety check on a fake bank page](docs/screenshots/overlay-check-unsafe.png) | ![Senior Assist toolbar: safety check on a recipe page](docs/screenshots/overlay-check-safe.png) |
+| **Senior Assist toolbar.** The round 🛡 button next to Aa−/Aa+ checks the page and answers on the page. | The same check on a harmless page. |
 | ![Welcome screen: on-device AI and cloud consent](docs/screenshots/welcome-ai.png) | ![Try it: scam text checked](docs/screenshots/try-it.png) |
 | **Setup slide.** Checks the computer, starts the Gemini Nano download, asks for cloud consent. | **Try it.** Any text, with verdict, type, confidence, engine and time. |
 
@@ -73,6 +75,7 @@ the default path.
 | A stop word appears on a page | The page is covered ("checking…") and the AI judges the word in context: **block**, **warn** or **allow** | Nano first, cloud fallback |
 | A page asks for a password or card number, or posts a form to another site | One background check; a confident scam/phishing verdict shows a large warning banner (never a hard block) | Nano first, cloud fallback |
 | Popup: **🛡 Is this page safe?** | Plain-language answer for the open tab | Nano first, cloud fallback |
+| Senior Assist toolbar: round **🛡** button | The same check from the on-page toolbar (next to Aa−/Aa+), with the answer in a card on the page | Nano first, cloud fallback |
 | Blocked page | Shows the AI's reason ("Blocked: gambling. …") and where it was checked | – |
 | Family: **Write summary** | Weekly plain-language summary of blocks and warnings | Nano first, cloud fallback |
 

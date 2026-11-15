@@ -152,7 +152,8 @@ async function recordEvent(verdict, snapshot, settings) {
 
 async function analyze(snapshot, trigger) {
     const settings = await getAiSettings();
-    if (settings.masterEnabled === false || settings.parentalEnabled === false) {
+    // Automatic checks follow the protection switches; a check the user asked for always runs.
+    if (trigger !== 'manual' && (settings.masterEnabled === false || settings.parentalEnabled === false)) {
         return { verdict: 'allow', engine: 'none' };
     }
     if (trigger === 'risky' && settings.aiScanScope !== 'riskyPages') return { verdict: 'allow', engine: 'none' };
