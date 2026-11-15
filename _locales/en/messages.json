@@ -742,7 +742,7 @@
         "description": "family sync title"
     },
     "family_sync_desc": {
-        "message": "Create one family account. Sign in with it on this computer and on the family member's Chrome (with Senior SafeSurf installed). Only the time, site name, type and engine of each block or warning are shared. Never page text.",
+        "message": "Let a son, daughter or carer see what Senior SafeSurf blocked or warned about on this computer, from their own Chrome.",
         "description": "family sync desc"
     },
     "family_signin_btn": {
@@ -848,5 +848,25 @@
     "scan_change_link": {
         "message": "Change local/cloud settings →",
         "description": "scan change link"
+    },
+    "family_step1": {
+        "message": "On this computer, create one family account with any email and a password. It's a Firebase Authentication account, used only for this.",
+        "description": "family step1"
+    },
+    "family_step2": {
+        "message": "On the family member's computer, install Senior SafeSurf and sign in here with the same account.",
+        "description": "family step2"
+    },
+    "family_step3": {
+        "message": "Each block or warning is saved to Cloud Firestore under that account, and both computers show the same weekly log and summary.",
+        "description": "family step3"
+    },
+    "family_privacy": {
+        "message": "Shared: the time, site name, type (for example gambling or scam) and whether it was checked locally or in the cloud. Never page text, passwords or browsing history. Only this account can read it (Firestore security rules), and entries can't be edited or deleted. Off by default; sign out to stop.",
+        "description": "family privacy"
+    },
+    "family_powered": {
+        "message": "Powered by Firebase Authentication + Cloud Firestore",
+        "description": "family powered"
     }
 }

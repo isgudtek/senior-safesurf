@@ -734,7 +734,7 @@
         "description": "family sync title"
     },
     "family_sync_desc": {
-        "message": "Crea un account di famiglia. Accedi con esso su questo computer e sul Chrome del familiare (con Senior SafeSurf installato). Si condividono solo ora, nome del sito, tipo e motore di ogni blocco o avviso. Mai il testo delle pagine.",
+        "message": "Permetti a un figlio, una figlia o a chi ti assiste di vedere cosa ha bloccato o segnalato Senior SafeSurf su questo computer, dal proprio Chrome.",
         "description": "family sync desc"
     },
     "family_signin_btn": {
@@ -840,5 +840,25 @@
     "scan_change_link": {
         "message": "Cambia impostazioni locale/cloud →",
         "description": "scan change link"
+    },
+    "family_step1": {
+        "message": "Su questo computer crea un account di famiglia con un'email e una password. È un account Firebase Authentication, usato solo per questo.",
+        "description": "family step1"
+    },
+    "family_step2": {
+        "message": "Sul computer del familiare installa Senior SafeSurf e accedi qui con lo stesso account.",
+        "description": "family step2"
+    },
+    "family_step3": {
+        "message": "Ogni blocco o avviso viene salvato in Cloud Firestore sotto quell'account, e i due computer mostrano lo stesso registro settimanale e riepilogo.",
+        "description": "family step3"
+    },
+    "family_privacy": {
+        "message": "Condiviso: ora, nome del sito, tipo (per esempio gioco d'azzardo o truffa) e se è stato controllato in locale o nel cloud. Mai il testo delle pagine, password o cronologia. Solo questo account può leggerlo (regole di sicurezza Firestore) e le voci non si possono modificare né cancellare. Spento per impostazione predefinita; esci per interrompere.",
+        "description": "family privacy"
+    },
+    "family_powered": {
+        "message": "Basato su Firebase Authentication + Cloud Firestore",
+        "description": "family powered"
     }
 }

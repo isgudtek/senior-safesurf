@@ -962,24 +962,20 @@
             </p>
 
             <div class="card">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <h2 style="margin: 0;" data-i18n="family_log_title">This week</h2>
-                    <div style="display: flex; gap: 8px;">
-                        <button class="btn-primary" id="summaryBtn" data-i18n="family_summary_btn">Write summary</button>
-                        <button class="btn-action btn-delete" id="clearLogBtn" data-i18n="family_clear_btn">Clear log</button>
-                    </div>
-                </div>
-                <div id="summaryBox" class="hidden" style="background: rgba(16,185,129,.08); border: 1px solid rgba(16,185,129,.25); padding: 16px; border-radius: 12px; margin-bottom: 16px; font-size: 15px; line-height: 1.6;"></div>
-                <div id="logSourceNote" style="color: var(--text-muted); font-size: 12px; margin-bottom: 8px;"></div>
-                <div id="eventList" class="options-list"></div>
-            </div>
-
-            <div class="card">
                 <h2 data-i18n="family_sync_title">Share with family (optional)</h2>
-                <p style="color: #94a3b8; font-size: 13px; margin-bottom: 15px;" data-i18n="family_sync_desc">Create one
-                    family account. Sign in with it on this computer and on the family member's Chrome (with Senior
-                    SafeSurf installed). Only the time, site name, type and engine of each block or warning are
-                    shared. Never page text.</p>
+                <p style="color: #94a3b8; font-size: 13px; margin-bottom: 10px;" data-i18n="family_sync_desc">Let a son,
+                    daughter or carer see what Senior SafeSurf blocked or warned about on this computer, from their own
+                    Chrome.</p>
+                <ol style="color: #94a3b8; font-size: 13px; line-height: 1.7; margin: 0 0 12px 18px; padding: 0;">
+                    <li data-i18n="family_step1">On this computer, create one family account with any email and a password. It's a Firebase Authentication account, used only for this.</li>
+                    <li data-i18n="family_step2">On the family member's computer, install Senior SafeSurf and sign in here with the same account.</li>
+                    <li data-i18n="family_step3">Each block or warning is saved to Cloud Firestore under that account, and both computers show the same weekly log and summary.</li>
+                </ol>
+                <p style="color: #94a3b8; font-size: 12px; margin-bottom: 15px;" data-i18n="family_privacy">Shared: the time, site
+                    name, type (for example gambling or scam) and whether it was checked locally or in the cloud. Never page
+                    text, passwords or browsing history. Only this account can read it (Firestore security rules), and entries
+                    can't be edited or deleted. Off by default; sign out to stop.</p>
+                <p style="font-size: 12px; margin-bottom: 15px;"><span style="background: rgba(255, 160, 0, .12); color: #f59e0b; border: 1px solid rgba(255, 160, 0, .3); padding: 3px 10px; border-radius: 999px; font-weight: 700;" data-i18n="family_powered">Powered by Firebase Authentication + Cloud Firestore</span></p>
                 <div id="familySignedOut">
                     <div class="input-group" style="flex-direction: column; gap: 10px; max-width: 360px;">
                         <input type="email" id="familyEmail" placeholder="Family email" autocomplete="username">
@@ -1005,7 +1001,21 @@
                 </div>
                 <div id="familyMsg" style="color: var(--text-muted); font-size: 13px; margin-top: 12px;"></div>
             </div>
-        </div>
+        
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <h2 style="margin: 0;" data-i18n="family_log_title">This week</h2>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn-primary" id="summaryBtn" data-i18n="family_summary_btn">Write summary</button>
+                        <button class="btn-action btn-delete" id="clearLogBtn" data-i18n="family_clear_btn">Clear log</button>
+                    </div>
+                </div>
+                <div id="summaryBox" class="hidden" style="background: rgba(16,185,129,.08); border: 1px solid rgba(16,185,129,.25); padding: 16px; border-radius: 12px; margin-bottom: 16px; font-size: 15px; line-height: 1.6;"></div>
+                <div id="logSourceNote" style="color: var(--text-muted); font-size: 12px; margin-bottom: 8px;"></div>
+                <div id="eventList" class="options-list"></div>
+            </div>
+
+</div>
 
         <!-- Security Section -->
         <div id="section-security" class="content-section hidden">
