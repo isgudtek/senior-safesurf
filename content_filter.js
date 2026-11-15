@@ -99,11 +99,20 @@
         back.textContent = 'Take me back';
         back.style.cssText = 'font:700 18px system-ui;padding:12px 20px;border-radius:12px;border:0;background:#fff;color:#7c2d12;cursor:pointer;';
         back.onclick = () => (history.length > 1 ? history.back() : (location.href = 'about:blank'));
+        const block = document.createElement('button');
+        block.textContent = '⛔ Block this site';
+        block.style.cssText = 'font:700 18px system-ui;padding:12px 20px;border-radius:12px;border:0;background:#ef4444;color:#fff;cursor:pointer;';
+        block.onclick = async () => {
+            block.disabled = true;
+            block.textContent = 'Blocking…';
+            const res = await chrome.runtime.sendMessage({ command: 'blockSite' }).catch(() => null);
+            if (!res || res.status !== 'success') { block.disabled = false; block.textContent = '⛔ Block this site'; }
+        };
         const stay = document.createElement('button');
         stay.textContent = 'I understand, stay';
         stay.style.cssText = 'font:600 16px system-ui;padding:12px 20px;border-radius:12px;border:2px solid #fff;background:transparent;color:#fff;cursor:pointer;';
         stay.onclick = () => host.remove();
-        row.append(back, stay);
+        row.append(back, block, stay);
         box.append(title, reason, engine, row);
         shadow.appendChild(box);
         document.documentElement.appendChild(host);

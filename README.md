@@ -75,6 +75,7 @@ the default path.
 | A stop word appears on a page | The page is covered ("checking…") and the AI judges the word in context: **block**, **warn** or **allow** | Nano first, cloud fallback |
 | A page asks for a password or card number, or posts a form to another site | One background check; a confident scam/phishing verdict shows a large warning banner (never a hard block) | Nano first, cloud fallback |
 | Popup: **🛡 Is this page safe?** | Plain-language answer for the open tab | Nano first, cloud fallback |
+| Any scam/phishing warning or "not safe" result | **⛔ Block this site** adds the site to Blocked Sites and reloads, so the block page appears | – |
 | Senior Assist toolbar: round **🛡** button | The same check from the on-page toolbar (next to Aa−/Aa+), with the answer in a card on the page | Nano first, cloud fallback |
 | Blocked page | Shows the AI's reason ("Blocked: gambling. …") and where it was checked | – |
 | Family: **Write summary** | Weekly plain-language summary of blocks and warnings | Nano first, cloud fallback |
@@ -172,6 +173,43 @@ flowchart LR
   (200 entries, no page text).
 - The SDK runs in an **offscreen document** (`DOM_PARSER` reason), bundled with esbuild because Manifest V3
   forbids remote code. Auth uses `firebase/auth/web-extension`, which never loads remote scripts.
+
+## Where your data lives
+
+Most of Senior SafeSurf never touches a server. This table lists every place data is stored or sent, and
+**whether a Firebase service is involved**.
+
+| What | Where it's stored or sent | Firebase? | When |
+|---|---|---|---|
+| Settings, blocked sites, stop words, speed dial, AI switches | `chrome.storage.local` on this computer | **No** | Always |
+| Master password | `chrome.storage.local`, as a PBKDF2-SHA256 hash | **No** | If set |
+| Block log (last 200 blocks/warnings: time, site, type, engine, reason) | `chrome.storage.local` | **No** | Always |
+| **Export JSON / Import JSON** (Blocked Sites page) | A `.json` file you download and pick again later. It contains only the blocked-sites list | **No.** There is no cloud backup | When you click |
+| On-device AI checks | Gemini Nano inside Chrome | **No** network at all (Firebase AI Logic SDK, on-device mode) | Nano available, mode Local or Hybrid |
+| Cloud AI checks | Page snapshot (≤ 3 KB) → `senior-safesurf.web.app` bridge → Gemini | **Yes:** AI Logic, App Check, Hosting. Nothing is stored | Only with cloud consent |
+| AI tuning values and the Pexels key | Read from Remote Config | **Yes:** Remote Config (read-only) | When the engine starts |
+| Background photos | Pexels API → photo URLs | Key from Remote Config; photos come from Pexels | When you open Appearance or a block page |
+| **Family sharing** (optional, off by default) | Firestore `families/{uid}/events` | **Yes:** Authentication + Firestore | Only after signing in to a family account |
+
+### How Family sharing identifies you
+
+Sharing is tied to the **Firebase Authentication account** (email and password) you create in **Settings ›
+Family**, not to the extension or the computer:
+
+- Each account gets a Firebase user ID (`uid`). Events are written to `families/{uid}/events/{autoId}`.
+- The extension ID isn't used for storage. It's only used so the cloud bridge answers Senior SafeSurf and
+  nothing else.
+- Any Chrome where you sign in with the same account reads and writes the same log. That's how a family member
+  sees the parent's blocks.
+- `firestore.rules` lets only that signed-in account read its own events. Entries can be added but never
+  edited or deleted, and each one is checked for type and size.
+- Signing out stops sharing on that computer. The local log keeps working.
+- Settings, blocked sites and stop words are **not** synced. Use Export/Import to move the blocked-sites list
+  between computers.
+
+Status: the code and rules are in this repository. Sharing needs Firestore and Email/Password sign-in enabled
+in the Firebase project (see **Setup › Firebase project**). Until then, **Sign in** shows "Email/password
+sign-in is not enabled for this Firebase project yet", and everything else works.
 
 ## Family sharing (Firestore)
 

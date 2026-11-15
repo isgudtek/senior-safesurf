@@ -37,6 +37,20 @@
         engine.className = 'engine';
         engine.textContent = (ENGINE_LABEL[v.engine] || ENGINE_LABEL.none)() + (v.escalated ? ` ${t('engine_escalated', '(double-checked in the cloud)')}` : '');
         out.append(head, reason, engine);
+        if (v.verdict === 'warn' || v.verdict === 'block') {
+            const blockBtn = document.createElement('button');
+            blockBtn.className = 'ai-block-btn';
+            blockBtn.textContent = t('ai_block_site', '⛔ Block this site');
+            blockBtn.onclick = async () => {
+                blockBtn.disabled = true;
+                const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+                const res = tab ? await chrome.runtime.sendMessage({ command: 'blockSite', url: tab.url, tabId: tab.id }).catch(() => null) : null;
+                blockBtn.textContent = res && res.status === 'success'
+                    ? `${t('ai_blocked_site', '✅ Blocked')}: ${res.host}`
+                    : t('ai_block_failed', 'Could not block this page');
+            };
+            out.appendChild(blockBtn);
+        }
         if (v.aiError || v.error) {
             const details = document.createElement('div');
             details.className = 'engine';

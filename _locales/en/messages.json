@@ -808,5 +808,17 @@
     "ai_restricted": {
         "message": "Chrome does not allow checking this kind of page.",
         "description": "ai restricted"
+    },
+    "ai_block_site": {
+        "message": "⛔ Block this site",
+        "description": "ai block site"
+    },
+    "ai_blocked_site": {
+        "message": "✅ Blocked",
+        "description": "ai blocked site"
+    },
+    "ai_block_failed": {
+        "message": "Could not block this page",
+        "description": "ai block failed"
     }
 }

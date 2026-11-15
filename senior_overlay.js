@@ -350,6 +350,19 @@
             body.textContent = content.text; // AI text is never inserted as HTML
             card.appendChild(body);
         }
+        if (content.verdict === 'warn' || content.verdict === 'block') {
+            const blockBtn = document.createElement('button');
+            blockBtn.textContent = '⛔ Block this site';
+            blockBtn.style.cssText = `margin-top: 12px; width: 100%; padding: 11px 14px; border: 0; border-radius: 12px;
+                background: #ef4444; color: #fff; font: 700 16px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; cursor: pointer;`;
+            blockBtn.onclick = async () => {
+                blockBtn.disabled = true;
+                blockBtn.textContent = 'Blocking…';
+                const res = await chrome.runtime.sendMessage({ command: 'blockSite' }).catch(() => null);
+                if (!res || res.status !== 'success') { blockBtn.disabled = false; blockBtn.textContent = '⛔ Block this site'; }
+            };
+            card.appendChild(blockBtn);
+        }
         if (content.meta) {
             const meta = document.createElement('div');
             meta.style.cssText = `font-size: 12px; margin-top: 8px; color: ${theme.mutedColor};`;

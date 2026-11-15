@@ -800,5 +800,17 @@
     "ai_restricted": {
         "message": "Chrome non permette di controllare questo tipo di pagina.",
         "description": "ai restricted"
+    },
+    "ai_block_site": {
+        "message": "⛔ Blocca questo sito",
+        "description": "ai block site"
+    },
+    "ai_blocked_site": {
+        "message": "✅ Bloccato",
+        "description": "ai blocked site"
+    },
+    "ai_block_failed": {
+        "message": "Impossibile bloccare questa pagina",
+        "description": "ai block failed"
     }
 }

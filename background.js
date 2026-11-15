@@ -39,6 +39,14 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         return true;
     }
 
+    if (message.command === "blockSite") {
+        // From a scam/phishing warning: add the site to Blocked Sites, then reload so the block page shows.
+        // Use the tab's real URL when the request comes from a page, so a page can't name another site.
+        blockSiteFromWarning(sender.tab ? sender.tab.url : message.url, sender.tab ? sender.tab.id : message.tabId)
+            .then(sendResponse, (err) => sendResponse({ status: "error", message: err.message }));
+        return true;
+    }
+
     if (message.command === "openOptions") {
         chrome.runtime.openOptionsPage();
         return true;
@@ -74,6 +82,19 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         return true;
     }
 });
+
+async function blockSiteFromWarning(url, tabId) {
+    const host = new URL(url).hostname.replace(/^www\./, '').toLowerCase();
+    if (!host || !/^https?:/.test(url)) throw new Error('This page cannot be blocked.');
+    const { blacklist = [] } = await chrome.storage.local.get('blacklist');
+    if (!blacklist.includes(host)) {
+        blacklist.push(host);
+        await chrome.storage.local.set({ blacklist });
+    }
+    await updateBlockingRules();
+    if (tabId) chrome.tabs.reload(tabId);
+    return { status: "success", host };
+}
 
 let activeBypasses = {}; // "tabId_domain" -> expirationTime
 
