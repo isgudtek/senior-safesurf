@@ -98,12 +98,8 @@ chrome.storage.local.get(['customBackground', 'bgAuthorName', 'bgAuthorUrl'], as
     // Handle Random Category
     if (bgUrl.startsWith('random:')) {
         const category = bgUrl.split(':')[1];
-        const PEXELS_API_KEY = 'IQkbu7hsbNHooEjFvGwQUm0Gqmdcf2Pz30HPsTD2vu5AcwJEkIoOgS6J';
         try {
-            const response = await fetch(`https://api.pexels.com/v1/search?query=${category}&per_page=40&page=1&orientation=landscape`, {
-                headers: { 'Authorization': PEXELS_API_KEY }
-            });
-            const data = await response.json();
+            const data = await chrome.runtime.sendMessage({ command: 'pexelsSearch', query: category, page: 1, perPage: 40 });
             if (data.photos && data.photos.length > 0) {
                 const randomIndex = Math.floor(Math.random() * data.photos.length);
                 const photo = data.photos[randomIndex];

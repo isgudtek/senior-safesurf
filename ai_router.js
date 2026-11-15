@@ -218,6 +218,8 @@ function handleAiMessage(message, sender, sendResponse) {
                 const settings = await getAiSettings();
                 return callEngine('summary', { events: message.events || [], config: engineConfig(settings) });
             })());
+        case 'pexelsSearch': // backgrounds; the key stays in the engine (Remote Config)
+            return run(callEngine('pexels', { query: message.query, page: message.page, perPage: message.perPage }));
         case 'resetEngine':
             return run(closeOffscreen().then(() => ({ ok: true })));
         default:

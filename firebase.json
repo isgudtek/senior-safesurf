@@ -7,13 +7,24 @@
       {
         "source": "/cloud.html",
         "headers": [
-          { "key": "Content-Security-Policy", "value": "frame-ancestors chrome-extension://acghgebogofndhakooiciaheodcakpjf chrome-extension://podaapoggacmjgkkghifgmigpdiakklb" },
-          { "key": "Cache-Control", "value": "no-cache" }
+          {
+            "key": "Content-Security-Policy",
+            "value": "frame-ancestors chrome-extension://acghgebogofndhakooiciaheodcakpjf chrome-extension://podaapoggacmjgkkghifgmigpdiakklb"
+          },
+          {
+            "key": "Cache-Control",
+            "value": "no-cache"
+          }
         ]
       },
       {
         "source": "/cloud.js",
-        "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache"
+          }
+        ]
       }
     ]
   },
@@ -21,6 +32,6 @@
     "rules": "firestore.rules"
   },
   "remoteconfig": {
-    "template": "remoteconfig.template.json"
+    "template": "remoteconfig.generated.json"
   }
 }

@@ -2,24 +2,39 @@
   "conditions": [],
   "parameters": {
     "ai_cloud_enabled": {
-      "defaultValue": { "value": "true" },
+      "defaultValue": {
+        "value": "true"
+      },
       "valueType": "BOOLEAN",
       "description": "Kill switch: false stops every cloud AI call (on-device AI and keywords keep working)."
     },
     "ai_cloud_model": {
-      "defaultValue": { "value": "gemini-3.5-flash-lite" },
+      "defaultValue": {
+        "value": "gemini-3.5-flash-lite"
+      },
       "valueType": "STRING",
       "description": "Cloud Gemini model used for fallback and escalation."
     },
     "ai_escalate_below": {
-      "defaultValue": { "value": "0.6" },
+      "defaultValue": {
+        "value": "0.6"
+      },
       "valueType": "NUMBER",
       "description": "Hybrid mode: when Gemini Nano's confidence is below this, the snapshot is re-checked in the cloud."
     },
     "ai_prompt_extra": {
-      "defaultValue": { "value": "" },
+      "defaultValue": {
+        "value": ""
+      },
       "valueType": "STRING",
       "description": "Extra guidance appended to the classification prompt (for example a new scam pattern)."
+    },
+    "pexels_api_key": {
+      "defaultValue": {
+        "value": ""
+      },
+      "valueType": "STRING",
+      "description": "Pexels API key for the background photos. Filled from .env.local by scripts/remote-config.mjs at deploy time; never committed."
     }
   }
 }

@@ -98,7 +98,7 @@ engine and the one-sentence reason. Never page text.
 | **Firebase AI Logic** (hybrid inference) | Gemini Nano on-device + Gemini cloud fallback, structured JSON verdicts | `src/engine.js` |
 | **App Check** (reCAPTCHA Enterprise) | Required by AI Logic; cloud calls are attested on the hosted bridge page | `src/cloud-bridge.js` |
 | **Hosting** | Serves the cloud bridge (`senior-safesurf.web.app`) | `web/`, `firebase.json` |
-| **Remote Config** (optional) | Cloud kill switch, cloud model name, hybrid escalation threshold, extra prompt guidance | `src/engine.js`, `remoteconfig.template.json` |
+| **Remote Config** | Optional AI tuning (cloud kill switch, cloud model, escalation threshold, extra prompt guidance), and the Pexels API key for background photos, so no key is in the code | `src/engine.js`, `src/pexels.js`, `remoteconfig.template.json` |
 | **Authentication** (email/password) | Optional family account | `src/family.js` |
 | **Cloud Firestore** | Optional shared family log, owner-only and append-only rules | `src/offscreen.js`, `src/family.js`, `firestore.rules` |
 
@@ -180,7 +180,10 @@ For Family sharing:
 
 1. Firebase console › **Firestore Database** › Create database (production mode).
 2. Firebase console › **Authentication** › Get started › enable **Email/Password**.
-3. `npm run deploy:firebase` deploys `firestore.rules`, the Remote Config template and the bridge page.
+3. Put `PEXELS_API_KEY=...` in `.env.local` (gitignored).
+4. `npm run deploy:firebase` deploys `firestore.rules`, the bridge page and Remote Config. The Remote Config
+   template in the repo has an empty `pexels_api_key`; `scripts/remote-config.mjs` fills it from `.env.local`
+   at deploy time, so the key is never committed.
 
 ## What changed in v2 (built during #BuildHybridAI)
 
@@ -198,7 +201,7 @@ added in v2. v2:
 - **Remote Config** (optional) for the cloud kill switch, model, threshold and prompt guidance.
 - **Family sharing** with Firebase Auth and Firestore, owner-only append-only rules.
 - **Free for everyone**: PRO tier, Stripe checkout, license checks, the PHP server and the `alarms` permission
-  removed. Support opens the user's mail app instead of posting to a server.
+  removed. The Pexels key that v1.3 hardcoded now comes from Remote Config at runtime. Support opens the user's mail app instead of posting to a server.
 - **Fixes**: word-boundary keyword matching (Unicode, CJK aware) instead of `includes()`, debounced page
   re-scans, single-page-app navigation handling, master password stored as PBKDF2-SHA256 (plain-text passwords
   are upgraded on first unlock), AI text rendered with `textContent` only.
@@ -210,7 +213,6 @@ added in v2. v2:
 - The on-device model is configured for English input and output. Pages in other languages still work, but the
   reason sentence is in English.
 - Site blocks (declarativeNetRequest rules) happen before a page loads, so they aren't reviewed by the AI.
-- The Appearance gallery loads photos from the Pexels API with an embedded API key, as in v1.3.
 
 ## License
 

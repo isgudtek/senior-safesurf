@@ -2,7 +2,6 @@ let blacklist = [];
 let stopWords = [];
 let hasPassword = false;
 let isUnlockedInSession = false;
-const PEXELS_API_KEY = 'IQkbu7hsbNHooEjFvGwQUm0Gqmdcf2Pz30HPsTD2vu5AcwJEkIoOgS6J';
 const SUPPORT_EMAIL = 'tazzcderq@gmail.com';
 let selectedBgUrl = '';
 let currentCategory = 'abstract';
@@ -590,12 +589,10 @@ async function fetchBackgrounds(query, page = 1) {
     if (pageInfo) pageInfo.textContent = `Page ${page}`;
 
     try {
-        const response = await fetch(`https://api.pexels.com/v1/search?query=${query}&per_page=14&page=${page}&orientation=landscape`, {
-            headers: {
-                Authorization: PEXELS_API_KEY
-            }
-        });
-        const data = await response.json();
+        // Pexels search runs in the AI engine page; its API key comes from Firebase Remote Config.
+        const data = await chrome.runtime.sendMessage({ command: 'pexelsSearch', query, page, perPage: 14 });
+        if (!data || data.error) throw new Error((data && data.error) || 'no answer');
+        data.next_page = data.nextPage;
 
         loader.classList.add('hidden');
 

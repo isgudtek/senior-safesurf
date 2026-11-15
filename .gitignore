@@ -5,3 +5,4 @@ lib/
 *.zip
 web-dist/
 .firebase/
+remoteconfig.generated.json
