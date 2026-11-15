@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<!-- Demo page for the Senior SafeSurf video and testing. "SecureBank" is fictional; the form sends nothing anywhere. -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>SecureBank – Account Suspended</title>
+    <style>
+        body { margin: 0; font-family: system-ui, sans-serif; background: #f3f4f6; color: #111827; }
+        header { background: #1e3a8a; color: #fff; padding: 16px 40px; font: 800 22px system-ui, sans-serif; }
+        main { max-width: 520px; margin: 40px auto; padding: 32px; background: #fff; border-radius: 14px; box-shadow: 0 10px 30px rgba(0,0,0,.08); }
+        h1 { font-size: 26px; margin: 0 0 10px; color: #b91c1c; }
+        p { font-size: 17px; line-height: 1.6; color: #374151; }
+        form { display: grid; gap: 12px; margin-top: 18px; }
+        input, button { font-size: 17px; padding: 12px 14px; border-radius: 10px; border: 1px solid #d1d5db; }
+        button { background: #1e3a8a; color: #fff; border: 0; font-weight: 700; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <header>SecureBank</header>
+    <main>
+        <h1>⚠ Your account has been suspended</h1>
+        <p>We detected unusual activity on your account. To avoid permanent closure, verify your identity within
+            <b>24 hours</b> by entering your login details and the card linked to your account.</p>
+        <form action="https://secure-verify-login.xyz/collect" method="post" onsubmit="return false">
+            <input name="email" placeholder="Email or customer number" autocomplete="off">
+            <input type="password" name="password" placeholder="Password" autocomplete="off">
+            <input name="cardnumber" placeholder="Card number" autocomplete="off">
+            <button type="submit">Verify now</button>
+        </form>
+    </main>
+</body>
+</html>

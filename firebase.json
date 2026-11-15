@@ -1,33 +1,55 @@
 {
-  "hosting": {
-    "site": "senior-safesurf",
-    "public": "web-dist",
-    "cleanUrls": false,
-    "headers": [
-      {
-        "source": "/cloud.html",
-        "headers": [
-          {
-            "key": "Content-Security-Policy",
-            "value": "frame-ancestors chrome-extension://acghgebogofndhakooiciaheodcakpjf chrome-extension://podaapoggacmjgkkghifgmigpdiakklb"
-          },
-          {
-            "key": "Cache-Control",
-            "value": "no-cache"
-          }
-        ]
-      },
-      {
-        "source": "/cloud.js",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "no-cache"
-          }
-        ]
-      }
-    ]
-  },
+  "hosting": [
+    {
+      "site": "senior-safesurf",
+      "public": "web-dist",
+      "cleanUrls": false,
+      "headers": [
+        {
+          "source": "/cloud.html",
+          "headers": [
+            {
+              "key": "Content-Security-Policy",
+              "value": "frame-ancestors chrome-extension://acghgebogofndhakooiciaheodcakpjf chrome-extension://podaapoggacmjgkkghifgmigpdiakklb"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache"
+            }
+          ]
+        },
+        {
+          "source": "/cloud.js",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "site": "safesurf-demo",
+      "public": "demo",
+      "cleanUrls": false,
+      "headers": [
+        {
+          "source": "**",
+          "headers": [
+            {
+              "key": "X-Robots-Tag",
+              "value": "noindex, nofollow"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache"
+            }
+          ]
+        }
+      ]
+    }
+  ],
   "firestore": {
     "rules": "firestore.rules"
   },

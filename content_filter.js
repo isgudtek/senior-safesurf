@@ -28,12 +28,21 @@
     if (settings.masterEnabled === false || settings.parentalEnabled === false) return;
 
     const aiMode = settings.aiMode || 'hybrid';
-    const keywordsOn = !!settings.enableContentFilter && Array.isArray(settings.stopWords) && settings.stopWords.length > 0;
+    let keywordsOn = !!settings.enableContentFilter && Array.isArray(settings.stopWords) && settings.stopWords.length > 0;
     const riskyOn = aiMode !== 'off' && (settings.aiScanScope || 'riskyPages') === 'riskyPages';
-    if (!keywordsOn && !riskyOn) return;
 
-    const compiled = keywordsOn ? SafeSurfKeywords.compile(settings.stopWords) : [];
+    let compiled = keywordsOn ? SafeSurfKeywords.compile(settings.stopWords) : [];
     const verdictCache = settings.verdictCache || {};
+
+    // New or changed Stop Words apply to pages that are already open, not only to the next page load.
+    chrome.storage.onChanged.addListener((changes, area) => {
+        if (area !== 'local' || !(changes.stopWords || changes.enableContentFilter)) return;
+        chrome.storage.local.get(['enableContentFilter', 'stopWords']).then((s) => {
+            keywordsOn = !!s.enableContentFilter && Array.isArray(s.stopWords) && s.stopWords.length > 0;
+            compiled = keywordsOn ? SafeSurfKeywords.compile(s.stopWords) : [];
+            if (keywordsOn) { done = false; checkKeywords(); }
+        });
+    });
 
     const pageKey = () => location.hostname.replace(/^www\./, '') + location.pathname;
     let pageUrl = location.href;

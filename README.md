@@ -263,6 +263,16 @@ Chrome only keeps one.
 
 Optional: `npm test` runs the unit tests (keywords, routing, policy, verdict parsing).
 
+### Demo pages
+
+Fictional pages that always behave the same way, hosted on `safesurf-demo.web.app` (source in `demo/`):
+
+- [casino.html](https://safesurf-demo.web.app/casino.html): add the Stop Word `casino`. Blocked at once; the AI confirms it as gambling.
+- [history.html](https://safesurf-demo.web.app/history.html): add `gun`. Blocked at once; the AI finds the mention harmless and reopens the page. Next visit opens directly.
+- [securebank.html](https://safesurf-demo.web.app/securebank.html): a fake "account suspended" login. No Stop Word needed: the scam check shows a warning banner.
+
+New Stop Words apply to tabs that are already open.
+
 ### App Check and the cloud bridge
 
 Firebase AI Logic enforces App Check on every cloud call, and reCAPTCHA can't run on a `chrome-extension://`
