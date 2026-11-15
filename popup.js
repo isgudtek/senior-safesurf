@@ -94,7 +94,7 @@ async function captureCurrentTab() {
     if (!tab?.url) return;
 
     // Filter out internal chrome pages
-    if (tab.url.startsWith('chrome://') || tab.url.startsWith('about:')) return;
+    if (!/^https?:/.test(tab.url)) return; // never offer to block chrome://, about: or the extension's own pages
 
     const url = new URL(tab.url);
     // Capture domain + path + search (cleaned of protocol and www)

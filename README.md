@@ -7,6 +7,24 @@ on-device model is missing or unsure, and only if the user allowed it.
 
 Every feature is free. There is no paid tier, no license server and no backend of our own.
 
+## Screenshots
+
+| | |
+|---|---|
+| ![Welcome screen: Now with local AI through Firebase](docs/screenshots/welcome-payoff.png) | ![Blocked page with the AI's reason](docs/screenshots/blocked-page.png) |
+| **First run.** The new opening slide. | **Blocked page.** The AI explains why ("Blocked: gambling…") and where it checked. |
+| ![Scam warning banner on a fake bank login page](docs/screenshots/scam-warning.png) | ![Popup: Is this page safe?](docs/screenshots/popup-check.png) |
+| **Scam warning.** A fake bank login page with no blocked word still gets a warning. | **Popup.** One click: "Is this page safe?" |
+| ![Settings: AI Protection](docs/screenshots/ai-protection.png) | ![Family log and weekly AI summary](docs/screenshots/family.png) |
+| **AI Protection** (top of Settings › Instructions): mode, on-device status, cloud consent, fine-tuning, Try it. | **Family.** This week's blocks and warnings, with a plain-language AI summary. |
+| ![Welcome screen: on-device AI and cloud consent](docs/screenshots/welcome-ai.png) | ![Try it: scam text checked](docs/screenshots/try-it.png) |
+| **Setup slide.** Checks the computer, starts the Gemini Nano download, asks for cloud consent. | **Try it.** Any text, with verdict, type, confidence, engine and time. |
+
+These were captured from the real extension with real AI answers, in a test browser that has no Gemini Nano.
+That's why the status reads "cannot run on-device AI" and the results say "Checked in the cloud". It also shows
+the fallback working. On a computer with Gemini Nano, the same views show "Ready on this computer" and
+"🔒 Checked on this computer".
+
 ## Why AI, and why on-device first
 
 Keyword lists fail older users in both directions:
@@ -35,7 +53,7 @@ Every result says where it ran: 🔒 *Checked on this computer (Gemini Nano)* or
 
 ## The switches
 
-**Settings › AI Protection**
+**Settings › Instructions › AI Protection**
 
 | Setting | Values | Default |
 |---|---|---|
@@ -72,7 +90,7 @@ Chrome downloads Gemini Nano (about 4 GB, once) the first time it's needed, and 
 - If the download isn't possible, the welcome screen and **AI Protection** say exactly why: Chrome older than
   138, or hardware below Chrome's requirements (Windows 10/11, macOS 13+, Linux or Chromebook Plus; 22 GB free
   disk; GPU with more than 4 GB VRAM or 16 GB RAM).
-- **AI Protection › Download on-device AI** and the popup's **Is this page safe?** button also start the
+- **Settings › Instructions › AI Protection › Download on-device AI** and the popup's **Is this page safe?** button also start the
   download if it hasn't happened yet.
 
 ## What leaves the computer

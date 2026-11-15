@@ -174,7 +174,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        if (!$('section-ai')) return;
+        if (!$('aiModeGroup')) return;
         document.querySelectorAll('#aiModeGroup .category-btn').forEach((b) =>
             b.addEventListener('click', async () => { if (await guard()) save({ aiMode: b.dataset.mode }); }));
         $('aiConsentToggle').addEventListener('click', async (e) => { if (!(await guard())) e.preventDefault(); });

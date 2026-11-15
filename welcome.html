@@ -108,6 +108,23 @@
         }
 
         /* Animations */
+        .payoff { text-align: center; }
+        .payoff-kicker {
+            display: inline-block; font-size: 13px; font-weight: 800; letter-spacing: .18em; color: #0f172a;
+            background: var(--primary); padding: 6px 14px; border-radius: 999px; margin-bottom: 22px;
+        }
+        .payoff-title { font-size: 56px !important; line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 18px; }
+        .payoff-title span {
+            background: linear-gradient(90deg, #fbbf24, #f97316, #10b981); -webkit-background-clip: text;
+            background-clip: text; color: transparent;
+        }
+        .payoff-pills { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 22px 0 18px; }
+        .payoff-pills span {
+            font-size: 15px; font-weight: 700; color: #fff; padding: 10px 16px; border-radius: 999px;
+            background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18);
+        }
+        .payoff-powered { font-size: 13px; color: var(--text-muted); letter-spacing: .02em; }
+
         .slide.active h1 {
             animation: fadeUp 0.5s 0.15s both;
         }
@@ -341,8 +358,23 @@
 
     <div class="presentation-wrapper">
         <div class="slide-container">
+            <!-- Slide 0: payoff -->
+            <div class="slide active payoff" id="slide-payoff">
+                <div class="payoff-kicker">NEW IN 2.0</div>
+                <h1 class="payoff-title">Now with local AI<br><span>through Firebase</span></h1>
+                <p class="subtitle">Senior SafeSurf now understands the pages you visit. A small AI on this computer
+                    tells a history article from a gun shop, and spots scams that no word list catches.</p>
+                <div class="payoff-pills">
+                    <span>🔒 Runs on this computer</span>
+                    <span>📴 Works offline</span>
+                    <span>☁️ Cloud only if you allow it</span>
+                    <span>💚 Free for everyone</span>
+                </div>
+                <p class="payoff-powered">Gemini Nano on-device · Gemini in the cloud · Firebase AI Logic</p>
+            </div>
+
             <!-- Slide 1: Welcome -->
-            <div class="slide active" id="slide-1">
+            <div class="slide" id="slide-1">
                 <div class="visual">
                     <svg class="icon-shield" width="72" height="72" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -362,15 +394,15 @@
                         <p>Block unwanted sites and scam keywords automatically.</p>
                     </div>
                     <div class="feature-item">
-                        <h3>🔒 100% Private</h3>
-                        <p>We never store or analyze your data. Ever.</p>
+                        <h3>🔒 Private by Design</h3>
+                        <p>The AI runs on your computer first. Nothing is sent without your OK.</p>
                     </div>
                 </div>
                 <div class="privacy-badge">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                     </svg>
-                    All data stays on your computer. Zero tracking.
+                    No accounts, no tracking. Your settings stay on your computer.
                 </div>
             </div>
 
@@ -492,6 +524,7 @@
             <button class="btn-nav" id="prevBtn">Back</button>
             <div class="progress-dots" id="dotContainer">
                 <div class="dot active"></div>
+                <div class="dot"></div>
                 <div class="dot"></div>
                 <div class="dot"></div>
                 <div class="dot"></div>

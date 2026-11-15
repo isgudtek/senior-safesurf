@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', async () => {
     let currentSlide = 1;
-    const totalSlides = 5;
+    const totalSlides = document.querySelectorAll('.slide').length;
 
     const slides = document.querySelectorAll('.slide');
     const dots = document.querySelectorAll('.dot');
@@ -123,7 +123,7 @@ async function setupAiSlide() {
     if (aiCloudConsent === undefined && (state === 'unavailable' || state === 'missing')) consent.checked = true;
 
     settingsBtn.addEventListener('click', () => {
-        window.location.href = chrome.runtime.getURL('options.html#ai');
+        window.location.href = chrome.runtime.getURL('options.html#instructions');
     });
 
     startBtn.addEventListener('click', async () => {

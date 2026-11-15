@@ -196,6 +196,8 @@ function setupNavigation() {
     const sections = document.querySelectorAll('.content-section');
 
     const switchTab = (target) => {
+        // Tabs that no longer exist (e.g. the old "ai" tab, now part of Instructions) fall back to Instructions.
+        if (!document.getElementById(`section-${target}`)) target = 'instructions';
         navItems.forEach(i => i.classList.remove('active'));
         const activeNav = document.querySelector(`.nav-item[data-section="${target}"]`);
         if (activeNav) activeNav.classList.add('active');

@@ -692,21 +692,6 @@
             </div>
         </nav>
 
-        <!-- AI: "Is this page safe?" (always visible) -->
-        <div class="ai-check">
-            <button id="aiCheckBtn" class="ai-check-btn" data-i18n="ai_check_btn">🛡 Is this page safe?</button>
-            <div id="aiCheckResult" class="ai-check-result hidden" aria-live="polite"></div>
-            <div class="ai-mode-row">
-                <span data-i18n="ai_label">AI</span>
-                <select id="aiModeSelect" aria-label="AI mode">
-                    <option value="off">Off</option>
-                    <option value="local">🔒 Local</option>
-                    <option value="hybrid">🔒+☁️ Hybrid</option>
-                    <option value="cloud">☁️ Cloud</option>
-                </select>
-            </div>
-        </div>
-
         <!-- Section 1: Speed Dial -->
         <div id="view-dial" class="view-section active">
             <div id="speedDialerContainer" class="dialer-grid">
@@ -716,6 +701,21 @@
 
         <!-- Section 2: Blocker -->
         <div id="view-block" class="view-section">
+            <!-- AI: "Is this page safe?" -->
+            <div class="ai-check">
+                <button id="aiCheckBtn" class="ai-check-btn" data-i18n="ai_check_btn">🛡 Is this page safe?</button>
+                <div id="aiCheckResult" class="ai-check-result hidden" aria-live="polite"></div>
+                <div class="ai-mode-row">
+                    <span data-i18n="ai_label">AI</span>
+                    <select id="aiModeSelect" aria-label="AI mode">
+                        <option value="off">Off</option>
+                        <option value="local">🔒 Local</option>
+                        <option value="hybrid">🔒+☁️ Hybrid</option>
+                        <option value="cloud">☁️ Cloud</option>
+                    </select>
+                </div>
+            </div>
+
             <p id="blockStatus" class="view-status">Active blocks: <span id="blockCount" class="count">0</span></p>
 
             <label id="blockLabel"
