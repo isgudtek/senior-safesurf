@@ -1,5 +1,7 @@
 # Senior SafeSurf
 
+**[Website](https://isgudtek.github.io/senior-safesurf/)** · **[Download the extension (.zip)](https://github.com/isgudtek/senior-safesurf/releases/latest/download/senior-safesurf.zip)** · desktop Chrome 138+, ready to load, no build needed
+
 ## Inspiration
 
 Older adults are one of the fastest-growing groups online, and the group that loses the most when something
@@ -229,6 +231,13 @@ and deletes, so a log entry can't be edited later.
 ## Setup
 
 Requirements: Node 20+, desktop Chrome 138+.
+
+### Quickest: the ready-made zip
+
+1. Download [senior-safesurf.zip](https://github.com/isgudtek/senior-safesurf/releases/latest/download/senior-safesurf.zip) and unzip it.
+2. Open `chrome://extensions`, turn on **Developer mode**, click **Load unpacked** and choose the `senior-safesurf` folder.
+
+`npm run package` rebuilds that zip from source (runtime files only, no source maps or local secrets).
 
 ### Try it from GitHub (about 2 minutes)
 
