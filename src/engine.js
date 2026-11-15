@@ -164,7 +164,13 @@ const errText = (e) => String((e && e.message) || e).slice(0, 300);
 let warmSession = null;
 export async function warmUp() {
     if (warmSession || (await nanoState()) !== 'available') return;
-    try { warmSession = await LanguageModel.create(createOptions); } catch (e) { console.warn('[SafeSurf] Nano warm-up failed:', e); }
+    try {
+        warmSession = await LanguageModel.create(createOptions);
+        // The first answer is slow (about 13 s on a MacBook, then about 5 s). Pay that once in the
+        // background with a tiny check in the same JSON format, not on the first real block.
+        await withTimeout(warmSession.prompt('Reply with a verdict for a safe page about gardening.',
+            { responseConstraint: verdictSchema }), 30000, 'Nano warm-up');
+    } catch (e) { console.warn('[SafeSurf] Nano warm-up failed:', e); }
 }
 
 async function runModel(factory, mode, rc, prompt, timeoutMs, label) {
