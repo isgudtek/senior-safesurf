@@ -540,7 +540,7 @@
             <div class="card">
                 <h2 data-i18n="ai_mode_title">Where the AI runs</h2>
                 <div class="category-group" id="aiModeGroup">
-                    <button class="category-btn" data-mode="off" data-i18n="ai_mode_off">Off (keywords only)</button>
+                    <button class="category-btn" data-mode="off" data-i18n="ai_mode_off">⚡ Keyword match</button>
                     <button class="category-btn" data-mode="local" data-i18n="ai_mode_local">🔒 On this computer only</button>
                     <button class="category-btn" data-mode="hybrid" data-i18n="ai_mode_hybrid">🔒 + ☁️ Hybrid</button>
                     <button class="category-btn" data-mode="cloud" data-i18n="ai_mode_cloud">☁️ Cloud only</button>
@@ -831,8 +831,8 @@
                     <div class="info">
                         <span class="name" data-i18n="smart_scan_name">Smart Page Scanning</span>
                         <span class="description" data-i18n="smart_scan_desc">Checks every page for your Stop
-                            Words. When one appears, the AI reads the text around it before anything is
-                            blocked.</span>
+                            Words and blocks at once. In an AI mode, the AI then reviews the text around the word
+                            and can reopen harmless pages.</span>
                     </div>
                     <label class="switch">
                         <input type="checkbox" id="contentFilterToggle">
@@ -844,10 +844,10 @@
                     <strong style="color: var(--text-main); font-size: 14px;" data-i18n="scan_how_title">How pages are scanned</strong>
                     <ol style="margin: 8px 0 10px 18px; padding: 0;">
                         <li data-i18n="scan_step1">The page text is searched for your Stop Words on this computer. Whole words only, so "tor" no longer matches "history".</li>
-                        <li data-i18n="scan_step2">If a word is found, the page is covered and a small snapshot (site name, title, headings and about 600 characters around the word) is checked by AI through Firebase AI Logic.</li>
+                        <li data-i18n="scan_step2">If a word is found, the page is blocked at once, like the classic version. In an AI mode, a small snapshot (site name, title, headings and about 600 characters around the word) is then reviewed by AI through Firebase AI Logic.</li>
                         <li data-i18n="scan_step3">🔒 Local: Gemini Nano runs inside Chrome on this computer. Nothing is sent online.</li>
                         <li data-i18n="scan_step4">☁️ Cloud: only if you allowed cloud checks, and only when the local AI is missing or unsure, the snapshot is checked by Gemini through Firebase (App Check protected). Nothing is stored.</li>
-                        <li data-i18n="scan_step5">The AI decides: block (blocked page with the reason), warn (warning banner) or allow (a harmless mention, the page stays open). If the AI is off, unavailable or too slow, the page is blocked by the word, as before.</li>
+                        <li data-i18n="scan_step5">The block page shows the result: confirmed with the reason, or "looks harmless" and the page reopens. Confident answers are remembered for 7 days, so the next visit is instant. In ⚡ Keyword match mode, or when the AI is unavailable, the word alone decides.</li>
                     </ol>
                     <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; border-top: 1px solid rgba(16, 185, 129, 0.2); padding-top: 10px;">
                         <span id="scanModeNow" style="color: var(--text-main);"></span>

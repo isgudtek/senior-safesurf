@@ -1,16 +1,18 @@
 // Content filter: stop-word scanning plus the AI check (classic content script).
-//  1. A stop word appears  -> the page is hidden and the AI judges the match in context.
-//     block: blocked page with the reason. warn: banner. allow: page stays (keyword cleared).
-//     AI off, unavailable or too slow: the keyword block applies, as in v1.3.
+//  1. A stop word appears -> the page is blocked AT ONCE, as in v1.3 (no waiting for any AI).
+//     In an AI mode the service worker then reviews the snapshot; the block page shows the AI's
+//     reason, or reopens the page if the AI is confident the mention is harmless. Confident
+//     verdicts are remembered per page and word, so repeat visits are instant.
 //  2. No stop word, but a risky page (password/card field, form posting to another site)
 //     -> one background AI check; a confident scam/phishing verdict shows a warning banner.
 (async function () {
     if (window.__safeSurfFilterLoaded) return;
     window.__safeSurfFilterLoaded = true;
 
-    const AI_WAIT_MS = 12000;
-    const MAX_AI_CHECKS_PER_PAGE = 4;
-    const RESCAN_DEBOUNCE_MS = 800;
+    const AI_WAIT_MS = 12000;            // risky-page check only (never delays a block)
+    const MAX_REVIEWS_PER_PAGE = 4;      // after this many cleared words, keyword blocks without review
+    const SCAN_INTERVAL_MS = 250;        // scans while the page keeps changing: at most every 250 ms
+    const CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 
     // Popup "Is this page safe?" asks for a snapshot even when the filter is off.
     chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
@@ -21,7 +23,7 @@
     });
 
     const settings = await chrome.storage.local.get([
-        'enableContentFilter', 'stopWords', 'masterEnabled', 'parentalEnabled', 'aiMode', 'aiScanScope'
+        'enableContentFilter', 'stopWords', 'masterEnabled', 'parentalEnabled', 'aiMode', 'aiScanScope', 'verdictCache'
     ]);
     if (settings.masterEnabled === false || settings.parentalEnabled === false) return;
 
@@ -31,50 +33,73 @@
     if (!keywordsOn && !riskyOn) return;
 
     const compiled = keywordsOn ? SafeSurfKeywords.compile(settings.stopWords) : [];
+    const verdictCache = settings.verdictCache || {};
 
+    const pageKey = () => location.hostname.replace(/^www\./, '') + location.pathname;
     let pageUrl = location.href;
-    let cleared = new Set();   // words the AI judged harmless on this page
-    let aiChecks = 0;
-    let busy = false;
+    let cleared = new Set();   // words judged harmless on this page
     let done = false;          // page blocked or warned: stop scanning
     let riskyChecked = false;
+
+    // Words the AI already judged harmless on this page (remembered for 7 days).
+    function loadClearedFromCache() {
+        cleared = new Set();
+        if (aiMode === 'off') return; // Keyword match mode is pure word matching, like v1.3: no AI memory
+        const prefix = pageKey() + '|';
+        for (const [k, v] of Object.entries(verdictCache)) {
+            if (k.startsWith(prefix) && v && v.verdict === 'allow' && Date.now() - v.ts < CACHE_TTL_MS) {
+                cleared.add(k.slice(prefix.length));
+            }
+        }
+    }
+    loadClearedFromCache();
 
     function resetForNewUrl() {
         if (location.href === pageUrl) return;
         pageUrl = location.href;
-        cleared = new Set();
-        aiChecks = 0;
+        loadClearedFromCache();
         done = false;
         riskyChecked = false;
     }
 
-    function goToBlockedPage(word, vid) {
+    // ---------- Stage 1: stop words, blocked instantly ----------
+    function blockNow(match, text) {
         done = true;
-        const params = new URLSearchParams({ url: location.href, reason: 'content' });
-        if (word) params.set('word', word);
-        if (vid) params.set('vid', vid);
-        window.location.href = chrome.runtime.getURL(`blocked.html?${params}`);
+        const params = new URLSearchParams({ url: location.href, reason: 'content', word: match.word });
+        const review = aiMode !== 'off' && cleared.size < MAX_REVIEWS_PER_PAGE;
+        const pid = crypto.randomUUID();
+        params.set('pid', pid);
+        // Hand the snapshot to the service worker without waiting: it logs the block and, in an AI mode,
+        // starts the review that the block page shows. Navigation does not wait for the answer.
+        const snapshot = SafeSurfSnapshot.build({ text, match, trigger: 'keyword' });
+        try {
+            chrome.runtime.sendMessage({ command: 'keywordHit', pid, snapshot, word: match.word, review }).catch(() => { });
+        } catch { /* extension reloaded: block anyway */ }
+        window.location.replace(chrome.runtime.getURL(`blocked.html?${params}`));
     }
 
+    function checkKeywords() {
+        if (!keywordsOn || done || !document.body) return;
+        const text = document.body.innerText;
+        const match = SafeSurfKeywords.findMatch(text, compiled, cleared);
+        if (match) blockNow(match, text);
+    }
+
+    // ---------- Stage 2: risky pages (scam / phishing) ----------
     function askAi(snapshot, trigger) {
         const request = chrome.runtime.sendMessage({ command: 'analyzePage', snapshot, trigger }).catch(() => null);
         const timeout = new Promise((r) => setTimeout(() => r(null), AI_WAIT_MS));
         return Promise.race([request, timeout]);
     }
 
-    // ---------- "Checking…" cover while the AI decides ----------
-    let cover = null;
-    function hidePage() {
-        if (cover) return;
-        cover = document.createElement('div');
-        cover.setAttribute('aria-live', 'polite');
-        cover.style.cssText = 'position:fixed;inset:0;z-index:2147483647;background:#0f172a;color:#f8fafc;display:flex;align-items:center;justify-content:center;font:600 22px/1.4 system-ui,sans-serif;text-align:center;padding:24px;';
-        cover.textContent = '🛡 Senior SafeSurf is checking this page…';
-        document.documentElement.appendChild(cover);
-    }
-    function showPage() {
-        if (cover) cover.remove();
-        cover = null;
+    async function checkRisky() {
+        if (!riskyOn || done || riskyChecked || !document.body) return;
+        const snapshot = SafeSurfSnapshot.build({ trigger: 'risky' });
+        const f = snapshot.flags;
+        if (!f.passwordField && !f.cardField && f.formPostsElsewhere.length === 0) return;
+        riskyChecked = true;
+        const verdict = await askAi(snapshot, 'risky');
+        if (!done && verdict && verdict.verdict === 'warn') showWarning(verdict);
     }
 
     // ---------- Warning banner (shadow DOM so page CSS can't hide it) ----------
@@ -118,59 +143,32 @@
         document.documentElement.appendChild(host);
     }
 
-    function applyVerdict(verdict, word) {
-        if (!verdict || !verdict.verdict) return goToBlockedPage(word); // fail safe for keyword hits
-        if (verdict.verdict === 'block') return goToBlockedPage(word, verdict.vid);
-        showPage();
-        if (verdict.verdict === 'warn') showWarning(verdict);
-        else if (word) cleared.add(word);
-    }
-
-    // ---------- Stage 1: stop words ----------
-    async function checkKeywords() {
-        if (!keywordsOn || done || busy) return;
-        const text = document.body.innerText;
-        const match = SafeSurfKeywords.findMatch(text, compiled, cleared);
-        if (!match) return;
-
-        if (aiChecks >= MAX_AI_CHECKS_PER_PAGE) return goToBlockedPage(match.word);
-
-        busy = true;
-        aiChecks++;
-        if (aiMode !== 'off') hidePage(); // AI off: the router answers at once with the keyword block (and logs it)
-        const snapshot = SafeSurfSnapshot.build({ text, match, trigger: 'keyword' });
-        const verdict = await askAi(snapshot, 'keyword');
-        busy = false;
-        applyVerdict(verdict, match.word);
-        if (!done) scheduleScan(); // other stop words may still be on the page
-    }
-
-    // ---------- Stage 2: risky pages (scam / phishing) ----------
-    async function checkRisky() {
-        if (!riskyOn || done || riskyChecked) return;
-        const snapshot = SafeSurfSnapshot.build({ trigger: 'risky' });
-        const f = snapshot.flags;
-        if (!f.passwordField && !f.cardField && f.formPostsElsewhere.length === 0) return;
-        riskyChecked = true;
-        const verdict = await askAi(snapshot, 'risky');
-        if (!done && verdict && verdict.verdict === 'warn') showWarning(verdict);
-    }
-
+    // ---------- Scheduling ----------
+    // v2.0 restarted a timer on every DOM change, so pages that never stop changing were never
+    // rescanned. Now: scan right away, then at most every SCAN_INTERVAL_MS while changes keep coming.
     let timer = null;
     function scheduleScan() {
-        clearTimeout(timer);
-        timer = setTimeout(async () => {
+        if (timer) return;
+        timer = setTimeout(() => {
+            timer = null;
             resetForNewUrl(); // single-page apps change URL without reloading
-            await checkKeywords();
-            await checkRisky();
-        }, RESCAN_DEBOUNCE_MS);
+            checkKeywords();
+            checkRisky();
+        }, SCAN_INTERVAL_MS);
     }
 
-    const start = () => {
-        if (!document.body) return setTimeout(start, 50);
-        checkKeywords().then(() => setTimeout(checkRisky, 1500));
-        new MutationObserver(() => { if (!done || location.href !== pageUrl) scheduleScan(); })
-            .observe(document.body, { childList: true, subtree: true, characterData: true });
-    };
+    let observing = false;
+    function start() {
+        if (!document.body) return setTimeout(start, 20);
+        checkKeywords();
+        if (!observing) {
+            observing = true;
+            new MutationObserver(() => { if (!done || location.href !== pageUrl) scheduleScan(); })
+                .observe(document.body, { childList: true, subtree: true, characterData: true });
+        }
+        setTimeout(checkRisky, 1500);
+    }
     start();
+    document.addEventListener('DOMContentLoaded', checkKeywords);
+    window.addEventListener('load', checkKeywords);
 })();

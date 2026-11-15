@@ -42,38 +42,61 @@ if (isTimerBlock) {
     showBlockReason();
 }
 
-// Explain the block: the AI's reason (stored by the service worker under ?vid=) or the matched word.
+// Explain the block in two honest steps:
+//  1. "Blocked instantly: the page contains the blocked word X" (keyword match, no AI involved).
+//  2. The AI review (?pid=): confirmed by Gemini Nano / the cloud with its reason, or "looks harmless"
+//     and the page reopens. If the AI is off, unavailable or too slow, step 1 stays as the reason.
 async function showBlockReason() {
     const CATEGORY = {
         adult: 'adult content', gambling: 'gambling', violence: 'graphic violence', drugs: 'illegal drugs',
         weapons: 'weapons', hate: 'hate or extremism', scam: 'a likely scam', phishing: 'a likely phishing page',
-        malware: 'possible malware', keyword: 'a blocked word', other: 'unsafe content'
+        malware: 'possible malware', other: 'unsafe content'
     };
-    const ENGINE = {
-        'on-device': 'Checked on this computer (Gemini Nano). Nothing was sent online.',
-        cloud: 'Checked in the cloud (Gemini via Firebase).',
-        keywords: 'Checked with your keyword list.'
+    const WHO = {
+        'on-device': { icon: '🔒', name: 'Gemini Nano', where: 'on this computer. Nothing was sent online' },
+        cloud: { icon: '☁️', name: 'Gemini', where: 'in the cloud via Firebase' }
     };
-    let verdict = null;
-    const vid = urlParams.get('vid');
-    if (vid) {
-        try { verdict = await chrome.runtime.sendMessage({ command: 'getVerdict', vid }); } catch { verdict = null; }
-    }
-    if (!verdict) {
-        verdict = {
-            engine: 'keywords',
-            category: 'keyword',
-            reason: word ? `The page contains the blocked word "${word}".` : 'The page matched your block list.'
-        };
-    }
     const box = document.getElementById('aiReason');
     const text = document.getElementById('aiReasonText');
     const engine = document.getElementById('aiEngine');
     if (!box || !text || !engine) return;
-    const type = CATEGORY[verdict.category] ? `Blocked: ${CATEGORY[verdict.category]}. ` : '';
-    text.textContent = type + (verdict.reason || ''); // textContent only: model output is never HTML
-    engine.textContent = ENGINE[verdict.engine] || '';
     box.classList.remove('hidden');
+
+    const keywordLine = word
+        ? `⚡ Blocked instantly: this page contains the blocked word "${word}".`
+        : '⚡ Blocked instantly by your block list.';
+    text.textContent = keywordLine;
+
+    const pid = urlParams.get('pid');
+    const vid = urlParams.get('vid');
+    let verdict = null;
+    if (pid) {
+        engine.textContent = '🛡 Checking with AI…';
+        const timeout = new Promise((r) => setTimeout(() => r(null), 25000));
+        try {
+            verdict = await Promise.race([chrome.runtime.sendMessage({ command: 'awaitVerdict', pid }), timeout]);
+        } catch { verdict = null; }
+    } else if (vid) {
+        try { verdict = await chrome.runtime.sendMessage({ command: 'getVerdict', vid }); } catch { verdict = null; }
+    }
+
+    const who = verdict && WHO[verdict.engine];
+    if (!verdict || !who) {
+        // Keyword match mode, AI unavailable, or no answer in time: the keyword block stands.
+        engine.textContent = 'Blocked by your keyword list.';
+        return;
+    }
+    if (verdict.verdict === 'allow') {
+        text.textContent = `✅ ${who.name}: this mention looks harmless. Opening the page…`;
+        engine.textContent = `${who.icon} Checked by ${who.name} ${who.where}.`;
+        let target = blockedUrl;
+        if (!/^https?:\/\//.test(target)) return;
+        setTimeout(() => window.location.replace(target), 1400);
+        return;
+    }
+    const type = CATEGORY[verdict.category] ? `${CATEGORY[verdict.category]}. ` : '';
+    text.textContent = `${keywordLine}\n${who.icon} Confirmed by ${who.name}: ${type}${verdict.reason || ''}`; // textContent only
+    engine.textContent = `${who.icon} Checked by ${who.name} ${who.where}${verdict.cached ? ' (remembered from an earlier visit)' : ''}.`;
 }
 
 // Load custom background & attribution

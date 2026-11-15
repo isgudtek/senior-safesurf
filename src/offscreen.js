@@ -4,6 +4,7 @@ import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from './firebase.js';
 import { analyze, summarize, status, warmUp } from './engine.js';
 import { searchPexels } from './pexels.js';
+import { bridgeReady } from './cloud-client.js';
 
 async function logEvent(event) {
     await auth.authStateReady();
@@ -22,6 +23,11 @@ async function handle(msg) {
             return { ...(await status(msg.config || {})), signedIn: auth.currentUser ? auth.currentUser.email : null };
         }
         case 'logEvent': return logEvent(msg.event);
+        case 'prewarm': {
+            await warmUp();
+            if (msg.config && msg.config.cloudConsent && msg.config.mode !== 'local') await bridgeReady();
+            return { ok: true };
+        }
         case 'pexels': return searchPexels(msg);
         default: return { error: `unknown type ${msg.type}` };
     }

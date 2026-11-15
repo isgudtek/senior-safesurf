@@ -192,7 +192,7 @@
         "description": "Scanning feature name"
     },
     "smart_scan_desc": {
-        "message": "Checks every page for your Stop Words. When one appears, the AI reads the text around it before anything is blocked.",
+        "message": "Checks every page for your Stop Words and blocks at once. In an AI mode, the AI then reviews the text around the word and can reopen harmless pages.",
         "description": "Scanning feature description"
     },
     "safety_presets_title": {
@@ -642,7 +642,7 @@
         "description": "ai mode title"
     },
     "ai_mode_off": {
-        "message": "Off (keywords only)",
+        "message": "⚡ Keyword match",
         "description": "ai mode off"
     },
     "ai_mode_local": {
@@ -830,7 +830,7 @@
         "description": "scan step1"
     },
     "scan_step2": {
-        "message": "If a word is found, the page is covered and a small snapshot (site name, title, headings and about 600 characters around the word) is checked by AI through Firebase AI Logic.",
+        "message": "If a word is found, the page is blocked at once, like the classic version. In an AI mode, a small snapshot (site name, title, headings and about 600 characters around the word) is then reviewed by AI through Firebase AI Logic.",
         "description": "scan step2"
     },
     "scan_step3": {
@@ -842,7 +842,7 @@
         "description": "scan step4"
     },
     "scan_step5": {
-        "message": "The AI decides: block (blocked page with the reason), warn (warning banner) or allow (a harmless mention, the page stays open). If the AI is off, unavailable or too slow, the page is blocked by the word, as before.",
+        "message": "The block page shows the result: confirmed with the reason, or \"looks harmless\" and the page reopens. Confident answers are remembered for 7 days, so the next visit is instant. In ⚡ Keyword match mode, or when the AI is unavailable, the word alone decides.",
         "description": "scan step5"
     },
     "scan_change_link": {
@@ -868,5 +868,9 @@
     "family_powered": {
         "message": "Powered by Firebase Authentication + Cloud Firestore",
         "description": "family powered"
+    },
+    "ai_help_off": {
+        "message": "Instant blocking with your word list, like the classic version. No AI, nothing leaves the computer.",
+        "description": "ai help off"
     }
 }

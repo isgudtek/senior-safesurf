@@ -74,7 +74,7 @@ the default path.
 
 | Where | What happens | Engine |
 |---|---|---|
-| A stop word appears on a page | The page is covered ("checking…") and the AI judges the word in context: **block**, **warn** or **allow** | Nano first, cloud fallback |
+| A stop word appears on a page | The page is **blocked at once**, as fast as v1.3. The AI then reviews the snapshot on the block page: it confirms the block with a reason, or says the mention is harmless and reopens the page. Confident answers are remembered for 7 days, so the next visit is instant | Nano first, cloud fallback |
 | A page asks for a password or card number, or posts a form to another site | One background check; a confident scam/phishing verdict shows a large warning banner (never a hard block) | Nano first, cloud fallback |
 | Popup: **Is this page safe?** (shield button) | Plain-language answer for the open tab | Nano first, cloud fallback |
 | Any scam/phishing warning or "not safe" result | **⛔ Block this site** adds the site to Blocked Sites and reloads, so the block page appears | – |
@@ -90,7 +90,7 @@ Every result says where it ran: 🔒 *Checked on this computer (Gemini Nano)* or
 
 | Setting | Values | Default |
 |---|---|---|
-| Where the AI runs (`aiMode`) | Off (keywords only) · On this computer only · Hybrid · Cloud only | Hybrid |
+| Where the AI runs (`aiMode`) | ⚡ Keyword match (instant, no AI, like v1.3) · On this computer only · Hybrid · Cloud only | Hybrid |
 | Allow cloud checks (`aiCloudConsent`) | on / off | asked on the welcome screen |
 | Sensitivity (`aiSensitivity`) | Relaxed · Balanced · Strict | Balanced |
 | Scam check on login and payment pages (`aiScanScope`) | on / off | on |
@@ -100,7 +100,7 @@ The popup has a compact copy of the mode switch.
 
 Routing rules (`src/engine.js › planRoute`):
 
-- **Off**: keywords only, exactly like v1.3.
+- **⚡ Keyword match**: word matching only, exactly like v1.3. No AI, and no remembered AI verdicts.
 - **On this computer only**: Gemini Nano. If it isn't available, keywords. Never the cloud.
 - **Hybrid**: Gemini Nano with `InferenceMode.PREFER_ON_DEVICE`. If Nano's confidence is below the escalation
   threshold (0.6), the same snapshot is re-checked once in the cloud. If Nano isn't available, cloud only.
@@ -109,8 +109,10 @@ Routing rules (`src/engine.js › planRoute`):
 
 Fail-safe rules (`ai_router.js › applyPolicy`):
 
-- A keyword hit stays blocked unless the AI says "allow" with enough confidence (0.6 / 0.75 / 0.9 for
-  Relaxed / Balanced / Strict). AI errors and timeouts keep the keyword block.
+- A keyword hit is blocked immediately. The AI can only reopen the page, and only if it says "allow" with
+  enough confidence (0.6 / 0.75 / 0.9 for Relaxed / Balanced / Strict). AI errors and timeouts keep the
+  keyword block. The block page labels both steps: "⚡ Blocked instantly…", then "🔒 Confirmed by Gemini
+  Nano" or "☁️ Confirmed by Gemini". A keyword block is never credited to the AI.
 - A page without a keyword hit is only ever **warned** about, and only when the AI is confident.
 
 ### First use of the on-device model
@@ -157,7 +159,7 @@ engine and the one-sentence reason. Never page text.
 
 ```mermaid
 flowchart LR
-  CS[content_filter.js<br/>stop word or risky page] -->|analyzePage: snapshot ≤3 KB| SW[background.js + ai_router.js<br/>switches, consent, policy, log]
+  CS[content_filter.js<br/>stop word: instant block<br/>or risky page] -->|keywordHit / analyzePage: snapshot ≤3 KB| SW[background.js + ai_router.js<br/>switches, consent, policy, log]
   P[popup: Is this page safe?] -->|checkActiveTab| SW
   SW -->|aiMode off| KW[keyword verdict]
   SW -->|target: offscreen| OS[offscreen.html → lib/offscreen.js<br/>Firebase AI Logic]

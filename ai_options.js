@@ -13,7 +13,7 @@
     };
 
     const MODE_HELP = {
-        off: () => t('ai_help_off', 'Only your keyword list is used, exactly like before. Pages with a blocked word are blocked immediately.'),
+        off: () => t('ai_help_off', 'Instant blocking with your word list, like the classic version. No AI, nothing leaves the computer.'),
         local: () => t('ai_help_local', 'The AI runs only on this computer. Nothing leaves it. If the on-device AI is not available, your keyword list is used.'),
         hybrid: () => t('ai_help_hybrid', 'Recommended. The AI runs on this computer first. If it is missing or unsure, and you allowed cloud checks, a small snapshot is checked in the cloud.'),
         cloud: () => t('ai_help_cloud', 'Every check runs in the cloud (needs cloud checks allowed). Useful on computers that cannot run on-device AI.')
@@ -34,7 +34,7 @@
     }
 
     const MODE_NAME = {
-        off: () => t('ai_mode_off', 'Off (keywords only)'),
+        off: () => t('ai_mode_off', '⚡ Keyword match'),
         local: () => t('ai_mode_local', '🔒 On this computer only'),
         hybrid: () => t('ai_mode_hybrid', '🔒 + ☁️ Hybrid'),
         cloud: () => t('ai_mode_cloud', '☁️ Cloud only')

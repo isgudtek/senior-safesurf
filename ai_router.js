@@ -148,6 +148,86 @@ async function recordEvent(verdict, snapshot, settings) {
     if (settings.familySyncEnabled) callEngine('logEvent', { event }).catch(() => { });
 }
 
+// ---------- Instant keyword blocks + background AI review ----------
+// The page is already on the block page when this runs. The AI's verdict is kept for the block page
+// (awaitVerdict) and, when confident, remembered per page and word for 7 days (verdictCache), so the
+// next visit is decided instantly: a harmless mention opens directly, a confirmed block shows its reason.
+
+const CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+const CACHE_MAX = 500;
+const pendingReviews = new Map(); // pid -> Promise<verdict>
+
+const cacheKey = (url, word) => {
+    try {
+        const u = new URL(url);
+        return `${u.hostname.replace(/^www\./, '')}${u.pathname}|${word}`;
+    } catch { return null; }
+};
+
+async function readCache(key) {
+    if (!key) return null;
+    const { verdictCache = {} } = await chrome.storage.local.get('verdictCache');
+    const v = verdictCache[key];
+    return v && Date.now() - v.ts < CACHE_TTL_MS ? v : null;
+}
+
+async function writeCache(key, verdict) {
+    if (!key) return;
+    const { verdictCache = {} } = await chrome.storage.local.get('verdictCache');
+    verdictCache[key] = {
+        ts: Date.now(), verdict: verdict.verdict, category: verdict.category,
+        reason: (verdict.reason || '').slice(0, 220), engine: verdict.engine
+    };
+    const keys = Object.keys(verdictCache);
+    if (keys.length > CACHE_MAX) {
+        keys.sort((a, b) => verdictCache[a].ts - verdictCache[b].ts)
+            .slice(0, keys.length - CACHE_MAX).forEach((k) => delete verdictCache[k]);
+    }
+    await chrome.storage.local.set({ verdictCache });
+}
+
+async function reviewKeywordHit({ pid, snapshot, word, review }, tabUrl) {
+    const key = cacheKey(tabUrl, word);
+    let verdict;
+    const cached = review ? await readCache(key) : null;
+    if (cached && cached.verdict !== 'allow') {
+        // Same page and word were already reviewed: show that verdict at once, no AI call.
+        verdict = { ...cached, cached: true, trigger: 'keyword' };
+        await recordEvent(verdict, snapshot, await getAiSettings());
+    } else if (!review) {
+        // Keyword match mode (or too many reviews on this page): log the plain keyword block.
+        const settings = await getAiSettings();
+        verdict = { ...keywordVerdict(snapshot), trigger: 'keyword' };
+        await recordEvent(verdict, snapshot, settings);
+    } else {
+        verdict = await analyze(snapshot, 'keyword');
+        // Only AI answers are remembered; applyPolicy already turned unsure "allow"s into blocks.
+        if (verdict.engine === 'on-device' || verdict.engine === 'cloud') await writeCache(key, verdict);
+    }
+    const result = { ...verdict, word, url: tabUrl };
+    await chrome.storage.session.set({ [`pending_${pid}`]: result });
+    return result;
+}
+
+async function awaitReview(pid) {
+    if (pendingReviews.has(pid)) return pendingReviews.get(pid);
+    // The service worker may have restarted, or the block page asked first: poll briefly.
+    for (let i = 0; i < 40; i++) {
+        const r = await chrome.storage.session.get(`pending_${pid}`);
+        if (r[`pending_${pid}`]) return r[`pending_${pid}`];
+        if (pendingReviews.has(pid)) return pendingReviews.get(pid);
+        await new Promise((res) => setTimeout(res, 500));
+    }
+    return null;
+}
+
+// Load Gemini Nano and the cloud bridge early, so the first review isn't paying the start-up cost.
+async function prewarmEngine() {
+    const settings = await getAiSettings();
+    if (settings.aiMode === 'off') return;
+    callEngine('prewarm', { config: engineConfig(settings) }).catch(() => { });
+}
+
 // ---------- Message handling ----------
 
 async function analyze(snapshot, trigger) {
@@ -193,6 +273,18 @@ function handleAiMessage(message, sender, sendResponse) {
     switch (message.command) {
         case 'analyzePage':
             return run(analyze(message.snapshot || {}, message.trigger || 'keyword'));
+        case 'keywordHit': {
+            // From the content script, which is already navigating to the block page. Use the tab's
+            // real URL (not anything the page says) for the cache key.
+            const tabUrl = (sender.tab && sender.tab.url) || '';
+            const p = reviewKeywordHit(message, tabUrl).catch((e) => ({ verdict: 'block', engine: 'keywords', error: String(e && e.message || e) }));
+            pendingReviews.set(message.pid, p);
+            p.finally(() => setTimeout(() => pendingReviews.delete(message.pid), 60000));
+            sendResponse({ ok: true });
+            return false;
+        }
+        case 'awaitVerdict':
+            return run(awaitReview(message.pid));
         case 'checkActiveTab':
             return run((async () => {
                 const { snapshot, error } = await snapshotActiveTab();

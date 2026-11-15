@@ -192,7 +192,7 @@
         "description": "Scanning feature name"
     },
     "smart_scan_desc": {
-        "message": "Controlla ogni pagina per le tue parole bloccate. Quando ne compare una, l'IA legge il testo intorno prima di bloccare.",
+        "message": "Controlla ogni pagina per le tue parole bloccate e blocca subito. In una modalità IA, l'IA poi legge il testo intorno alla parola e può riaprire le pagine innocue.",
         "description": "Scanning feature description"
     },
     "safety_presets_title": {
@@ -634,7 +634,7 @@
         "description": "ai mode title"
     },
     "ai_mode_off": {
-        "message": "Spenta (solo parole chiave)",
+        "message": "⚡ Solo parole chiave",
         "description": "ai mode off"
     },
     "ai_mode_local": {
@@ -822,7 +822,7 @@
         "description": "scan step1"
     },
     "scan_step2": {
-        "message": "Se la parola viene trovata, la pagina viene coperta e un piccolo estratto (nome del sito, titolo, intestazioni e circa 600 caratteri intorno alla parola) viene controllato dall'IA tramite Firebase AI Logic.",
+        "message": "Se la parola viene trovata, la pagina viene bloccata subito, come nella versione classica. In una modalità IA, un piccolo estratto (nome del sito, titolo, intestazioni e circa 600 caratteri intorno alla parola) viene poi controllato dall'IA tramite Firebase AI Logic.",
         "description": "scan step2"
     },
     "scan_step3": {
@@ -834,7 +834,7 @@
         "description": "scan step4"
     },
     "scan_step5": {
-        "message": "L'IA decide: blocca (pagina bloccata con il motivo), avvisa (banner di avviso) o consenti (menzione innocua, la pagina resta aperta). Se l'IA è spenta, non disponibile o troppo lenta, la pagina viene bloccata dalla parola, come prima.",
+        "message": "La pagina di blocco mostra il risultato: confermato con il motivo, oppure \"sembra innocua\" e la pagina si riapre. Le risposte sicure vengono ricordate per 7 giorni, quindi la visita successiva è immediata. In modalità ⚡ Solo parole chiave, o se l'IA non è disponibile, decide solo la parola.",
         "description": "scan step5"
     },
     "scan_change_link": {
@@ -860,5 +860,9 @@
     "family_powered": {
         "message": "Basato su Firebase Authentication + Cloud Firestore",
         "description": "family powered"
+    },
+    "ai_help_off": {
+        "message": "Blocco immediato con il tuo elenco di parole, come la versione classica. Nessuna IA, nulla esce dal computer.",
+        "description": "ai help off"
     }
 }

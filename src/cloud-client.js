@@ -38,6 +38,23 @@ function ensureFrame() {
 
 /** Runs a cloud Gemini request through the hosted page. kind: 'verdict' (JSON schema) or 'text'. */
 export async function cloudGenerate(kind, prompt, model) {
+    try {
+        return await sendToBridge(kind, prompt, model);
+    } catch (e) {
+        // A rejected App Check attempt throttles the bridge page for its lifetime; reload it and retry once.
+        if (!/app ?check|attestation|throttle|401|403/i.test(String(e && e.message))) throw e;
+        resetFrame();
+        return sendToBridge(kind, prompt, model);
+    }
+}
+
+function resetFrame() {
+    if (frame) frame.remove();
+    frame = null;
+    ready = null;
+}
+
+async function sendToBridge(kind, prompt, model) {
     await ensureFrame();
     const id = crypto.randomUUID();
     return new Promise((resolve, reject) => {

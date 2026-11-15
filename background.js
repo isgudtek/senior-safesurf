@@ -20,6 +20,13 @@ chrome.runtime.onStartup.addListener(() => {
     updateBlockingRules();
 });
 
+// Get the AI engine ready (Gemini Nano in memory, cloud bridge loaded) whenever the worker starts,
+// and again when the user turns the AI or cloud checks on.
+prewarmEngine();
+chrome.storage.onChanged.addListener((changes, area) => {
+    if (area === 'local' && (changes.aiMode || changes.aiCloudConsent)) prewarmEngine();
+});
+
 // v1.3 had a paid tier. Everything is free now, so drop its leftover keys.
 async function removeLegacyLicenseData() {
     await chrome.storage.local.remove(['isPro', 'licenseKey', 'lastLicenseCheck']);
