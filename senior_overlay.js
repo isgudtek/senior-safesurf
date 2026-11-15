@@ -156,12 +156,9 @@
             }
 
             // 0. "Is this page safe?" (same AI check as the popup)
-            const safeBtn = createThemedButton('🛡', 'Is this page safe?');
+            const safeBtn = createThemedButton('', 'Is this page safe?');
             safeBtn.setAttribute('aria-label', 'Is this page safe?');
-            safeBtn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
-            safeBtn.style.borderColor = 'transparent';
-            safeBtn.style.fontSize = '18px';
-            safeBtn.onmouseout = () => { safeBtn.style.transform = 'translateY(0)'; safeBtn.style.boxShadow = 'none'; };
+            safeBtn.innerHTML = SHIELD_SVG; // constant markup, no page or AI data
             safeBtn.onclick = () => checkThisPage(safeBtn, { isLight, textColor, bgColor, borderColor, mutedColor });
 
             // 1. Zoom Controls
@@ -219,9 +216,9 @@
                 }
             };
 
-            overlay.appendChild(safeBtn);
             overlay.appendChild(zoomOutBtn);
             overlay.appendChild(zoomInBtn);
+            overlay.appendChild(safeBtn);
             overlay.appendChild(settingsBtn);
             overlay.appendChild(separator);
             overlay.appendChild(closeBtn);
@@ -299,6 +296,11 @@
 
     // ---------- "Is this page safe?" card ----------
     const CHECK_ID = 'safenet-senior-check';
+    // Flat green shield with a check mark (inline SVG, no emoji).
+    const SHIELD_SVG = '<svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex-shrink:0">' +
+        '<path d="M12 2 4 5v6.5c0 5.2 3.4 9.4 8 10.5 4.6-1.1 8-5.3 8-10.5V5l-8-3z" fill="#10b981"/>' +
+        '<path d="m8.3 12.2 2.6 2.6 4.9-5.3" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>' +
+        '</svg>';
     const HEADLINE = {
         allow: '✅ This page looks safe',
         warn: '⚠️ Be careful on this page',
@@ -362,8 +364,9 @@
         if (checking) return;
         checking = true;
         btn.textContent = '…';
+        btn.style.color = '#10b981';
         btn.disabled = true;
-        showCheckCard(theme, { verdict: 'unknown', title: '🛡 Checking this page…', text: 'This takes a few seconds.' });
+        showCheckCard(theme, { verdict: 'unknown', title: 'Checking this page…', text: 'This takes a few seconds.' });
         try {
             const snapshot = SafeSurfSnapshot.build({ trigger: 'manual' });
             const v = (await chrome.runtime.sendMessage({ command: 'analyzePage', snapshot, trigger: 'manual' })) || {};
@@ -374,7 +377,7 @@
             showCheckCard(theme, { verdict: 'unknown', title: HEADLINE.unknown, text: 'Reload the page and try again.' });
         } finally {
             checking = false;
-            btn.textContent = '🛡';
+            btn.innerHTML = SHIELD_SVG;
             btn.disabled = false;
         }
     }
