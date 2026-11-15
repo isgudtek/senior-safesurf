@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Senior SafeSurf</title>
+    <style>
+        :root {
+            --primary: #007aff;
+            /* Apple Blue */
+            --primary-dark: #0056b3;
+            --bg-glass: rgba(15, 23, 42, 0.7);
+            /* Translucent Slate */
+            --bg-accent: rgba(30, 41, 59, 0.5);
+            --text-main: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --border: rgba(255, 255, 255, 0.1);
+            --pro: #ff9f0a;
+            /* Apple Orange */
+        }
+
+        [data-theme="light"] {
+            --bg-glass: rgba(255, 255, 255, 0.85);
+            --bg-accent: rgba(241, 245, 249, 0.8);
+            --text-main: #0f172a;
+            --text-muted: rgba(15, 23, 42, 0.6);
+            --border: rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="light"] body {
+            background: #e2e8f0;
+            background-image:
+                radial-gradient(at 0% 0%, rgba(0, 122, 255, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(10, 132, 255, 0.08) 0px, transparent 50%);
+        }
+
+        /* Light theme - Solid navbar background */
+        [data-theme="light"] .nav-bar {
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Light theme - Tile states */
+        [data-theme="light"] .dialer-grid button {
+            background: rgba(255, 255, 255, 0.9) !important;
+            border-color: rgba(0, 0, 0, 0.08) !important;
+        }
+
+        [data-theme="light"] .dialer-grid button:hover {
+            background: rgba(0, 0, 0, 0.05) !important;
+        }
+
+        [data-theme="light"] .nav-link.active {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        [data-theme="light"] .glass-container {
+            background: var(--bg-glass);
+        }
+
+        /* Light theme - Input fields */
+        [data-theme="light"] input[type="text"],
+        [data-theme="light"] input[type="password"] {
+            background: rgba(255, 255, 255, 0.95) !important;
+            color: #0f172a !important;
+            border-color: rgba(0, 0, 0, 0.15) !important;
+        }
+
+        [data-theme="light"] input::placeholder {
+            color: rgba(0, 0, 0, 0.4) !important;
+        }
+
+        [data-theme="light"] input[type="text"]:focus,
+        [data-theme="light"] input[type="password"]:focus {
+            background: #ffffff !important;
+        }
+
+        /* Light theme - Settings gear icon blue */
+        [data-theme="light"] .settings-btn svg {
+            fill: var(--primary);
+        }
+
+        [data-theme="light"] .settings-btn:hover {
+            background: #ffffff;
+            border-color: var(--primary);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            width: 400px;
+            height: 580px;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+            background: #000;
+            background-image:
+                radial-gradient(at 0% 0%, rgba(0, 122, 255, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(10, 132, 255, 0.1) 0px, transparent 50%);
+            color: var(--text-main);
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Glassmorphism Container */
+        .glass-container {
+            position: absolute;
+            inset: 0;
+            background: var(--bg-glass);
+            backdrop-filter: blur(30px) saturate(180%);
+            -webkit-backdrop-filter: blur(30px) saturate(180%);
+            z-index: -1;
+        }
+
+        .version-tag {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            font-size: 10px;
+            color: var(--text-muted);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 28px;
+            margin-top: 20px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        .header h1 svg {
+            fill: var(--primary);
+            filter: drop-shadow(0 0 8px rgba(0, 122, 255, 0.4));
+        }
+
+        .settings-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-accent);
+            border-radius: 50%;
+            border: 1px solid var(--border);
+        }
+
+        .settings-btn:hover {
+            opacity: 1;
+            transform: scale(1.1) rotate(45deg);
+            background: var(--primary);
+        }
+
+        .settings-btn svg {
+            fill: #fff;
+            width: 14px;
+            height: 14px;
+        }
+
+        .header p {
+            font-size: 15px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            flex: 1;
+            padding: 14px 16px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: var(--bg-accent);
+            color: var(--text-main);
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            border-color: var(--primary);
+            background: rgba(30, 41, 59, 0.8);
+            box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.15);
+        }
+
+        input[type="text"]::placeholder,
+        input[type="password"]::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        button {
+            padding: 14px 24px;
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .add-btn {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+        }
+
+        .add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 122, 255, 0.4);
+            filter: brightness(1.1);
+        }
+
+        .add-btn:active {
+            transform: scale(0.96);
+        }
+
+        .capture-label {
+            width: 100%;
+            color: var(--primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .manage-links-btn {
+            width: 100%;
+            background: var(--bg-accent);
+            color: #fff;
+            border: 1px solid var(--border);
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 16px;
+            cursor: pointer;
+            margin-top: 16px;
+        }
+
+        .manage-links-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .tier-badge {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .tier-badge.free {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+        }
+
+        .tier-badge.pro {
+            background: var(--pro);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(255, 159, 10, 0.3);
+        }
+
+        .upgrade-section {
+            background: rgba(255, 159, 10, 0.1);
+            border: 1px solid rgba(255, 159, 10, 0.2);
+            padding: 12px;
+            border-radius: 14px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .upgrade-section p {
+            font-size: 13px;
+            color: var(--pro);
+            font-weight: 600;
+        }
+
+        .upgrade-section span {
+            font-size: 12px;
+            text-decoration: underline;
+            cursor: pointer;
+            display: block;
+            margin-top: 4px;
+            opacity: 0.8;
+        }
+
+        .preview-area {
+            font-size: 14px;
+            color: var(--text-muted);
+            background: rgba(0, 122, 255, 0.05);
+            padding: 16px;
+            border-radius: 14px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+            border: 1px solid rgba(0, 122, 255, 0.2);
+        }
+
+        .preview-area strong {
+            color: #fff;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .password-view {
+            padding: 40px 20px;
+        }
+
+        .password-view label {
+            display: block;
+            margin-bottom: 16px;
+            font-size: 17px;
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        /* Floating Nav Bar */
+        .nav-bar {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: rgba(15, 23, 42, 0.98);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px;
+            border-radius: 24px;
+            border: 1px solid var(--border);
+            z-index: 100;
+            box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .nav-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+            padding: 8px 0;
+            border-radius: 16px;
+        }
+
+        .nav-link svg {
+            width: 22px;
+            height: 22px;
+            fill: currentColor;
+        }
+
+        .nav-link.active {
+            color: var(--primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .view-section {
+            display: none;
+            height: calc(100% - 140px);
+            overflow-y: auto;
+            padding-bottom: 40px;
+        }
+
+        .view-section.active {
+            display: block;
+        }
+
+        /* Grid specific */
+        #speedDialerContainer {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        /* Reminder UI Card */
+        .reminder-card {
+            background: var(--bg-accent);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 24px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .timer-display {
+            font-size: 56px;
+            font-weight: 700;
+            font-family: 'SF Pro Display', ui-monospace, monospace;
+            color: #fff;
+            margin: 16px 0;
+            letter-spacing: -2px;
+        }
+
+        .timer-controls {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .timer-btn {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            padding: 10px;
+            border-radius: 12px;
+            font-size: 15px;
+            border: 1px solid var(--border);
+        }
+
+        .timer-btn:hover {
+            background: var(--primary);
+            border-color: transparent;
+        }
+
+        .timer-action-btn {
+            width: 100%;
+            padding: 16px;
+            font-size: 18px;
+            border-radius: 16px;
+        }
+
+        /* Custom Timer Picker */
+        .custom-timer-container {
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .picker-display {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            letter-spacing: -2px;
+        }
+
+        .picker-display span {
+            min-width: 60px;
+        }
+
+        .picker-display small {
+            font-size: 20px;
+            color: var(--text-muted);
+            letter-spacing: 0;
+            margin-top: 10px;
+        }
+
+        .ios-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            outline: none;
+            margin: 20px 0;
+        }
+
+        .ios-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 28px;
+            height: 28px;
+            background: #fff;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            border: 2px solid var(--primary);
+            transition: transform 0.2s;
+        }
+
+        .ios-slider::-webkit-slider-thumb:active {
+            transform: scale(1.2);
+        }
+
+        .quick-presets {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .preset-chip {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.2s;
+        }
+
+        .preset-chip:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .view-status {
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .view-status .count {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        /* Toggle Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 20px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #334155;
+            transition: .3s;
+            border-radius: 20px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 14px;
+            width: 14px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: var(--primary);
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(20px);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="glass-container"></div>
+    <div id="settingsBtn" class="settings-btn" title="Settings">
+        <svg viewBox="0 0 24 24">
+            <path
+                d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+            <circle cx="12" cy="12" r="3" />
+        </svg>
+    </div>
+
+    <div class="version-tag">Senior SafeSurf Pro v1.3</div>
+    <div class="header">
+        <div style="display: flex; justify-content: center; align-items: center; gap: 8px;">
+            <h1 data-i18n="extName">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    style="display: inline-block; vertical-align: middle;">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+                Senior SafeSurf
+            </h1>
+            <span id="tierBadge" class="tier-badge free">FREE</span>
+        </div>
+    </div>
+
+    <!-- Setup Password View -->
+    <div id="setupView" class="password-view hidden">
+        <label data-i18n="set_master_pass">Set a Master Password</label>
+        <input type="password" id="newPasswordInput" placeholder="New Password" data-i18n="new_pass_placeholder">
+        <input type="password" id="confirmPasswordInput" placeholder="Confirm Password"
+            data-i18n="confirm_pass_placeholder">
+        <button class="password-btn" id="savePasswordBtn" data-i18n="set_pass_btn">Set Password</button>
+    </div>
+
+    <!-- Unlock Password View -->
+    <div id="unlockView" class="password-view hidden">
+        <label data-i18n="enter_password_unlock">Enter Password to Unlock</label>
+        <input type="password" id="unlockPasswordInput" placeholder="Password" data-i18n="pass_placeholder">
+        <button class="password-btn" id="unlockBtn" data-i18n="unlock_btn">Unlock</button>
+    </div>
+
+    <!-- Main App View -->
+    <div id="appView" class="hidden">
+        <!-- Tab Navigation Bar -->
+        <nav class="nav-bar">
+            <div class="nav-link active" id="tab-dial" data-view="dial" data-i18n="view_dial">
+                <svg viewBox="0 0 24 24">
+                    <path
+                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V9h2v7zm4 0h-2V7h2v9z" />
+                </svg>
+                Speed Dial
+            </div>
+            <div class="nav-link" id="tab-block" data-view="blocker" data-i18n="view_blocker">
+                <svg viewBox="0 0 24 24">
+                    <path
+                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+                </svg>
+                Blocks
+            </div>
+        </nav>
+
+        <!-- Section 1: Speed Dial -->
+        <div id="view-dial" class="view-section active">
+            <div id="speedDialerContainer" class="dialer-grid">
+                <!-- Buttons injected by JS -->
+            </div>
+            <p id="dialStatus" class="view-status"
+                style="margin-top: 12px; text-align: center; font-size: 11px; color: var(--text-muted); padding-bottom: 8px;">
+                bookmarks left <span id="bookmarksRemaining">3</span>/3
+            </p>
+        </div>
+
+        <!-- Section 2: Blocker -->
+        <div id="view-block" class="view-section">
+            <p id="blockStatus" class="view-status">Manage blocks <span id="blockCount" class="count">0</span> / <span
+                    id="blockLimit">3</span></p>
+            <div id="upgradeSection" class="upgrade-section hidden">
+                <p><strong data-i18n="limit_reached">Limit Reached!</strong></p>
+                <span id="openOptions" data-i18n="upgrade_pro_hint">Upgrade to PRO for unlimited blocks</span>
+            </div>
+
+            <label id="blockLabel"
+                style="font-size: 14px; font-weight: 600; color: var(--text-main); margin-bottom: 8px; display: block;"
+                data-i18n="add_current_page">Block current page/domain</label>
+
+            <div class="input-group">
+                <input type="text" id="domainInput" placeholder="Enter domain (e.g., facebook.com)"
+                    data-i18n="domain_placeholder">
+                <button class="add-btn" id="addBtn" data-i18n="add_btn">Add</button>
+            </div>
+
+            <div id="previewArea" class="preview-area hidden"></div>
+
+            <div id="manageLinksBtn" class="manage-links-btn" data-i18n="security_rules_btn">
+                Security & Rules
+            </div>
+
+            <div
+                style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; background: var(--bg-accent); padding: 12px; border-radius: 12px; border: 1px solid var(--border);">
+                <span style="font-size: 13px; font-weight: 500; color: var(--text-muted);">Senior Assist</span>
+                <label class="switch" style="transform: scale(0.9);">
+                    <input type="checkbox" id="popupOverlayToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/i18n.js"></script>
+    <script src="popup.js"></script>
+</body>
+
+</html>

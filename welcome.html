@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Senior SafeSurf</title>
+    <style>
+        :root {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --pro: #f59e0b;
+            --pro-dark: #d97706;
+            --bg: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.75);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: var(--text-main);
+            line-height: 1.7;
+            min-height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* Foundational Background */
+        #bgContainer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            z-index: -2;
+            filter: brightness(0.35) saturate(1.2);
+            transition: opacity 1s ease-in-out;
+        }
+
+        .overlay-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, transparent 0%, rgba(15, 23, 42, 0.85) 100%);
+            z-index: -1;
+        }
+
+        /* Presentation Wrapper */
+        .presentation-wrapper {
+            width: 100%;
+            max-width: 900px;
+            height: 580px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            max-width: 780px;
+            background: var(--card-bg);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            padding: 50px 60px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6);
+            transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+            opacity: 0;
+            transform: translateY(30px) scale(0.96);
+        }
+
+        .slide.active {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        /* Animations */
+        .slide.active h1 {
+            animation: fadeUp 0.5s 0.15s both;
+        }
+
+        .slide.active .subtitle {
+            animation: fadeUp 0.5s 0.25s both;
+        }
+
+        .slide.active .visual {
+            animation: fadeUp 0.5s 0.35s both;
+        }
+
+        .slide.active .feature-grid {
+            animation: fadeUp 0.5s 0.4s both;
+        }
+
+        .slide.active .privacy-badge {
+            animation: fadeUp 0.5s 0.5s both;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 38px;
+            font-weight: 800;
+            margin-bottom: 14px;
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 17px;
+            color: var(--text-muted);
+            max-width: 520px;
+            margin-bottom: 32px;
+        }
+
+        /* Visuals */
+        .visual {
+            width: 100%;
+            margin-bottom: 32px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .icon-shield {
+            color: var(--primary);
+        }
+
+        .icon-block {
+            color: #ef4444;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            width: 100%;
+        }
+
+        .feature-item {
+            background: rgba(255, 255, 255, 0.04);
+            padding: 18px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+        }
+
+        .feature-item h3 {
+            font-size: 14px;
+            margin-bottom: 6px;
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .feature-item p {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Privacy Badge */
+        .privacy-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 10px 20px;
+            border-radius: 30px;
+            margin-top: 20px;
+            font-size: 13px;
+            color: var(--primary);
+        }
+
+        /* Navigation */
+        .nav-controls {
+            position: absolute;
+            bottom: -75px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .btn-nav {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border);
+            color: #fff;
+            padding: 12px 30px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(10px);
+            font-size: 14px;
+        }
+
+        .btn-nav:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .btn-nav.primary {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .btn-nav.primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-nav.pro {
+            background: var(--pro);
+            border-color: var(--pro);
+        }
+
+        .progress-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            transition: all 0.3s;
+        }
+
+        .dot.active {
+            background: var(--primary);
+            width: 22px;
+            border-radius: 10px;
+        }
+
+        /* Comparison Table */
+        .compact-table {
+            width: 100%;
+            font-size: 12px;
+            border-collapse: collapse;
+            text-align: left;
+            margin-bottom: 24px;
+        }
+
+        .compact-table th,
+        .compact-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .compact-table th {
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-size: 10px;
+        }
+
+        .compact-table td:not(:first-child) {
+            text-align: center;
+        }
+
+        /* Final CTA Grid */
+        .cta-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            width: 100%;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .pexels-attribution {
+            position: fixed;
+            bottom: 18px;
+            right: 28px;
+            font-size: 10px;
+            color: var(--text-muted);
+            opacity: 0.4;
+        }
+
+        .pexels-attribution a {
+            color: inherit;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="bgContainer"></div>
+    <div class="overlay-gradient"></div>
+
+    <div class="presentation-wrapper">
+        <div class="slide-container">
+            <!-- Slide 1: Welcome -->
+            <div class="slide active" id="slide-1">
+                <div class="visual">
+                    <svg class="icon-shield" width="72" height="72" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    </svg>
+                </div>
+                <h1>Welcome to Senior SafeSurf</h1>
+                <p class="subtitle">A simpler, safer web experience designed for you. Big buttons, clear controls, and
+                    protection from scams—all without compromising your privacy.</p>
+                <div class="feature-grid">
+                    <div class="feature-item">
+                        <h3>🖱️ Big Buttons</h3>
+                        <p>Large, easy-to-click speed dial for your favorite sites.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h3>🛡️ Smart Shield</h3>
+                        <p>Block unwanted sites and scam keywords automatically.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h3>🔒 100% Private</h3>
+                        <p>We never store or analyze your data. Ever.</p>
+                    </div>
+                </div>
+                <div class="privacy-badge">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    </svg>
+                    All data stays on your computer. Zero tracking.
+                </div>
+            </div>
+
+            <!-- Slide 2: Speed Dial -->
+            <div class="slide" id="slide-2">
+                <div class="visual">
+                    <div
+                        style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; background: rgba(255,255,255,0.03); padding: 24px; border-radius: 20px; border: 1px solid var(--border);">
+                        <div
+                            style="width: 48px; height: 48px; background: var(--primary); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800;">
+                            G</div>
+                        <div style="width: 48px; height: 48px; background: rgba(255,255,255,0.1); border-radius: 12px;">
+                        </div>
+                        <div style="width: 48px; height: 48px; background: rgba(255,255,255,0.1); border-radius: 12px;">
+                        </div>
+                        <div style="width: 48px; height: 48px; background: rgba(255,255,255,0.1); border-radius: 12px;">
+                        </div>
+                        <div
+                            style="width: 48px; height: 48px; background: var(--primary); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800;">
+                            Y</div>
+                        <div style="width: 48px; height: 48px; background: rgba(255,255,255,0.1); border-radius: 12px;">
+                        </div>
+                    </div>
+                </div>
+                <h1>Your Favorites, One Click Away</h1>
+                <p class="subtitle">The Speed Dial gives you a grid of large, high-visibility buttons. No more squinting
+                    at tiny links. Just click and go.</p>
+                <div class="feature-item"
+                    style="width: 100%; background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.2);">
+                    <p style="color: #fff; font-size: 13px;"><strong>Free:</strong> 3 bookmarks. <strong>PRO:</strong>
+                        Unlimited bookmarks to build your personal portal.</p>
+                </div>
+            </div>
+
+            <!-- Slide 3: Blocker -->
+            <div class="slide" id="slide-3">
+                <div class="visual">
+                    <svg class="icon-block" width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+                    </svg>
+                </div>
+                <h1>Protection from Scams & Distractions</h1>
+                <p class="subtitle">Block entire websites, specific pages, or dangerous keywords. Keep unwanted content
+                    away from your screen with surgical precision.</p>
+                <div class="feature-grid">
+                    <div class="feature-item">
+                        <h3>Site Blocker</h3>
+                        <p>Block facebook.com, casino.net, or any domain.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h3>Keyword Shield</h3>
+                        <p>Block pages mentioning "lottery", "wire transfer", etc.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h3>Safety Presets</h3>
+                        <p>Load curated anti-scam packs in one click.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 4: Senior Assist Overlay -->
+            <div class="slide" id="slide-4">
+                <div class="visual">
+                    <div
+                        style="background: rgba(15, 23, 42, 0.95); padding: 12px 24px; border-radius: 50px; border: 1px solid var(--border); display: flex; gap: 18px; align-items: center; box-shadow: 0 8px 30px rgba(0,0,0,0.4);">
+                        <span style="font-weight: 800; font-size: 20px; color: #fff;">Aa-</span>
+                        <span style="font-weight: 800; font-size: 20px; color: #fff;">Aa+</span>
+                        <span style="opacity: 0.2; font-size: 20px;">|</span>
+                        <span style="font-size: 22px;">⚙️</span>
+                    </div>
+                </div>
+                <h1>Senior Assist Toolbar</h1>
+                <p class="subtitle">A floating helper that stays with you on every page. Increase text size without the
+                    page jumping around. Access settings instantly.</p>
+                <div class="feature-item" style="width: 100%;">
+                    <p style="font-size: 13px; color: var(--text-muted);">Toggle it on or off from the popup. It
+                        remembers your preferences and keeps the buttons in a fixed position—no more chasing moving
+                        targets.</p>
+                </div>
+            </div>
+
+            <!-- Slide 5: Choose Your Path -->
+            <div class="slide" id="slide-5">
+                <h1>Ready to Browse Safely?</h1>
+                <p class="subtitle" style="margin-bottom: 20px;">Pick the tier that suits you. Both are 100% private—we
+                    never see your data.</p>
+
+                <table class="compact-table">
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Free</th>
+                            <th>PRO</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Speed Dial Slots</td>
+                            <td>3</td>
+                            <td>Unlimited</td>
+                        </tr>
+                        <tr>
+                            <td>Blocking Rules</td>
+                            <td>3</td>
+                            <td>Unlimited</td>
+                        </tr>
+                        <tr>
+                            <td>Anti-Scam Presets</td>
+                            <td>Limited</td>
+                            <td>1000+ Keywords</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="cta-grid">
+                    <button class="btn-nav" id="freeBtn" style="justify-content: center; width: 100%;">Start
+                        Free</button>
+                    <button class="btn-nav pro" id="proBtn" style="justify-content: center; width: 100%;">Unlock
+                        PRO</button>
+                </div>
+                <p style="font-size: 11px; color: var(--text-muted); margin-top: 18px;">PRO starts at $2.99/month.
+                    Cancel anytime.</p>
+            </div>
+        </div>
+
+        <!-- Shared Navigation -->
+        <div class="nav-controls">
+            <button class="btn-nav" id="prevBtn">Back</button>
+            <div class="progress-dots" id="dotContainer">
+                <div class="dot active"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+            <button class="btn-nav primary" id="nextBtn">Next</button>
+        </div>
+    </div>
+
+    <div class="pexels-attribution" id="authorAttribution">Photo by <a id="authorLink" href="#" target="_blank"></a> on
+        Pexels</div>
+
+    <script src="welcome.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,760 @@
+{
+    "extName": {
+        "message": "Senior SafeSurf",
+        "description": "The name of the extension."
+    },
+    "extDesc": {
+        "message": "Un'esperienza di navigazione semplificata e sicura su misura per gli anziani. Include selezione rapida, blocchi e promemoria.",
+        "description": "The description of the extension."
+    },
+    "view_dial": {
+        "message": "Rapido",
+        "description": "Speed dial tab label"
+    },
+    "view_blocker": {
+        "message": "Senior SafeSurf",
+        "description": "Blocker tab label"
+    },
+    "view_reminder": {
+        "message": "Promemoria",
+        "description": "Reminder tab label"
+    },
+    "add_site": {
+        "message": "Aggiungi",
+        "description": "Add site button text"
+    },
+    "settings": {
+        "message": "Impostazioni",
+        "description": "Settings link text"
+    },
+    "set_master_pass": {
+        "message": "Imposta Password Master",
+        "description": "Password set label"
+    },
+    "new_pass_placeholder": {
+        "message": "Nuova Password",
+        "description": "New password input placeholder"
+    },
+    "confirm_pass_placeholder": {
+        "message": "Conferma Password",
+        "description": "Confirm password input placeholder"
+    },
+    "set_pass_btn": {
+        "message": "Imposta Password",
+        "description": "Set password button text"
+    },
+    "enter_password_unlock": {
+        "message": "Inserire Password per Sbloccare",
+        "description": "Unlock password label"
+    },
+    "pass_placeholder": {
+        "message": "Password",
+        "description": "Generic password placeholder"
+    },
+    "unlock_btn": {
+        "message": "Sblocca",
+        "description": "Unlock button text"
+    },
+    "limit_reached": {
+        "message": "Limite Raggiunto!",
+        "description": "Limit warning title"
+    },
+    "upgrade_pro_hint": {
+        "message": "Passa a PRO per blocchi illimitati",
+        "description": "PRO upgrade hint"
+    },
+    "add_current_page": {
+        "message": "Blocca pagina/dominio corrente",
+        "description": "Label for adding current tab"
+    },
+    "domain_placeholder": {
+        "message": "Inserisci dominio (es. facebook.com)",
+        "description": "Domain input placeholder"
+    },
+    "add_btn": {
+        "message": "Aggiungi",
+        "description": "Add domain button"
+    },
+    "security_rules_btn": {
+        "message": "Sicurezza & Regole",
+        "description": "Options page link button"
+    },
+    "handy_reminders": {
+        "message": "Promemoria Utili",
+        "description": "Reminder section title"
+    },
+    "set_quick_alarm": {
+        "message": "Imposta un allarme rapido",
+        "description": "Reminder sub-title"
+    },
+    "start_timer_btn": {
+        "message": "AVVIA TIMER",
+        "description": "Start timer button"
+    },
+    "cancel_btn": {
+        "message": "ANNULLA",
+        "description": "Cancel button"
+    },
+    "nav_instructions": {
+        "message": "Istruzioni",
+        "description": "Sidebar instructions"
+    },
+    "nav_dialer": {
+        "message": "Selezione Rapida",
+        "description": "Sidebar dialer"
+    },
+    "nav_domains": {
+        "message": "Siti Bloccati",
+        "description": "Sidebar domains"
+    },
+    "nav_security": {
+        "message": "Sicurezza & Password",
+        "description": "Sidebar security"
+    },
+    "nav_parental": {
+        "message": "Parole Bloccate",
+        "description": "Sidebar parental"
+    },
+    "nav_appearance": {
+        "message": "Aspetto",
+        "description": "Sidebar appearance"
+    },
+    "nav_license": {
+        "message": "Licenza",
+        "description": "Sidebar license"
+    },
+    "nav_support": {
+        "message": "Supporto & Feedback",
+        "description": "Sidebar support"
+    },
+    "nav_general": {
+        "message": "Impostazioni",
+        "description": "Sidebar general"
+    },
+    "inst_welcome": {
+        "message": "Benvenuti in Senior SafeSurf",
+        "description": "Instructions welcome title"
+    },
+    "inst_intro_title": {
+        "message": "🛡️ Protezione ad Alta Visibilità",
+        "description": "Intro title"
+    },
+    "inst_intro_desc": {
+        "message": "Senior SafeSurf è progettato per essere il tuo scudo chirurgico. Ci concentriamo sulla semplicità e sulla sicurezza. Il popup rileva automaticamente la pagina che stai visitando. Se vuoi bloccarla, clicca l'icona e clicca Aggiungi.",
+        "description": "Intro description"
+    },
+    "inst_how_to_title": {
+        "message": "🔍 Come Bloccare",
+        "description": "How to block title"
+    },
+    "inst_universal_title": {
+        "message": "1. Blocco Universale",
+        "description": "Universal block title"
+    },
+    "inst_universal_desc": {
+        "message": "Inserisci una singola parola come 'instagram'. Questo rimuove chirurgicamente tutte le varianti (.com, .net, ecc.). È l'opzione nucleare.",
+        "description": "Universal block desc"
+    },
+    "dial_quick_setup_title": {
+        "message": "Configurazione Rapida Senior",
+        "description": "Quick setup title"
+    },
+    "dial_quick_setup_desc": {
+        "message": "Riempi istantaneamente la tua Selezione Rapida con siti affidabili curati per gli anziani. Nota: Questo sovrascriverà gli slot esistenti.",
+        "description": "Quick setup desc"
+    },
+    "btn_global_essentials": {
+        "message": "Essenziali Globali",
+        "description": "Global pack button"
+    },
+    "btn_italian_essentials": {
+        "message": "Essenziali Italiani",
+        "description": "Italian pack button"
+    },
+    "dial_add_favorite": {
+        "message": "Aggiungi Sito Preferito",
+        "description": "Add favorite site legend"
+    },
+    "dial_add_desc": {
+        "message": "Inserisci il nome e l'URL del tuo sito preferito per un accesso rapido.",
+        "description": "Add favorite site instructions"
+    },
+    "dial_name_placeholder": {
+        "message": "Nome Sito (es. Google)",
+        "description": "Dialer name placeholder"
+    },
+    "dial_url_placeholder": {
+        "message": "URL (es. google.com)",
+        "description": "Dialer URL placeholder"
+    },
+    "btn_add_dialer": {
+        "message": "Aggiungi a Rapido",
+        "description": "Add to dialer button"
+    },
+    "parental_title": {
+        "message": "Parental Control",
+        "description": "Parental section title"
+    },
+    "content_filter_title": {
+        "message": "Filtro Contenuti",
+        "description": "Content filter legend"
+    },
+    "smart_scan_name": {
+        "message": "Scansione Intelligente Pagine",
+        "description": "Scanning feature name"
+    },
+    "smart_scan_desc": {
+        "message": "Blocca automaticamente le pagine che contengono specifiche 'Parole Bloccate' nel testo.",
+        "description": "Scanning feature description"
+    },
+    "safety_presets_title": {
+        "message": "Preset Sicurezza Senior",
+        "description": "Safety presets title"
+    },
+    "safety_presets_desc": {
+        "message": "Proteggiti istantaneamente da truffe comuni e parole fraudolente. Nota: Gli utenti gratuiti sono limitati ai primi 3 termini.",
+        "description": "Safety presets description"
+    },
+    "btn_safety_en": {
+        "message": "English (Anti-Scam)",
+        "description": "English safety btn"
+    },
+    "btn_safety_it": {
+        "message": "Italiano (Anti-Frode)",
+        "description": "Italian safety btn"
+    },
+    "btn_load_pro_shield": {
+        "message": "Carica Preset Pro-Shield",
+        "description": "Load pro presets btn"
+    },
+    "pro_shield_hint": {
+        "message": "Carica più di 100 parole chiave chirurgiche per rafforzare istantaneamente lo scudo.",
+        "description": "Pro shield hint"
+    },
+    "stop_word_placeholder": {
+        "message": "Inserisci parola da bloccare",
+        "description": "Stop word placeholder"
+    },
+    "btn_add_stop_word": {
+        "message": "Aggiungi Parola",
+        "description": "Add stop word btn"
+    },
+    "active_stop_words_title": {
+        "message": "Parole Bloccate Attive",
+        "description": "Active words title"
+    },
+    "btn_clear_all": {
+        "message": "Cancella Tutto",
+        "description": "Clear all btn"
+    },
+    "settings_title": {
+        "message": "Impostazioni Estensione",
+        "description": "Settings section title"
+    },
+    "license_status_title": {
+        "message": "Stato Licenza",
+        "description": "License status title"
+    },
+    "license_status_desc_free": {
+        "message": "Attualmente limitato a 3 regole di blocco. Passa a PRO per sbloccare la piena potenza.",
+        "description": "License free description"
+    },
+    "license_key_placeholder": {
+        "message": "Inserisci Chiave Licenza",
+        "description": "License input placeholder"
+    },
+    "btn_activate_pro": {
+        "message": "Attiva PRO",
+        "description": "Activate btn"
+    },
+    "get_pro_link": {
+        "message": "Non hai una chiave? Ottieni PRO a partire da $2.99",
+        "description": "Checkout link text"
+    },
+    "select_plan_title": {
+        "message": "🔓 Seleziona il tuo Piano",
+        "description": "Plan selection title"
+    },
+    "plan_monthly": {
+        "message": "Mensile",
+        "description": "Monthly plan"
+    },
+    "plan_yearly": {
+        "message": "Annuale",
+        "description": "Yearly plan"
+    },
+    "best_value_badge": {
+        "message": "MIGLIOR OFFERTA",
+        "description": "Best value badge"
+    },
+    "btn_select_plan": {
+        "message": "Seleziona",
+        "description": "Select plan button"
+    },
+    "security_settings_title": {
+        "message": "Impostazioni Sicurezza",
+        "description": "Security section title"
+    },
+    "security_pass_title": {
+        "message": "Password Master",
+        "description": "Security pass title"
+    },
+    "security_pass_desc": {
+        "message": "Proteggi le tue impostazioni da modifiche non autorizzate.",
+        "description": "Security pass desc"
+    },
+    "current_pass_placeholder": {
+        "message": "Password Attuale",
+        "description": "Current password placeholder"
+    },
+    "btn_set_save": {
+        "message": "Imposta & Salva",
+        "description": "Set and save button"
+    },
+    "add_new_rule_title": {
+        "message": "Aggiungi Nuova Regola",
+        "description": "Add rule legend"
+    },
+    "add_new_rule_desc": {
+        "message": "Inserisci una parola (Universale), dominio.com (Dominio) o dominio.com/percorso (Percorso).",
+        "description": "Add rule description"
+    },
+    "domain_input_placeholder": {
+        "message": "es. facebook.com",
+        "description": "Domain input placeholder"
+    },
+    "btn_add_rule": {
+        "message": "Aggiungi Regola",
+        "description": "Add rule button"
+    },
+    "active_blacklist_title": {
+        "message": "Blacklist Attiva",
+        "description": "Blacklist title"
+    },
+    "btn_export_json": {
+        "message": "Esporta JSON",
+        "description": "Export button"
+    },
+    "btn_import_json": {
+        "message": "Importa JSON",
+        "description": "Import button"
+    },
+    "appearance_title": {
+        "message": "Aspetto",
+        "description": "Appearance section title"
+    },
+    "bg_title": {
+        "message": "Sfondo Pagina Bloccata",
+        "description": "Background setting title"
+    },
+    "bg_desc": {
+        "message": "Scegli un'immagine di sfondo personalizzata per la pagina visualizzata quando un sito è bloccato.",
+        "description": "Background setting description"
+    },
+    "bg_abstract": {
+        "message": "Astratto",
+        "description": "Abstract category"
+    },
+    "bg_animals": {
+        "message": "Animali",
+        "description": "Animals category"
+    },
+    "bg_streetlife": {
+        "message": "Vita di Strada",
+        "description": "Streetlife category"
+    },
+    "bg_nature": {
+        "message": "Natura",
+        "description": "Nature category"
+    },
+    "bg_cyber": {
+        "message": "Cyber",
+        "description": "Cyber category"
+    },
+    "bg_fetching": {
+        "message": "Recupero immagini da Pexels...",
+        "description": "Fetching loader"
+    },
+    "btn_prev": {
+        "message": "Precedente",
+        "description": "Previous button"
+    },
+    "btn_next": {
+        "message": "Successivo",
+        "description": "Next button"
+    },
+    "table_max_targets": {
+        "message": "Target Massimi",
+        "description": "Table row"
+    },
+    "table_unlimited": {
+        "message": "Illimitati",
+        "description": "Table value"
+    },
+    "table_parental_presets": {
+        "message": "Preset Parentali",
+        "description": "Table row"
+    },
+    "table_10_langs": {
+        "message": "10 Lingue",
+        "description": "Table value"
+    },
+    "table_rule_sync": {
+        "message": "Sincronizzazione Regole",
+        "description": "Table row"
+    },
+    "table_included": {
+        "message": "Inclusa",
+        "description": "Table value"
+    },
+    "table_future_updates": {
+        "message": "Aggiornamenti Futuri",
+        "description": "Table row"
+    },
+    "advanced_config_title": {
+        "message": "Configurazione Avanzata",
+        "description": "Advanced title"
+    },
+    "bypass_name": {
+        "message": "Consenti Bypass di 1 Minuto",
+        "description": "Bypass setting name"
+    },
+    "bypass_desc": {
+        "message": "Abilita il pulsante 'Continua Comunque' con verifica password per un accesso di emergenza di 1 minuto.",
+        "description": "Bypass setting desc"
+    },
+    "notifications_label": {
+        "message": "Mostra notifiche desktop al blocco",
+        "description": "Notifications setting label"
+    },
+    "support_title": {
+        "message": "Supporto & Feedback",
+        "description": "Support section title"
+    },
+    "contact_title": {
+        "message": "📬 Comando Contatto",
+        "description": "Contact legend"
+    },
+    "contact_desc": {
+        "message": "Hai riscontrato un bug o hai un suggerimento chirurgico? Usa il modulo sottostante per contattare direttamente lo sviluppatore.",
+        "description": "Contact description"
+    },
+    "request_type_label": {
+        "message": "Tipo di Richiesta",
+        "description": "Support label"
+    },
+    "support_type_assistance": {
+        "message": "Assistenza",
+        "description": "Support option"
+    },
+    "support_type_suggestion": {
+        "message": "Suggerimento",
+        "description": "Support option"
+    },
+    "support_type_bug": {
+        "message": "Segnala un Bug",
+        "description": "Support option"
+    },
+    "email_optional_label": {
+        "message": "Tua Email (Opzionale)",
+        "description": "Support label"
+    },
+    "email_placeholder": {
+        "message": "per scopi di risposta",
+        "description": "Email input placeholder"
+    },
+    "message_label": {
+        "message": "Messaggio",
+        "description": "Support label"
+    },
+    "message_placeholder": {
+        "message": "Descrivi la tua richiesta in modo chirurgico...",
+        "description": "Message textarea placeholder"
+    },
+    "btn_send_message": {
+        "message": "Invia Messaggio",
+        "description": "Submit support button"
+    },
+    "alert_enter_license": {
+        "message": "Inserisci una chiave di licenza.",
+        "description": "Alert"
+    },
+    "alert_pro_active": {
+        "message": "Successo! La tua licenza Pro è ora attiva.",
+        "description": "Alert"
+    },
+    "alert_license_verified": {
+        "message": "Successo! Licenza verificata.\nScadenza: $EXPIRY$",
+        "description": "Alert",
+        "placeholders": {
+            "expiry": {
+                "content": "$1"
+            }
+        }
+    },
+    "alert_license_error": {
+        "message": "Errore Licenza: $MSG$",
+        "description": "Alert",
+        "placeholders": {
+            "msg": {
+                "content": "$1"
+            }
+        }
+    },
+    "alert_connection_error": {
+        "message": "Errore di connessione: $MSG$\nAssicurati di essere connesso a internet.",
+        "description": "Alert",
+        "placeholders": {
+            "msg": {
+                "content": "$1"
+            }
+        }
+    },
+    "alert_already_in_list": {
+        "message": "Già in elenco.",
+        "description": "Alert"
+    },
+    "alert_limit_reached": {
+        "message": "Limite raggiunto! Passa a PRO per aggiungere altro.",
+        "description": "Alert"
+    },
+    "confirm_remove_password": {
+        "message": "Impostare una password vuota rimuoverà la protezione. Questo disabiliterà anche la funzione Bypass di 1 Minuto. Procedere?",
+        "description": "Confirm"
+    },
+    "alert_pass_mismatch": {
+        "message": "Le password non corrispondono.",
+        "description": "Alert"
+    },
+    "alert_curr_pass_wrong": {
+        "message": "Password attuale errata.",
+        "description": "Alert"
+    },
+    "alert_pass_removed": {
+        "message": "Password rimossa.",
+        "description": "Alert"
+    },
+    "alert_pass_saved": {
+        "message": "Password salvata con successo!",
+        "description": "Alert"
+    },
+    "alert_import_limit": {
+        "message": "Avviso: Come utente FREE, solo i primi 3 elementi verranno importati. Passa a PRO per importare tutti i $TOTAL$ elementi.",
+        "description": "Alert",
+        "placeholders": {
+            "total": {
+                "content": "$1"
+            }
+        }
+    },
+    "alert_import_success": {
+        "message": "Importazione riuscita!",
+        "description": "Alert"
+    },
+    "alert_import_failed": {
+        "message": "Importazione fallita: file JSON non valido.",
+        "description": "Alert"
+    },
+    "prompt_enter_password": {
+        "message": "Azione Protetta: Inserisci Password Master",
+        "description": "Prompt"
+    },
+    "alert_wrong_password": {
+        "message": "Password errata.",
+        "description": "Alert"
+    },
+    "alert_pro_random_bg": {
+        "message": "Funzione PRO: Gli sfondi casuali per categoria sono disponibili solo per i membri PRO.",
+        "description": "Alert"
+    },
+    "alert_pro_select_bg": {
+        "message": "Funzione PRO: Puoi selezionare solo la prima immagine per categoria come utente FREE. Passa a PRO per sbloccare centinaia di sfondi di alta qualità!",
+        "description": "Alert"
+    },
+    "confirm_add_safety": {
+        "message": "Aggiungere il pacchetto sicurezza $PACK$ alla tua lista di blocco? Questo aiuta a prevenire le comuni truffe online.",
+        "description": "Confirm",
+        "placeholders": {
+            "pack": {
+                "content": "$1"
+            }
+        }
+    },
+    "rule_desc_path": {
+        "message": "<strong>Blocco Percorso</strong>: Chiude il percorso esatto e le sue sottopagine.",
+        "description": "Rule type desc"
+    },
+    "rule_desc_universal": {
+        "message": "<strong>Blocco Universale</strong>: Chiude \"$ENTRY$\" in ogni singola estensione (.com, .net, .org, ecc.).",
+        "description": "Rule type desc",
+        "placeholders": {
+            "entry": {
+                "content": "$1"
+            }
+        }
+    },
+    "rule_desc_domain": {
+        "message": "<strong>Blocco Dominio</strong>: Chiude $ENTRY$ e tutti i suoi sottodomini (mail, drive, etc.).",
+        "description": "Rule type desc",
+        "placeholders": {
+            "entry": {
+                "content": "$1"
+            }
+        }
+    },
+    "alert_safety_limit": {
+        "message": "Versione Gratuita: Solo i primi 3 termini di sicurezza sono stati aggiunti. Passa a PRO per aggiungerli tutti!",
+        "description": "Alert"
+    },
+    "alert_pack_loaded": {
+        "message": "Pacchetto $PACK$ caricato con successo!",
+        "description": "Alert",
+        "placeholders": {
+            "pack": {
+                "content": "$1"
+            }
+        }
+    },
+    "alert_stopword_limit": {
+        "message": "Limite raggiunto! Passa a PRO per aggiungere altre parole chiave.",
+        "description": "Alert"
+    },
+    "alert_pro_shield_required": {
+        "message": "I preset Pro-Shield richiedono una licenza PRO. Passa a PRO per sbloccare più di 1000 parole chiave!",
+        "description": "Alert"
+    },
+    "alert_presets_loaded": {
+        "message": "Caricati con successo $COUNT$ preset chirurgici per $LANG$.",
+        "description": "Alert",
+        "placeholders": {
+            "count": {
+                "content": "$1"
+            },
+            "lang": {
+                "content": "$2"
+            }
+        }
+    },
+    "alert_all_presets_exist": {
+        "message": "Tutti i preset sono già nella tua lista.",
+        "description": "Alert"
+    },
+    "confirm_clear_stopwords": {
+        "message": "Cancellare tutte le parole bloccate? Questo indebolirà lo scudo.",
+        "description": "Confirm"
+    },
+    "alert_license_expired": {
+        "message": "La tua licenza Pro è scaduta o non è valida.\nMotivo: $REASON$\n\nControlla il tuo abbonamento.",
+        "description": "Alert",
+        "placeholders": {
+            "reason": {
+                "content": "$1"
+            }
+        }
+    },
+    "btn_sending": {
+        "message": "Invio in corso...",
+        "description": "Button state"
+    },
+    "error_connection": {
+        "message": "Errore di connessione. Riprova più tardi.",
+        "description": "Error message"
+    },
+    "confirm_add_presets": {
+        "message": "Sei sicuro? Questo aggiungerà questi siti affidabili alla tua selezione rapida.",
+        "description": "Confirm"
+    },
+    "alert_bookmark_limit": {
+        "message": "Limite raggiunto! Passa a PRO per aggiungere più di 3 segnalibri.",
+        "description": "Alert"
+    },
+    "no_dial_sites": {
+        "message": "Ancora nessun sito nella selezione rapida.",
+        "description": "Empty state"
+    },
+    "btn_verifying": {
+        "message": "Verifica in corso...",
+        "description": "Button state"
+    },
+    "btn_check_status": {
+        "message": "Verifica Stato",
+        "description": "Button state"
+    },
+    "manage_blocks_label": {
+        "message": "Gestisci blocchi",
+        "description": "Popup header label"
+    },
+    "alert_pass_match_error": {
+        "message": "Le password non corrispondono",
+        "description": "Alert"
+    },
+    "alert_pass_set_success": {
+        "message": "Password impostata con successo",
+        "description": "Alert"
+    },
+    "alert_unlocked": {
+        "message": "Sbloccato",
+        "description": "Alert"
+    },
+    "alert_confirm_add": {
+        "message": "Confermi?",
+        "description": "Button confirmation state"
+    },
+    "alert_blocking_domain": {
+        "message": "Blocco di $DOMAIN$",
+        "description": "Status message",
+        "placeholders": {
+            "domain": {
+                "content": "$1"
+            }
+        }
+    },
+    "alert_cannot_capture": {
+        "message": "Impossibile catturare questa pagina",
+        "description": "Alert"
+    },
+    "alert_saved_dial": {
+        "message": "Salvato nella Selezione Rapida",
+        "description": "Alert"
+    },
+    "timer_active": {
+        "message": "Timer ATTIVO",
+        "description": "Timer state"
+    },
+    "time_is_up": {
+        "message": "TEMPO SCADUTO!",
+        "description": "Timer state"
+    },
+    "alarm_message": {
+        "message": "⏰ Allarme SafeNet: Tempo scaduto!",
+        "description": "Alert"
+    },
+    "timer_canceled": {
+        "message": "Timer Annullato",
+        "description": "Timer state"
+    },
+    "nav_settings_license": {
+        "message": "Impostazioni/Licenza",
+        "description": "Sidebar label"
+    },
+    "settings_license_title": {
+        "message": "Impostazioni Estensione e Licenza",
+        "description": "Section title"
+    },
+    "language_title": {
+        "message": "Lingua di Visualizzazione",
+        "description": "Card title"
+    },
+    "app_language_label": {
+        "message": "Lingua dell'Applicazione",
+        "description": "Option label"
+    },
+    "app_language_desc": {
+        "message": "Scegli la tua lingua preferita per l'interfaccia.",
+        "description": "Option description"
+    },
+    "alert_language_saved": {
+        "message": "Lingua aggiornata. Ricarica per l'effetto completo.",
+        "description": "Alert"
+    }
+}
