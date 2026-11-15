@@ -83,7 +83,10 @@ function textModel(mode, rc) {
 }
 
 const TRIGGER_NOTE = {
-    keyword: (s) => `The page contains the word "${s.word}" from the user's block list. Judge whether that mention is harmful here or harmless (news, history, health, museums, recipes, place names).`,
+    keyword: (s) => {
+        const list = (Array.isArray(s.words) && s.words.length ? s.words : [s.word]).map((w) => `"${w}"`).join(', ');
+        return `The page contains ${list} from the user's block list. Judge whether these mentions are harmful here or harmless (news, history, health, museums, recipes, place names).`;
+    },
     risky: () => 'The page has a login, payment or form field. Check for phishing or scam signs: a brand that does not match the site, urgency, prizes, fake security alerts, payment by gift card or wire transfer.',
     manual: () => 'The user asked: "Is this page safe for me?"'
 };

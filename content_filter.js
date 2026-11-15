@@ -81,8 +81,17 @@
         // Hand the snapshot to the service worker without waiting: it logs the block and, in an AI mode,
         // starts the review that the block page shows. Navigation does not wait for the answer.
         const snapshot = SafeSurfSnapshot.build({ text, match, trigger: 'keyword' });
+        // Every other blocked word on the page goes into the same review, so a page that mentions
+        // "gun" and "rifle" is checked once, not once per word.
+        const words = [match.word];
+        const seen = new Set([...cleared, match.word]);
+        for (let m; words.length < 8 && (m = SafeSurfKeywords.findMatch(text, compiled, seen));) {
+            words.push(m.word);
+            seen.add(m.word);
+        }
+        snapshot.words = words;
         try {
-            chrome.runtime.sendMessage({ command: 'keywordHit', pid, snapshot, word: match.word, review }).catch(() => { });
+            chrome.runtime.sendMessage({ command: 'keywordHit', pid, snapshot, word: match.word, words, review }).catch(() => { });
         } catch { /* extension reloaded: block anyway */ }
         window.location.replace(chrome.runtime.getURL(`blocked.html?${params}`));
     }

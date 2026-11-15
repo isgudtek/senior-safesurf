@@ -186,7 +186,7 @@ async function writeCache(key, verdict) {
     await chrome.storage.local.set({ verdictCache });
 }
 
-async function reviewKeywordHit({ pid, snapshot, word, review }, tabUrl) {
+async function reviewKeywordHit({ pid, snapshot, word, words, review }, tabUrl) {
     const key = cacheKey(tabUrl, word);
     let verdict;
     const cached = review ? await readCache(key) : null;
@@ -202,7 +202,11 @@ async function reviewKeywordHit({ pid, snapshot, word, review }, tabUrl) {
     } else {
         verdict = await analyze(snapshot, 'keyword');
         // Only AI answers are remembered; applyPolicy already turned unsure "allow"s into blocks.
-        if (verdict.engine === 'on-device' || verdict.engine === 'cloud') await writeCache(key, verdict);
+        // The one review covers every blocked word found on the page, so remember it for each of them.
+        if (verdict.engine === 'on-device' || verdict.engine === 'cloud') {
+            const all = [...new Set([word, ...(Array.isArray(words) ? words.slice(0, 8) : [])])];
+            for (const w of all) await writeCache(cacheKey(tabUrl, w), verdict);
+        }
     }
     const result = { ...verdict, word, url: tabUrl };
     await chrome.storage.session.set({ [`pending_${pid}`]: result });
