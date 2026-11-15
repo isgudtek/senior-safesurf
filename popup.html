@@ -704,14 +704,6 @@
             <!-- AI: "Is this page safe?" -->
             <div class="ai-check">
                 <button id="aiCheckBtn" class="ai-check-btn" data-i18n="ai_check_btn">🛡 Is this page safe?</button>
-                <div
-                    style="display: flex; justify-content: space-between; align-items: center; margin: 0; background: var(--bg-accent); padding: 12px; border-radius: 12px; border: 1px solid var(--border);">
-                    <span style="font-size: 13px; font-weight: 500; color: var(--text-muted);">Senior Assist</span>
-                    <label class="switch" style="transform: scale(0.9);">
-                        <input type="checkbox" id="popupOverlayToggle">
-                        <span class="slider"></span>
-                    </label>
-                </div>
                 <div id="aiCheckResult" class="ai-check-result hidden" aria-live="polite"></div>
                 <div class="ai-mode-row">
                     <span data-i18n="ai_label">AI</span>
@@ -721,6 +713,14 @@
                         <option value="hybrid">🔒+☁️ Hybrid</option>
                         <option value="cloud">☁️ Cloud</option>
                     </select>
+                </div>
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; margin: 0; background: var(--bg-accent); padding: 12px; border-radius: 12px; border: 1px solid var(--border);">
+                    <span style="font-size: 13px; font-weight: 500; color: var(--text-muted);">Senior Assist</span>
+                    <label class="switch" style="transform: scale(0.9);">
+                        <input type="checkbox" id="popupOverlayToggle">
+                        <span class="slider"></span>
+                    </label>
                 </div>
             </div>
 
