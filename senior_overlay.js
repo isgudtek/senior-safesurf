@@ -312,6 +312,12 @@
         cloud: 'Checked in the cloud (Gemini via Firebase).',
         keywords: 'Checked with your keyword list.'
     };
+    // Which AI answered, shown as a pill at the top of the card.
+    const ENGINE_BADGE = {
+        'on-device': { label: '🔒 Local AI · Gemini Nano', color: '#059669' },
+        cloud: { label: '☁️ Cloud AI · Gemini via Firebase', color: '#2563eb' },
+        keywords: { label: '🔤 Keyword list', color: '#64748b' }
+    };
     const ACCENT = { allow: '#10b981', warn: '#f59e0b', block: '#ef4444', unknown: '#64748b' };
 
     function closeCheckCard() {
@@ -345,6 +351,14 @@
         head.style.cssText = 'font-size: 19px; font-weight: 800; margin: 0 22px 6px 0;';
         head.textContent = content.title;
         card.append(close, head);
+        const badge = ENGINE_BADGE[content.engine];
+        if (badge) {
+            const pill = document.createElement('div');
+            pill.style.cssText = `display: inline-block; margin: 0 0 8px; padding: 4px 10px; border-radius: 999px;
+                font-size: 13px; font-weight: 700; color: #fff; background: ${badge.color};`;
+            pill.textContent = badge.label;
+            card.appendChild(pill);
+        }
         if (content.text) {
             const body = document.createElement('div');
             body.textContent = content.text; // AI text is never inserted as HTML
@@ -385,7 +399,7 @@
             const v = (await chrome.runtime.sendMessage({ command: 'analyzePage', snapshot, trigger: 'manual' })) || {};
             const verdict = HEADLINE[v.verdict] ? v.verdict : 'unknown';
             const meta = [ENGINE[v.engine], v.escalated ? '(double-checked in the cloud)' : ''].filter(Boolean).join(' ');
-            showCheckCard(theme, { verdict, title: HEADLINE[verdict], text: v.reason || '', meta });
+            showCheckCard(theme, { verdict, engine: v.engine, title: HEADLINE[verdict], text: v.reason || '', meta });
         } catch (e) {
             showCheckCard(theme, { verdict: 'unknown', title: HEADLINE.unknown, text: 'Reload the page and try again.' });
         } finally {
