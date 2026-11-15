@@ -74,7 +74,7 @@ the default path.
 |---|---|---|
 | A stop word appears on a page | The page is covered ("checking…") and the AI judges the word in context: **block**, **warn** or **allow** | Nano first, cloud fallback |
 | A page asks for a password or card number, or posts a form to another site | One background check; a confident scam/phishing verdict shows a large warning banner (never a hard block) | Nano first, cloud fallback |
-| Popup: **🛡 Is this page safe?** | Plain-language answer for the open tab | Nano first, cloud fallback |
+| Popup: **Is this page safe?** (shield button) | Plain-language answer for the open tab | Nano first, cloud fallback |
 | Any scam/phishing warning or "not safe" result | **⛔ Block this site** adds the site to Blocked Sites and reloads, so the block page appears | – |
 | Senior Assist toolbar: shield button (between Aa+ and ⚙️) | The same check from the on-page toolbar, with the answer in a card on the page | Nano first, cloud fallback |
 | Blocked page | Shows the AI's reason ("Blocked: gambling. …") and where it was checked | – |

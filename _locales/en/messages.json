@@ -762,7 +762,7 @@
         "description": "family signout btn"
     },
     "ai_check_btn": {
-        "message": "🛡 Is this page safe?",
+        "message": "Is this page safe?",
         "description": "ai check btn"
     },
     "ai_label": {

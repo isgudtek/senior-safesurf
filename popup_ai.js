@@ -1,6 +1,7 @@
 // Popup: "Is this page safe?" button and the quick AI mode switch.
 (function () {
     const btn = document.getElementById('aiCheckBtn');
+    const btnLabel = document.getElementById('aiCheckLabel'); // the shield icon stays, only the text changes
     const out = document.getElementById('aiCheckResult');
     const modeSelect = document.getElementById('aiModeSelect');
     if (!btn || !out || !modeSelect) return;
@@ -78,8 +79,8 @@
 
     btn.addEventListener('click', async () => {
         btn.disabled = true;
-        const label = btn.textContent;
-        btn.textContent = t('ai_checking', 'Checking…');
+        const label = btnLabel.textContent;
+        btnLabel.textContent = t('ai_checking', 'Checking…');
         out.classList.add('hidden');
         const { aiMode } = await chrome.storage.local.get('aiMode');
         if (aiMode !== 'off' && aiMode !== 'cloud') maybeStartNanoDownload();
@@ -89,7 +90,7 @@
             render({ verdict: 'unknown', reason: String(e.message || e) });
         } finally {
             btn.disabled = false;
-            btn.textContent = label;
+            btnLabel.textContent = label;
         }
     });
 

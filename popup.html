@@ -279,7 +279,7 @@
         }
 
         .ai-check { margin: 0 0 14px; display: flex; flex-direction: column; gap: 8px; }
-        .ai-check-btn { width: 100%; padding: 14px; font-size: 17px; font-weight: 800; border-radius: 14px; border: 0; cursor: pointer;
+        .ai-check-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 14px; font-size: 17px; font-weight: 800; border-radius: 14px; border: 0; cursor: pointer;
             background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #fff; }
         .ai-check-btn:disabled { opacity: .7; cursor: progress; }
         .ai-check-result { padding: 14px; border-radius: 14px; font-size: 15px; line-height: 1.45; border: 1px solid var(--border); background: var(--bg-accent); color: var(--text-main); }
@@ -706,7 +706,7 @@
         <div id="view-block" class="view-section">
             <!-- AI: "Is this page safe?" -->
             <div class="ai-check">
-                <button id="aiCheckBtn" class="ai-check-btn" data-i18n="ai_check_btn">🛡 Is this page safe?</button>
+                <button id="aiCheckBtn" class="ai-check-btn"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5v6.5c0 5.2 3.4 9.4 8 10.5 4.6-1.1 8-5.3 8-10.5V5l-8-3z" fill="currentColor"/></svg><span id="aiCheckLabel" data-i18n="ai_check_btn">Is this page safe?</span></button>
                 <div id="aiCheckResult" class="ai-check-result hidden" aria-live="polite"></div>
                 <div class="ai-mode-row">
                     <span data-i18n="ai_label">AI</span>

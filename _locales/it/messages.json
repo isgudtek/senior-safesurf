@@ -754,7 +754,7 @@
         "description": "family signout btn"
     },
     "ai_check_btn": {
-        "message": "🛡 Questa pagina è sicura?",
+        "message": "Questa pagina è sicura?",
         "description": "ai check btn"
     },
     "ai_label": {
