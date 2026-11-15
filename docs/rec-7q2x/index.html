@@ -26,12 +26,47 @@
         tr.active td { outline: 2px solid var(--primary); outline-offset: -2px; background: rgba(16,185,129,.12); }
         .hint { color: var(--muted); font-size: 14px; margin-top: 10px; }
         b { color: #fff; }
+        .demo { background: var(--card); border: 1px solid rgba(16,185,129,.35); border-radius: 16px; padding: 16px 18px; margin-bottom: 18px; }
+        .demo h2 { font-size: 19px; margin-bottom: 6px; color: var(--primary); }
+        .demo a { color: #34d399; }
+        .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+        .card { display: flex; flex-direction: column; gap: 6px; background: rgba(2,6,23,.6); border: 1px solid rgba(255,255,255,.08); border-radius: 14px; padding: 14px; text-decoration: none; color: var(--text) !important; }
+        .card:hover { border-color: var(--primary); }
+        .card .t { font-weight: 800; font-size: 17px; }
+        .card .u { color: #34d399; font-size: 13px; word-break: break-all; }
+        .card .d { color: #cbd5e1; font-size: 15px; }
+        .card .s { color: var(--muted); font-size: 13px; margin-top: auto; }
         kbd { background: rgba(255,255,255,.1); border-radius: 6px; padding: 1px 7px; font-family: inherit; }
     </style>
 </head>
 <body>
     <h1>🎬 Senior SafeSurf · recording script</h1>
     <p class="sub">Target ≈ 2:55 (limit 3:00). Click a row or press <kbd>↓</kbd>/<kbd>↑</kbd> (or <kbd>Space</kbd>) to highlight the current scene.</p>
+
+    <section class="demo">
+        <h2>🧪 Demo pages (prepared for the video)</h2>
+        <p class="hint" style="margin:0 0 12px">Hosted at <a href="https://safesurf-demo.web.app/">safesurf-demo.web.app</a>. They always behave the same way. You can open them in tabs before adding the words, because open tabs react straight away.</p>
+        <div class="cards">
+            <a class="card" href="https://safesurf-demo.web.app/casino.html" target="_blank">
+                <span class="t">🎰 Casino</span>
+                <span class="u">safesurf-demo.web.app/casino.html</span>
+                <span class="d">Needs the word <b>casino</b>. Blocked instantly, then the AI confirms it's gambling.</span>
+                <span class="s">Scene 1:08–1:28</span>
+            </a>
+            <a class="card" href="https://safesurf-demo.web.app/history.html" target="_blank">
+                <span class="t">📜 History article with "gun"</span>
+                <span class="u">safesurf-demo.web.app/history.html</span>
+                <span class="d">Needs the word <b>gun</b>. Blocked for a moment, then the AI says it's harmless and reopens it. Then use the shield: "Looks safe".</span>
+                <span class="s">Scene 1:28–1:48 · open only once before the real take</span>
+            </a>
+            <a class="card" href="https://safesurf-demo.web.app/securebank.html" target="_blank">
+                <span class="t">🏦 Fake bank alert</span>
+                <span class="u">safesurf-demo.web.app/securebank.html</span>
+                <span class="d">Needs no word. The orange scam banner appears by itself. Click <b>⛔ Block this site</b>.</span>
+                <span class="s">Scene 1:48–2:15</span>
+            </a>
+        </div>
+    </section>
 
     <details>
         <summary>Before recording (checklist)</summary>
