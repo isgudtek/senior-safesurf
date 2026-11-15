@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Recording script · Senior SafeSurf</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #10b981; --bg: #020617; --card: rgba(15, 23, 42, 0.85); --muted: #94a3b8; --text: #f8fafc; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: var(--bg); color: var(--text); font-family: 'Outfit', system-ui, sans-serif; padding: 28px; line-height: 1.45; }
+        h1 { font-size: 26px; margin-bottom: 4px; }
+        .sub { color: var(--muted); margin-bottom: 18px; font-size: 15px; }
+        details { background: var(--card); border: 1px solid rgba(255,255,255,.08); border-radius: 16px; padding: 14px 18px; margin-bottom: 18px; }
+        summary { cursor: pointer; font-weight: 700; color: var(--primary); }
+        details ol, details ul { margin: 10px 0 0 20px; color: var(--muted); font-size: 16px; }
+        details li { margin-bottom: 6px; }
+        table { width: 100%; border-collapse: separate; border-spacing: 0 10px; }
+        th { text-align: left; font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); padding: 0 14px; }
+        td { background: var(--card); padding: 16px 18px; vertical-align: top; font-size: 19px; }
+        td:first-child { border-radius: 14px 0 0 14px; font-weight: 800; color: var(--primary); white-space: nowrap; font-size: 20px; width: 1%; }
+        td:last-child { border-radius: 0 14px 14px 0; }
+        td.shot { width: 40%; color: #cbd5e1; font-size: 17px; }
+        td.vo { font-size: 21px; font-weight: 600; }
+        tr.active td { outline: 2px solid var(--primary); outline-offset: -2px; background: rgba(16,185,129,.12); }
+        .hint { color: var(--muted); font-size: 14px; margin-top: 10px; }
+        b { color: #fff; }
+        kbd { background: rgba(255,255,255,.1); border-radius: 6px; padding: 1px 7px; font-family: inherit; }
+    </style>
+</head>
+<body>
+    <h1>🎬 Senior SafeSurf · recording script</h1>
+    <p class="sub">Target ≈ 2:55 (limit 3:00). Click a row or press <kbd>↓</kbd>/<kbd>↑</kbd> (or <kbd>Space</kbd>) to highlight the current scene.</p>
+
+    <details>
+        <summary>Before recording (checklist)</summary>
+        <ol>
+            <li>Remove Senior SafeSurf from <b>chrome://extensions</b>, then load the fresh zip, so the welcome tab opens on install.</li>
+            <li>Check Gemini Nano works (AI Protection says <b>Ready on this computer</b>), so badges read <b>🔒 Local AI</b>.</li>
+            <li>Tabs ready: a <b>casino site</b>, a <b>history page that mentions "gun"</b> (e.g. a Wikipedia article on a historic rifle), a <b>fake bank page</b>. Never a real phishing site.</li>
+            <li>Normal Chrome window, zoom 100%, other extensions off.</li>
+        </ol>
+        <ul>
+            <li>Move the mouse slowly; pause a beat on every result so "Checked on this computer" is readable.</li>
+            <li>If a result says Cloud instead of Local, keep it: it shows the hybrid fallback. Mention it.</li>
+            <li>Record a little longer than needed; the voiceover is re-timed to the footage afterwards.</li>
+        </ul>
+    </details>
+
+    <table>
+        <thead><tr><th>Time</th><th>On screen</th><th>Voiceover</th></tr></thead>
+        <tbody id="rows">
+            <tr><td>0:00–0:12</td><td class="shot">Welcome tab opens on install: <b>"Now with local AI through Firebase"</b></td>
+                <td class="vo">Older adults lose more to online scams than anyone. Senior SafeSurf is a free Swiss Army knife that keeps them safe, now with local AI through Firebase.</td></tr>
+            <tr><td>0:12–0:30</td><td class="shot">Click through the slides quickly. Last slide: <b>"On-device AI is ready"</b>, tick cloud consent, press <b>Start protecting</b></td>
+                <td class="vo">Setup takes one screen. It checks the computer for Gemini Nano, and the cloud is only used if you allow it.</td></tr>
+            <tr><td>0:30–0:52</td><td class="shot">Popup › <b>Speed Dial</b>: click an empty <b>+</b> tile to add the current site (or Settings › Speed Dialer › <b>Global Essentials</b>). Click a big tile</td>
+                <td class="vo">Big buttons for favourite sites. No more hunting for tiny links.</td></tr>
+            <tr><td>0:52–1:08</td><td class="shot">Settings › <b>Blocked Keywords</b>: turn on Smart Page Scanning, load the <b>Anti-Scam</b> pack, add <b>casino</b> and <b>gun</b>. Show "How pages are scanned" briefly</td>
+                <td class="vo">Blocked words used to block blindly. Now the AI reads the text around a word before anything is blocked.</td></tr>
+            <tr><td>1:08–1:28</td><td class="shot">Open the <b>casino</b> tab: "checking" cover → block page with <b>"Blocked: gambling…"</b> and <b>"Checked on this computer"</b></td>
+                <td class="vo">A casino is blocked with a plain reason, decided on this computer by Gemini Nano. Nothing was sent online.</td></tr>
+            <tr><td>1:28–1:48</td><td class="shot">Open the <b>history page with "gun"</b>: it stays open. Turn on Senior Assist, click the <b>shield</b> between Aa+ and the gear → <b>"✅ Looks safe · 🔒 Local AI"</b></td>
+                <td class="vo">A history article that mentions a gun stays open. Keywords alone can't do that. One click asks: is this page safe?</td></tr>
+            <tr><td>1:48–2:15</td><td class="shot">Open the <b>fake bank page</b>: the orange warning banner appears by itself. Click <b>⛔ Block this site</b> → block page</td>
+                <td class="vo">Scams rarely use a blocked word. Login pages get a quiet background check. A fake bank alert gets a clear warning, and one click blocks it for good.</td></tr>
+            <tr><td>2:15–2:35</td><td class="shot">Settings › Instructions › <b>AI Protection</b>: Off / Local / Hybrid / Cloud switch, then <b>Try it</b> with the scam text and its result</td>
+                <td class="vo">You decide where the AI runs: on this computer, hybrid, or cloud. When Nano is missing or unsure, Gemini in the cloud helps through Firebase, protected by App Check.</td></tr>
+            <tr><td>2:35–2:50</td><td class="shot"><b>Family</b>: weekly log → <b>Write summary</b>. Flash <b>"Powered by Firebase Authentication + Cloud Firestore"</b></td>
+                <td class="vo">Families get a plain weekly summary, and can share it through a Firebase account. Never page text.</td></tr>
+            <tr><td>2:50–2:58</td><td class="shot">Back to the payoff slide or the website</td>
+                <td class="vo">Senior SafeSurf. Free, private, and now with local AI through Firebase.</td></tr>
+        </tbody>
+    </table>
+    <p class="hint">Unlisted page for the recording session (not linked from the website).</p>
+
+    <script>
+        const rows = [...document.querySelectorAll('#rows tr')];
+        let i = -1;
+        const set = (n) => {
+            i = Math.max(0, Math.min(rows.length - 1, n));
+            rows.forEach((r, k) => r.classList.toggle('active', k === i));
+            rows[i].scrollIntoView({ behavior: 'smooth', block: 'center' });
+        };
+        rows.forEach((r, k) => r.addEventListener('click', () => set(k)));
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowDown' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); set(i + 1); }
+            if (e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); set(i - 1); }
+        });
+    </script>
+</body>
+</html>
