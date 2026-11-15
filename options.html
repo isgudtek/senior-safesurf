@@ -513,7 +513,6 @@
         <div class="nav-item" data-section="appearance"><span data-i18n="nav_appearance">Appearance</span></div>
         <div class="nav-item" data-section="security"><span data-i18n="nav_security">Security & Password</span></div>
         <div class="nav-item" data-section="support"><span data-i18n="nav_support">Support & Feedback</span></div>
-        <div class="nav-item" data-section="general"><span data-i18n="nav_settings">Settings</span></div>
     </div>
     <div class="main">
         <div id="section-instructions" class="content-section">
@@ -750,7 +749,24 @@
                 </div>
             </div>
 
-            <div class="card">
+                        <div class="card">
+                <h2 data-i18n="language_title">Display Language</h2>
+                <div class="options-item">
+                    <div class="info">
+                        <span class="name" data-i18n="app_language_label">Application Language</span>
+                        <span class="description" data-i18n="app_language_desc">Choose your preferred language
+                            for the
+                            extension interface.</span>
+                    </div>
+                    <select id="appLanguageSelect"
+                        style="background: var(--bg); color: #fff; border: 1px solid var(--border); padding: 8px 12px; border-radius: 8px; font-family: inherit; font-size: 13px; cursor: pointer;">
+                        <option value="en">🇺🇸 English</option>
+                        <option value="it">🇮🇹 Italiano</option>
+                    </select>
+                </div>
+            </div>
+
+<div class="card">
                 <h2 data-i18n="overlay_title">Senior Assist Overlay</h2>
                 <div class="options-item">
                     <div class="info">
@@ -925,28 +941,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Settings Section -->
-        <div id="section-general" class="content-section hidden">
-            <h1 data-i18n="settings_title">Extension Settings</h1>
-            <div class="card">
-                <h2 data-i18n="language_title">Display Language</h2>
-                <div class="options-item">
-                    <div class="info">
-                        <span class="name" data-i18n="app_language_label">Application Language</span>
-                        <span class="description" data-i18n="app_language_desc">Choose your preferred language
-                            for the
-                            extension interface.</span>
-                    </div>
-                    <select id="appLanguageSelect"
-                        style="background: var(--bg); color: #fff; border: 1px solid var(--border); padding: 8px 12px; border-radius: 8px; font-family: inherit; font-size: 13px; cursor: pointer;">
-                        <option value="en">🇺🇸 English</option>
-                        <option value="it">🇮🇹 Italiano</option>
-                    </select>
-                </div>
-            </div>
-            
         </div>
 
         <!-- Family Section -->

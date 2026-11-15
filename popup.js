@@ -272,7 +272,7 @@ async function addDomain() {
 document.getElementById('manageLinksBtn').addEventListener('click', () => openOptions('domains'));
 
 // SaaS Logic: Open Options Page
-const openOptions = (section = 'general') => {
+const openOptions = (section = 'instructions') => {
     const url = chrome.runtime.getURL(`options.html#${section}`);
     if (chrome.runtime.openOptionsPage) {
         chrome.runtime.openOptionsPage();
