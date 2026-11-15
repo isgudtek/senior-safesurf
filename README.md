@@ -178,7 +178,9 @@ For Family sharing:
 ## What changed in v2 (built during #BuildHybridAI)
 
 v1.3 (the published store version, packaged February 2026) is the first commit in this repository, so the diff
-shows everything built for the hackathon. It was a keyword and site blocker with a paid PRO tier. v2:
+shows everything built for the hackathon. It was a keyword and site blocker with a paid PRO tier, and it had
+**no AI of any kind**: stop words were matched with plain `text.includes(word)`. All AI in this repository was
+added in v2. v2:
 
 - **Hybrid AI** with Firebase AI Logic: on-device Gemini Nano, cloud Gemini fallback and low-confidence
   escalation, structured verdicts, four-way switch and explicit cloud consent.
