@@ -45,8 +45,8 @@ async function ensureOffscreen() {
     if (!creatingOffscreen) {
         creatingOffscreen = chrome.offscreen.createDocument({
             url: 'offscreen.html',
-            reasons: ['DOM_PARSER'],
-            justification: 'Runs the on-device Prompt API and the Firebase AI Logic SDK to classify page snapshots.'
+            reasons: ['DOM_PARSER', 'IFRAME_SCRIPTING'],
+            justification: 'Runs the on-device Prompt API and the Firebase AI Logic SDK to classify page snapshots, and embeds the hosted cloud bridge.'
         }).finally(() => { creatingOffscreen = null; });
     }
     await creatingOffscreen;

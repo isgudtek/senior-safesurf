@@ -117,8 +117,10 @@
             cloud.textContent = t('cloud_off', 'Cloud checks are off.');
         } else if (s.remoteConfig && s.remoteConfig.values && s.remoteConfig.values.ai_cloud_enabled === false) {
             cloud.textContent = t('cloud_killed', 'Cloud checks are paused by Remote Config.');
+        } else if (s.cloudReady === false) {
+            cloud.textContent = t('cloud_bridge_down', '⚠️ The cloud bridge (senior-safesurf.web.app) did not load. Check the internet connection.');
         } else {
-            cloud.textContent = t('cloud_on', '☁️ Cloud checks allowed. Model: ') + (s.remoteConfig ? s.remoteConfig.values.ai_cloud_model : '');
+            cloud.textContent = t('cloud_on', '☁️ Cloud checks allowed. Model: ') + (s.remoteConfig ? s.remoteConfig.values.ai_cloud_model : '') + (s.cloudPath ? ` · ${s.cloudPath}` : '');
         }
         if (!settings.aiUseRemoteConfig) rcEl.textContent = '';
         else if (s.remoteConfig && s.remoteConfig.active) rcEl.textContent = t('rc_active', 'Remote Config loaded: ') + JSON.stringify(s.remoteConfig.values);

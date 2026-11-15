@@ -96,7 +96,8 @@ engine and the one-sentence reason. Never page text.
 | Product | Used for | Code |
 |---|---|---|
 | **Firebase AI Logic** (hybrid inference) | Gemini Nano on-device + Gemini cloud fallback, structured JSON verdicts | `src/engine.js` |
-| **App Check** | Required by AI Logic; debug provider in the extension (see below) | `src/firebase.js` |
+| **App Check** (reCAPTCHA Enterprise) | Required by AI Logic; cloud calls are attested on the hosted bridge page | `src/cloud-bridge.js` |
+| **Hosting** | Serves the cloud bridge (`senior-safesurf.web.app`) | `web/`, `firebase.json` |
 | **Remote Config** (optional) | Cloud kill switch, cloud model name, hybrid escalation threshold, extra prompt guidance | `src/engine.js`, `remoteconfig.template.json` |
 | **Authentication** (email/password) | Optional family account | `src/family.js` |
 | **Cloud Firestore** | Optional shared family log, owner-only and append-only rules | `src/offscreen.js`, `src/family.js`, `firestore.rules` |
@@ -110,7 +111,8 @@ flowchart LR
   SW -->|aiMode off| KW[keyword verdict]
   SW -->|target: offscreen| OS[offscreen.html → lib/offscreen.js<br/>Firebase AI Logic]
   OS -->|Nano available| ND[🔒 Gemini Nano<br/>Chrome Prompt API]
-  OS -->|fallback / escalation, with consent| CL[☁️ Gemini via Firebase<br/>App Check]
+  OS -->|fallback / escalation, with consent| BR[hidden iframe<br/>senior-safesurf.web.app/cloud.html]
+  BR -->|App Check: reCAPTCHA Enterprise| CL[☁️ Gemini via Firebase AI Logic]
   OS -->|family sharing on| FS[(Firestore<br/>families/uid/events)]
   OS --> SW
   SW -->|block| BL[blocked.html: reason + engine]
@@ -144,25 +146,30 @@ Requirements: Node 20+, desktop Chrome 138+.
 
 ```bash
 npm install
-npm run build        # bundles the Firebase SDK into lib/
+npm run build        # bundles the Firebase SDK into lib/ (extension) and web-dist/ (cloud bridge)
 npm test             # unit tests (keywords, routing, policy, verdict parsing)
 ```
 
 Load it: `chrome://extensions` → Developer mode → **Load unpacked** → this folder.
 
-### App Check (needed for cloud checks)
+### App Check and the cloud bridge
 
-Firebase AI Logic enforces App Check. reCAPTCHA can't run on a `chrome-extension://` origin, so the extension
-uses the **App Check debug provider**, which the hackathon accepts for submissions.
+Firebase AI Logic enforces App Check on every cloud call, and reCAPTCHA can't run on a `chrome-extension://`
+origin. So the extension sends cloud requests through a small hosted page, **`https://senior-safesurf.web.app/cloud.html`**
+(`src/cloud-bridge.js`), which the AI engine loads in a hidden iframe:
 
-- `npm run build` reads `APPCHECK_DEBUG_TOKEN` from `.env.local` (gitignored). If it's missing, the build creates
-  one and prints it.
-- Register it: Firebase console › App Check › Apps › web app › **Manage debug tokens**.
-- Without a registered token, cloud checks are rejected and the extension stays on-device / keywords;
-  **AI Protection** shows a warning.
+- The page runs Firebase AI Logic with **App Check backed by reCAPTCHA Enterprise**, so cloud calls are attested
+  like any Firebase web app. **No debug token or secret is in the extension or in this repository**, and cloud
+  checks work for every install, from the Chrome Web Store or from GitHub.
+- It only answers `postMessage` requests from Senior SafeSurf's two extension IDs (store build and the unpacked
+  build, pinned by the `key` in `manifest.json`), and its `frame-ancestors` header lets only those IDs embed it.
+- It only accepts the two request types the extension uses (verdict JSON or summary text), with a size limit.
+- On-device checks never touch the bridge: Gemini Nano runs inside the extension.
 
-A production release would replace the debug provider with a `CustomProvider` backed by a server that attests
-the extension. That's out of scope for this version.
+The bridge is deployed to its own Hosting site: `firebase deploy --only hosting:senior-safesurf`.
+
+Developer option: put `CLOUD_VIA=direct` and a registered `APPCHECK_DEBUG_TOKEN` in `.env.local` to call the
+cloud straight from the extension with the App Check debug provider. Never publish such a build.
 
 ### Firebase project
 
@@ -173,7 +180,7 @@ For Family sharing:
 
 1. Firebase console › **Firestore Database** › Create database (production mode).
 2. Firebase console › **Authentication** › Get started › enable **Email/Password**.
-3. `npm run deploy:firebase` deploys `firestore.rules` and the Remote Config template.
+3. `npm run deploy:firebase` deploys `firestore.rules`, the Remote Config template and the bridge page.
 
 ## What changed in v2 (built during #BuildHybridAI)
 

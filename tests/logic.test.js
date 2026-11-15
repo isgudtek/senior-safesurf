@@ -14,7 +14,8 @@ function loadClassic(file, extra = {}) {
 const { compile, findMatch } = loadClassic('../js/keywords.js').SafeSurfKeywords;
 
 // engine.js imports the Firebase SDK; only its pure helpers are tested here.
-vi.mock('../src/firebase.js', () => ({ app: {}, cloudConfigured: true }));
+vi.mock('../src/firebase.js', () => ({ app: {}, cloudConfigured: true, cloudDirect: false }));
+vi.mock('../src/cloud-client.js', () => ({ cloudGenerate: async () => '{}', bridgeReady: async () => true }));
 vi.mock('firebase/ai', () => ({
     getAI: () => ({}), getGenerativeModel: () => ({}), GoogleAIBackend: class {},
     InferenceMode: { ONLY_ON_DEVICE: 'only_on_device', PREFER_ON_DEVICE: 'prefer_on_device', ONLY_IN_CLOUD: 'only_in_cloud' }

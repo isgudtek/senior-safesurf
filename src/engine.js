@@ -1,7 +1,9 @@
 // Hybrid AI engine: Firebase AI Logic with Gemini Nano on-device and Gemini in the cloud.
 import { getAI, getGenerativeModel, GoogleAIBackend, InferenceMode } from 'firebase/ai';
 import { getRemoteConfig, fetchAndActivate, getValue } from 'firebase/remote-config';
-import { app, cloudConfigured } from './firebase.js';
+import { app, cloudConfigured, cloudDirect } from './firebase.js';
+import { cloudGenerate, bridgeReady } from './cloud-client.js';
+import { CATEGORIES, verdictSchema } from './schema.js';
 
 const ai = getAI(app, { backend: new GoogleAIBackend() });
 
@@ -60,19 +62,7 @@ export async function nanoState() {
     }
 }
 
-// ---------- Verdict schema (same schema on-device and in the cloud) ----------
-const CATEGORIES = ['safe', 'adult', 'gambling', 'violence', 'drugs', 'weapons', 'hate', 'scam', 'phishing', 'malware', 'other'];
-const verdictSchema = {
-    type: 'object',
-    properties: {
-        verdict: { type: 'string', enum: ['allow', 'warn', 'block'] },
-        category: { type: 'string', enum: CATEGORIES },
-        confidence: { type: 'number' },
-        reason: { type: 'string' }
-    },
-    required: ['verdict', 'category', 'confidence', 'reason']
-};
-
+// ---------- Models (verdict schema in src/schema.js, same on-device and in the cloud) ----------
 function verdictModel(mode, rc) {
     return getGenerativeModel(ai, {
         mode,
@@ -176,6 +166,15 @@ async function runModel(factory, mode, rc, prompt, timeoutMs, label) {
     return res;
 }
 
+// Cloud step. Default: through the hosted bridge (App Check with reCAPTCHA Enterprise).
+// Developer builds with an App Check debug token (CLOUD_VIA=direct) call the SDK here directly.
+async function cloudText(kind, factory, rc, prompt, timeoutMs, label) {
+    if (cloudDirect) {
+        return (await runModel(factory, InferenceMode.ONLY_IN_CLOUD, rc, prompt, timeoutMs, label)).text();
+    }
+    return withTimeout(cloudGenerate(kind, prompt, rc.values.ai_cloud_model), timeoutMs, label);
+}
+
 export async function analyze(snapshot, trigger, config) {
     const t0 = performance.now();
     const rc = await runtimeConfig(config.useRemoteConfig);
@@ -185,8 +184,8 @@ export async function analyze(snapshot, trigger, config) {
 
     const prompt = buildPrompt(snapshot, trigger, rc.values.ai_prompt_extra);
     const cloud = async (extra = {}) => {
-        const res = await runModel(verdictModel, InferenceMode.ONLY_IN_CLOUD, rc, prompt, CLOUD_TIMEOUT_MS, 'Cloud check');
-        return { ...parseVerdict(res.text()), engine: 'cloud', ...extra };
+        const text = await cloudText('verdict', verdictModel, rc, prompt, CLOUD_TIMEOUT_MS, 'Cloud check');
+        return { ...parseVerdict(text), engine: 'cloud', ...extra };
     };
 
     let result;
@@ -227,17 +226,21 @@ export async function summarize(events, config) {
         'EVENTS (date verdict category site engine):',
         lines.length ? lines.join('\n') : '(none)'
     ].join('\n');
-    const attempt = async (mode, ms, label) => {
-        const res = await runModel(textModel, mode, rc, prompt, ms, label);
+    const onDevice = async () => {
+        const res = await runModel(textModel, InferenceMode.ONLY_ON_DEVICE, rc, prompt, DEVICE_TIMEOUT_MS * 2, 'On-device summary');
         return { text: res.text().trim(), engine: engineOf(res) };
     };
+    const inCloud = async () => ({
+        text: (await cloudText('text', textModel, rc, prompt, CLOUD_TIMEOUT_MS * 2, 'Cloud summary')).trim(),
+        engine: 'cloud'
+    });
     try {
-        if (plan.route === 'cloud') return await attempt(InferenceMode.ONLY_IN_CLOUD, CLOUD_TIMEOUT_MS * 2, 'Cloud summary');
+        if (plan.route === 'cloud') return await inCloud();
         try {
-            return await attempt(InferenceMode.ONLY_ON_DEVICE, DEVICE_TIMEOUT_MS * 2, 'On-device summary');
+            return await onDevice();
         } catch (e) {
             if (plan.route !== 'hybrid') throw e;
-            return await attempt(InferenceMode.ONLY_IN_CLOUD, CLOUD_TIMEOUT_MS * 2, 'Cloud summary');
+            return await inCloud();
         }
     } catch (e) {
         return { engine: 'none', status: nano, error: errText(e) };
@@ -247,5 +250,7 @@ export async function summarize(events, config) {
 export async function status(config) {
     const rc = await runtimeConfig(config.useRemoteConfig);
     const nano = await nanoState();
-    return { nano, cloudConfigured, remoteConfig: rc, route: planRoute(config, nano, rc) };
+    const cloudPath = cloudDirect ? 'direct (debug token)' : 'hosted bridge';
+    const cloudReady = config.cloudConsent && !cloudDirect ? await bridgeReady() : null;
+    return { nano, cloudConfigured, cloudPath, cloudReady, remoteConfig: rc, route: planRoute(config, nano, rc) };
 }
