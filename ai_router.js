@@ -204,8 +204,10 @@ async function reviewKeywordHit({ pid, snapshot, word, words, review }, tabUrl) 
         // Only AI answers are remembered; applyPolicy already turned unsure "allow"s into blocks.
         // The one review covers every blocked word found on the page, so remember it for each of them.
         if (verdict.engine === 'on-device' || verdict.engine === 'cloud') {
-            const all = [...new Set([word, ...(Array.isArray(words) ? words.slice(0, 8) : [])])];
+            const all = [...new Set([word, ...(Array.isArray(words) ? words.slice(0, 40) : [])])];
             for (const w of all) await writeCache(cacheKey(tabUrl, w), verdict);
+            // A harmless verdict trusts the whole page, so text that loads later doesn't block it again.
+            if (verdict.verdict === 'allow') await writeCache(cacheKey(tabUrl, '*'), verdict);
         }
     }
     const result = { ...verdict, word, url: tabUrl };

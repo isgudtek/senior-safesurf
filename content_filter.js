@@ -10,7 +10,7 @@
     window.__safeSurfFilterLoaded = true;
 
     const AI_WAIT_MS = 12000;            // risky-page check only (never delays a block)
-    const MAX_REVIEWS_PER_PAGE = 4;      // after this many cleared words, keyword blocks without review
+    const MAX_REVIEWS_PER_PAGE = 3;      // AI reviews per page per tab; after that, keyword blocks without review
     const SCAN_INTERVAL_MS = 250;        // scans while the page keeps changing: at most every 250 ms
     const CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 
@@ -47,17 +47,20 @@
     const pageKey = () => location.hostname.replace(/^www\./, '') + location.pathname;
     let pageUrl = location.href;
     let cleared = new Set();   // words judged harmless on this page
+    let pageCleared = false;   // the AI judged this whole page harmless
     let done = false;          // page blocked or warned: stop scanning
     let riskyChecked = false;
 
     // Words the AI already judged harmless on this page (remembered for 7 days).
     function loadClearedFromCache() {
         cleared = new Set();
+        pageCleared = false;
         if (aiMode === 'off') return; // Keyword match mode is pure word matching, like v1.3: no AI memory
         const prefix = pageKey() + '|';
         for (const [k, v] of Object.entries(verdictCache)) {
             if (k.startsWith(prefix) && v && v.verdict === 'allow' && Date.now() - v.ts < CACHE_TTL_MS) {
-                cleared.add(k.slice(prefix.length));
+                const w = k.slice(prefix.length);
+                if (w === '*') pageCleared = true; else cleared.add(w);
             }
         }
     }
@@ -75,7 +78,13 @@
     function blockNow(match, text) {
         done = true;
         const params = new URLSearchParams({ url: location.href, reason: 'content', word: match.word });
-        const review = aiMode !== 'off' && cleared.size < MAX_REVIEWS_PER_PAGE;
+        // Count reviews, not cleared words: one review can clear several words at once. The count lives
+        // in this tab's sessionStorage for the page, so it survives the trip to the block page and back.
+        const countKey = `safesurf_reviews_${pageKey()}`;
+        let reviews = 0;
+        try { reviews = Number(sessionStorage.getItem(countKey)) || 0; } catch { /* storage blocked */ }
+        const review = aiMode !== 'off' && reviews < MAX_REVIEWS_PER_PAGE;
+        if (review) { try { sessionStorage.setItem(countKey, String(reviews + 1)); } catch { /* ignore */ } }
         const pid = crypto.randomUUID();
         params.set('pid', pid);
         // Hand the snapshot to the service worker without waiting: it logs the block and, in an AI mode,
@@ -85,7 +94,7 @@
         // "gun" and "rifle" is checked once, not once per word.
         const words = [match.word];
         const seen = new Set([...cleared, match.word]);
-        for (let m; words.length < 8 && (m = SafeSurfKeywords.findMatch(text, compiled, seen));) {
+        for (let m; words.length < 40 && (m = SafeSurfKeywords.findMatch(text, compiled, seen));) {
             words.push(m.word);
             seen.add(m.word);
         }
@@ -97,7 +106,7 @@
     }
 
     function checkKeywords() {
-        if (!keywordsOn || done || !document.body) return;
+        if (!keywordsOn || done || pageCleared || !document.body) return;
         const text = document.body.innerText;
         const match = SafeSurfKeywords.findMatch(text, compiled, cleared);
         if (match) blockNow(match, text);

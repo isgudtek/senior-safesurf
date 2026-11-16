@@ -129,7 +129,19 @@ async function setupAiSlide() {
     });
 
     startBtn.addEventListener('click', async () => {
-        await chrome.storage.local.set({ aiMode: 'hybrid', aiCloudConsent: consent.checked });
+        // "Start protecting" turns everything on: Hybrid AI, Smart Page Scanning with the English
+        // Stop Word list (added to any words already there) and the Senior Assist toolbar.
+        // All of it can be changed in Settings.
+        const { stopWords = [] } = await chrome.storage.local.get('stopWords');
+        const starter = (globalThis.SAFESURF_PRESETS && globalThis.SAFESURF_PRESETS.en) || [];
+        await chrome.storage.local.set({
+            aiMode: 'hybrid',
+            aiCloudConsent: consent.checked,
+            enableContentFilter: true,
+            stopWords: [...new Set([...(Array.isArray(stopWords) ? stopWords : []), ...starter])],
+            showSeniorOverlay: true
+        });
+        const on = `${starter.length} blocked words, scam checks and the Senior Assist toolbar are on. Change anything in Settings.`;
         startBtn.style.display = 'none';
         settingsBtn.style.display = 'flex';
 
@@ -147,14 +159,16 @@ async function setupAiSlide() {
                 session.destroy();
                 bar.style.width = '100%';
                 describeNano('available');
-                msg.textContent = 'All set. Smart protection is on.';
+                msg.textContent = `All set. ${on}`;
             } catch (e) {
                 msg.textContent = `The download could not start (${e.message || e}). You can retry from Settings > AI Protection.`;
             }
         } else {
             msg.textContent = state === 'available'
-                ? 'All set. Smart protection is on.'
-                : (consent.checked ? 'Smart protection is on, using cloud checks.' : 'Keyword protection is on. Allow cloud checks anytime for AI protection.');
+                ? `All set: AI checks run on this computer. ${on}`
+                : (consent.checked
+                    ? `All set: AI checks run in the cloud. ${on}`
+                    : `${on} AI checks are off until you allow cloud checks in Settings › AI Protection.`);
         }
     });
 }

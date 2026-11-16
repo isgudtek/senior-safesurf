@@ -238,6 +238,12 @@ Requirements: Node 20+, desktop Chrome 138+.
 
 1. Download [senior-safesurf.zip](https://github.com/isgudtek/senior-safesurf/releases/latest/download/senior-safesurf.zip) and unzip it.
 2. Open `chrome://extensions`, turn on **Developer mode**, click **Load unpacked** and choose the `senior-safesurf` folder.
+3. The welcome tab opens. Click through to the last slide and press **Start protecting**. This turns on Hybrid AI,
+   Smart Page Scanning with the 88-word English Stop Word list, and the Senior Assist toolbar. Cloud checks are
+   pre-ticked when Gemini Nano isn't ready on the computer (you can untick them).
+4. Open the [demo pages](#demo-pages): the casino is blocked and confirmed by the AI, the history article is
+   reopened by the AI, and the fake bank gets a scam warning. On any page, the toolbar shield asks the AI
+   "Is this page safe?".
 
 `npm run package` rebuilds that zip from source (runtime files only, no source maps or local secrets).
 
@@ -267,8 +273,8 @@ Optional: `npm test` runs the unit tests (keywords, routing, policy, verdict par
 
 Fictional pages that always behave the same way, hosted on `safesurf-demo.web.app` (source in `demo/`):
 
-- [casino.html](https://safesurf-demo.web.app/casino.html): add the Stop Word `casino`. Blocked at once; the AI confirms it as gambling.
-- [history.html](https://safesurf-demo.web.app/history.html): add `gun`. Blocked at once; the AI finds the mention harmless and reopens the page. Next visit opens directly.
+- [casino.html](https://safesurf-demo.web.app/casino.html): contains `casino` (in the English list). Blocked at once; the AI confirms it as gambling.
+- [history.html](https://safesurf-demo.web.app/history.html): contains `gun` and `rifle`. Blocked at once; one AI check finds the mentions harmless and reopens the page. Next visit opens directly.
 - [securebank.html](https://safesurf-demo.web.app/securebank.html): a fake "account suspended" login. No Stop Word needed: the scam check shows a warning banner.
 
 New Stop Words apply to tabs that are already open.
