@@ -119,8 +119,10 @@ async function setupAiSlide() {
     describeNano(state);
     const { aiCloudConsent } = await chrome.storage.local.get('aiCloudConsent');
     consent.checked = aiCloudConsent === true;
-    // Without on-device AI the cloud is the only AI option, so suggest it (still the user's choice).
-    if (aiCloudConsent === undefined && (state === 'unavailable' || state === 'missing')) consent.checked = true;
+    // Without a ready on-device AI the cloud is the only AI option for now, so suggest it. It stays a
+    // visible checkbox the user can untick. (The install defaults already store false, so "not chosen
+    // yet" can't be told apart from "said no"; this page only opens on install, before any choice.)
+    if (aiCloudConsent !== true && state !== 'available') consent.checked = true;
 
     settingsBtn.addEventListener('click', () => {
         window.location.href = chrome.runtime.getURL('options.html#instructions');
